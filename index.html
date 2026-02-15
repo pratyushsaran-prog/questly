@@ -131,7 +131,7 @@ button{font-family:'Inter',sans-serif;cursor:pointer}
 .ph-code:focus,.ph-input:focus{border-color:var(--text)}.ph-input::placeholder{color:var(--t3);font-weight:300}
 .otp-g{display:none;flex-direction:column;gap:12px}.otp-g.active{display:flex}
 .otp-row{display:flex;gap:8px;justify-content:center}
-.otp-b{width:48px;height:56px;border-radius:var(--r);border:1px solid var(--border);font-size:22px;font-weight:700;text-align:center;background:var(--bg);color:var(--text);outline:none;font-family:'Inter',sans-serif}
+.otp-b{width:42px;height:52px;border-radius:var(--r);border:1px solid var(--border);font-size:20px;font-weight:700;text-align:center;background:var(--bg);color:var(--text);outline:none;font-family:'Inter',sans-serif}
 .otp-b:focus{border-color:var(--text)}
 .otp-note{font-size:13px;font-weight:300;color:var(--t2);text-align:center}
 .otp-resend{background:none;border:none;color:var(--accent);font-weight:500;cursor:pointer;font-size:13px}
@@ -154,6 +154,7 @@ button{font-family:'Inter',sans-serif;cursor:pointer}
 .bc-title{font-size:16px;font-weight:600;margin-bottom:8px}.bc-desc{font-size:13px;font-weight:300;color:var(--t2);margin-bottom:20px}
 .bc-btns{display:flex;gap:8px}.bc-btns button{flex:1}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 <body>
 <div class="app">
@@ -177,8 +178,8 @@ button{font-family:'Inter',sans-serif;cursor:pointer}
 
 <div class="overlay" id="loginOL"><div class="sheet"><div class="s-handle"></div><div class="s-title">Don't lose your streak</div><div class="s-desc" id="loginDesc">Login and save it to your account.</div>
 <div class="login-hl"><div class="lh-item"><div class="lh-ic">🔥</div><div class="lh-tx">Keep streak</div></div><div class="lh-item"><div class="lh-ic">⚡</div><div class="lh-tx">Save XP</div></div><div class="lh-item"><div class="lh-ic">📊</div><div class="lh-tx">Track stats</div></div></div>
-<div id="phoneG"><div class="phone-row"><input type="text" class="ph-code" value="+91" id="phCode"><input type="tel" class="ph-input" placeholder="Enter mobile number" id="phNum" maxlength="10"></div><button class="btn-p" onclick="sendOTP()">Send OTP</button></div>
-<div class="otp-g" id="otpG"><div class="otp-note">Enter code sent to <strong id="otpPh"></strong></div><div class="otp-row"><input type="text" class="otp-b" maxlength="1" data-otp><input type="text" class="otp-b" maxlength="1" data-otp><input type="text" class="otp-b" maxlength="1" data-otp><input type="text" class="otp-b" maxlength="1" data-otp></div><div style="text-align:center;margin-top:4px"><button class="otp-resend" onclick="sendOTP()">Resend</button></div><button class="btn-p" style="margin-top:8px" onclick="verifyOTP()">Verify</button></div>
+<div id="phoneG"><input type="email" class="ph-input" placeholder="Enter your email" id="emailIn" style="margin-bottom:12px"><button class="btn-p" onclick="sendMagicLink()">Send login link</button></div>
+<div class="otp-g" id="otpG"><div class="otp-note">✉️ Magic link sent to <strong id="otpPh"></strong></div><div style="font-size:13px;font-weight:300;color:var(--t3);text-align:center;margin-top:8px;line-height:1.5">Check your inbox and click the link.<br>You'll be logged in automatically.</div><div style="text-align:center;margin-top:12px"><button class="otp-resend" onclick="sendMagicLink()">Resend link</button></div></div>
 <button class="s-dismiss" onclick="closeLogin()">Not now</button><div class="login-terms">By continuing you agree to our <a href="#">Terms</a> & <a href="#">Privacy</a></div>
 </div></div>
 <div class="ms-banner" id="msBanner"></div>
@@ -190,6 +191,58 @@ button{font-family:'Inter',sans-serif;cursor:pointer}
 const IG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>';
 const WA='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>';
 const shareURL=window.location.origin+window.location.pathname;
+
+// ===== SUPABASE =====
+const SB_URL='https://aymztaxwncpsegnibbut.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF5bXp0YXh3bmNwc2VnbmliYnV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzExMzQwNDMsImV4cCI6MjA4NjcxMDA0M30.rMkRjk6_dfMndTFxinSHiT4jpcDAxeE1hYTmGIbbwH4';
+const sb=window.supabase.createClient(SB_URL,SB_KEY);
+
+async function sbSendMagicLink(email){
+  const{error}=await sb.auth.signInWithOtp({email,options:{emailRedirectTo:window.location.origin+window.location.pathname}});
+  return error;
+}
+async function sbGetUser(){
+  const{data:{user}}=await sb.auth.getUser();
+  return user;
+}
+async function sbGetSession(){
+  const{data:{session}}=await sb.auth.getSession();
+  return session;
+}
+async function sbFetchProfile(uid){
+  const{data,error}=await sb.from('users').select('*').eq('id',uid).single();
+  if(error&&error.code==='PGRST116') return null; // no row
+  return data;
+}
+async function sbUpsertProfile(uid,fields){
+  const{error}=await sb.from('users').upsert({id:uid,...fields},{onConflict:'id'});
+  if(error)console.error('sbUpsert error:',error);
+}
+async function sbSyncToCloud(){
+  const user=await sbGetUser();
+  if(!user)return;
+  await sbUpsertProfile(user.id,{
+    email:G.email||user.email||'',streak:G.streak,xp:G.xp,days:G.days,
+    played_date:G.playedDate,score:G.score,
+    ms_shown:G.msShown||[]
+  });
+}
+async function sbSyncFromCloud(){
+  const user=await sbGetUser();
+  if(!user)return false;
+  const p=await sbFetchProfile(user.id);
+  if(!p)return false;
+  G.email=p.email||user.email||G.email;
+  G.streak=p.streak??G.streak;
+  G.xp=p.xp??G.xp;
+  G.days=p.days??G.days;
+  G.playedDate=p.played_date||G.playedDate;
+  G.score=p.score??G.score;
+  G.msShown=p.ms_shown||G.msShown;
+  G.logged=true;
+  save();
+  return true;
+}
 
 const DAYS=[
 [{q:"You have one in your wallet. What image is on the back of the new stone-grey ₹500 note?",o:["The Red Fort","Mangalyaan","Sanchi Stupa","Hampi Chariot"],a:0},{q:"In WhatsApp, what does a \"single grey tick\" strictly mean?",o:["Message delivered","Sent from your phone","User blocked you","Their internet is off"],a:1},{q:"You see them everywhere. What is the correct color combination for a private EV (Electric Vehicle) number plate?",o:["White plate, Green text","Green plate, White text","Green plate, Yellow text","Blue plate, White text"],a:1},{q:"Which of these popular quick-commerce apps is majority-owned by the Tata Group?",o:["Zepto","Dunzo","Blinkit","BigBasket"],a:3},{q:"Look closely next time: The \"Non-Vegetarian\" symbol on food packets was recently changed from a Brown Circle to a...?",o:["Red Circle","Brown Triangle","Red Square","Black Cross"],a:1},{q:"Which of these monthly subscriptions actually costs the most (Standard/Individual plans)?",o:["Netflix Premium (4K)","Amazon Prime","YouTube Premium","Spotify Premium"],a:0},{q:"A standard domestic LPG cylinder (Indane/HP) contains exactly how much gas (net weight)?",o:["10 kg","12.5 kg","14.2 kg","19 kg"],a:2},{q:"In an ODI cricket match, how many distinct \"Powerplay\" phases are there in one innings?",o:["Just 1","2","3","4"],a:2},{q:"On Google Maps, a \"Red\" line means slow traffic. What does a \"Dark Red\" (Maroon) line mean?",o:["Accident ahead","Road closed","Stop-and-go traffic","Toll booth ahead"],a:2},{q:"Before Reels and Shorts, which app made 6-second looping videos famous?",o:["TikTok","Snapchat","Vine","Dubsmash"],a:2}],
@@ -211,24 +264,35 @@ function log(e,d){console.log(`[Questly ${new Date().toLocaleString()}] ${e}`,d|
 function localDate(d){d=d||new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 function yday(){const d=new Date();d.setDate(d.getDate()-1);return localDate(d)}
 function dayIdx(){const e=new Date(2025,0,1),n=new Date();n.setHours(0,0,0,0);return((Math.floor((n-e)/864e5)%10)+10)%10}
-function save(){try{localStorage.setItem(LS,JSON.stringify({logged:G.logged,phone:G.phone,streak:G.streak,xp:G.xp,days:G.days,playedDate:G.playedDate,score:G.score,ans:G.ans,firstVisit:false,msShown:G.msShown||[],quizActive:G.quizActive,qi:G.qi,qAns:G.qAns,qScore:G.qScore,qStart:G.qStart,qDay:G.qDay}))}catch(e){}}
+function save(){try{localStorage.setItem(LS,JSON.stringify({logged:G.logged,email:G.email||'',streak:G.streak,xp:G.xp,days:G.days,playedDate:G.playedDate,score:G.score,ans:G.ans,firstVisit:false,msShown:G.msShown||[],quizActive:G.quizActive,qi:G.qi,qAns:G.qAns,qScore:G.qScore,qStart:G.qStart,qDay:G.qDay}))}catch(e){}}
 function load(){try{const r=localStorage.getItem(LS);return r?JSON.parse(r):null}catch(e){return null}}
 
-let G={logged:false,phone:'',streak:0,xp:0,days:0,played:false,missed:false,qi:0,score:0,ans:[],busy:false,cd:null,qt:null,t0:0,playedDate:'',firstVisit:true,msShown:[],quizActive:false,qAns:[],qScore:0,qStart:0,qDay:'',inQuiz:false};
+let G={logged:false,email:'',streak:0,xp:0,days:0,played:false,missed:false,qi:0,score:0,ans:[],busy:false,cd:null,qt:null,t0:0,playedDate:'',firstVisit:true,msShown:[],quizActive:false,qAns:[],qScore:0,qStart:0,qDay:'',inQuiz:false};
 
 function initApp(){
   log('app_open');const s=load();
   if(s){for(const k in s)if(s[k]!==undefined)G[k]=s[k]}
-  const today=localDate();
-  if(G.playedDate===today){G.played=true;G.missed=false;G.quizActive=false}
-  else{
-    G.played=false;
-    if(G.quizActive&&G.qDay===today){G.firstVisit=false;save();go('sQuiz');resumeQuiz();scheduleMN();return}
-    G.quizActive=false;
-    if(G.playedDate&&G.playedDate!==yday()){G.missed=!!G.playedDate;G.streak=0;save()}else G.missed=false;
-  }
-  if(G.firstVisit&&!G.playedDate)go('sWelcome');else showHome();
-  scheduleMN();
+
+  // Check Supabase session and sync
+  (async()=>{
+    const session=await sbGetSession();
+    if(session&&session.user){
+      G.logged=true;G.email=session.user.email||G.email;
+      const synced=await sbSyncFromCloud();
+      if(synced)save();
+    }
+    // Now run normal init logic with potentially updated state
+    const today=localDate();
+    if(G.playedDate===today){G.played=true;G.missed=false;G.quizActive=false}
+    else{
+      G.played=false;
+      if(G.quizActive&&G.qDay===today){G.firstVisit=false;save();go('sQuiz');resumeQuiz();scheduleMN();return}
+      G.quizActive=false;
+      if(G.playedDate&&G.playedDate!==yday()){G.missed=!!G.playedDate;G.streak=0;save()}else G.missed=false;
+    }
+    if(G.firstVisit&&!G.playedDate)go('sWelcome');else showHome();
+    scheduleMN();
+  })();
 }
 function scheduleMN(){const n=new Date(),t=new Date(n);t.setDate(t.getDate()+1);t.setHours(0,0,0,100);setTimeout(()=>{G.played=false;G.missed=false;G.quizActive=false;if($('sHome').classList.contains('active')||$('sRes').classList.contains('active'))showHome();scheduleMN()},Math.min(t-n,864e5))}
 function $(id){return document.getElementById(id)}
@@ -240,7 +304,7 @@ function todayQs(){return DAYS[dayIdx()]}
 function enterApp(){G.firstVisit=false;save();if(G.played){showHome();return}startQuiz()}
 
 function showHome(){
-  if(G.logged){let p=`<div class="h-pill">🔥 <span class="v">${G.streak}</span></div>`;if(G.days>=GATE)p+=`<div class="h-pill">✦ <span class="xv">${G.xp}</span></div>`;p+=`<div class="avatar">${G.phone.slice(-2)}</div>`;$('hRight').innerHTML=p}else $('hRight').innerHTML='';
+  if(G.logged){let p=`<div class="h-pill">🔥 <span class="v">${G.streak}</span></div>`;if(G.days>=GATE)p+=`<div class="h-pill">✦ <span class="xv">${G.xp}</span></div>`;p+=`<div class="avatar">${(G.email||'?')[0].toUpperCase()}</div>`;$('hRight').innerHTML=p}else $('hRight').innerHTML='';
   let h='';
   if(G.missed)h+=`<div class="missed"><strong>You missed yesterday.</strong>Your streak was reset — but today's challenge is ready.</div>`;
   if(G.played){
@@ -284,6 +348,7 @@ function finish(){
   if(G.playedDate&&G.playedDate!==yday())G.streak=0;
   G.streak++;G.days++;G.played=true;G.missed=false;G.playedDate=today;G.score=G.qScore;G.ans=G.qAns;G.quizActive=false;
   const tt=Math.round((Date.now()-G.t0)/1000),xp=calcXP(G.score,tt);G.xp+=xp;save();
+  if(G.logged)sbSyncToCloud(); // sync to Supabase
   log('quiz_complete',{score:G.score,streak:G.streak,xp});
   $('qBar').style.width='100%';
   const cls=G.score===10?'s10':G.score>=8?'s8':G.score>=5?'s5':'s0',ns=G.streak+1;
@@ -311,11 +376,40 @@ window.addEventListener('popstate',function(e){if(G.inQuiz){e.preventDefault();$
 function confirmLeave(){$('backConfirm').classList.remove('active');G.inQuiz=false;clearInterval(G.qt);G.played=true;G.playedDate=localDate();G.score=G.qScore;G.ans=G.qAns;G.quizActive=false;if(!G.ans.length){G.score=0;G.ans=[]}save();showHome()}
 function cancelLeave(){$('backConfirm').classList.remove('active')}
 
-function openLogin(){log('login_opened');$('loginDesc').textContent=`You have a ${G.streak}-day streak. Login to keep it safe.`;$('phoneG').style.display='block';$('otpG').classList.remove('active');$('phNum').value='';$('loginOL').classList.add('active')}
+function openLogin(){log('login_opened');$('loginDesc').textContent=`You have a ${G.streak}-day streak. Login to keep it safe.`;$('phoneG').style.display='block';$('otpG').classList.remove('active');$('emailIn').value='';$('loginOL').classList.add('active')}
 function closeLogin(){$('loginOL').classList.remove('active')}
-function sendOTP(){const n=$('phNum').value.replace(/\D/g,'');if(n.length<10){toast('Enter valid number');return}G.phone=$('phCode').value+n;$('otpPh').textContent=G.phone;$('phoneG').style.display='none';$('otpG').classList.add('active');toast('OTP sent! (Demo: any 4 digits)');setTimeout(()=>document.querySelector('[data-otp]').focus(),300)}
-function verifyOTP(){const c=[...document.querySelectorAll('[data-otp]')].map(b=>b.value).join('');if(c.length<4){toast('Enter all 4 digits');return}G.logged=true;save();closeLogin();toast('Signed in!');const r=document.querySelector('.r-login');if(r)r.remove()}
-document.querySelectorAll('[data-otp]').forEach((b,i,a)=>{b.addEventListener('input',()=>{if(b.value&&i<a.length-1)a[i+1].focus()});b.addEventListener('keydown',e=>{if(e.key==='Backspace'&&!b.value&&i>0)a[i-1].focus()})});
+async function sendMagicLink(){
+  const email=$('emailIn').value.trim();
+  if(!email||!email.includes('@')){toast('Enter a valid email');return}
+  G.email=email;
+  const btn=$('phoneG').querySelector('.btn-p');
+  btn.textContent='Sending...';btn.disabled=true;
+  const err=await sbSendMagicLink(email);
+  btn.textContent='Send login link';btn.disabled=false;
+  if(err){toast('Failed: '+err.message);return}
+  $('otpPh').textContent=email;
+  $('phoneG').style.display='none';
+  $('otpG').classList.add('active');
+  toast('Check your email!');
+}
+// Listen for magic link callback (user returns from email click)
+sb.auth.onAuthStateChange(async(event,session)=>{
+  if(event==='SIGNED_IN'&&session&&!G.logged){
+    G.logged=true;
+    G.email=session.user.email||G.email;
+    // Merge: cloud wins if it has a higher streak
+    const existing=await sbFetchProfile(session.user.id);
+    if(existing&&existing.streak>G.streak){
+      await sbSyncFromCloud();
+    } else {
+      await sbSyncToCloud();
+    }
+    save();closeLogin();toast('Signed in!');
+    const r=document.querySelector('.r-login');if(r)r.remove();
+    if($('sHome').classList.contains('active'))showHome();
+    if($('sRes').classList.contains('active'))showResults();
+  }
+});
 $('loginOL').addEventListener('click',function(e){if(e.target===this)closeLogin()});
 
 window.addEventListener('beforeunload',()=>{if(G.inQuiz)save()});
