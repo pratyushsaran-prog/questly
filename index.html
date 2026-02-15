@@ -414,6 +414,23 @@ $('loginOL').addEventListener('click',function(e){if(e.target===this)closeLogin(
 
 window.addEventListener('beforeunload',()=>{if(G.inQuiz)save()});
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&G.inQuiz)save()});
+<script>
+async function restoreLoginSession(){
+  try{
+    const { data } = await sb.auth.getSession();
+    if(data && data.session && data.session.user){
+      const user = data.session.user;
+      G.logged = true;
+      G.email = user.email;
+      save();
+      console.log("Session restored", user.email);
+    }
+  }catch(e){
+    console.log("No session yet");
+  }
+}
+restoreLoginSession();
+</script>
 
 initApp();
 
