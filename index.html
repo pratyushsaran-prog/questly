@@ -154,6 +154,8 @@ button{font-family:'Inter',sans-serif;cursor:pointer}
 .bc-title{font-size:16px;font-weight:600;margin-bottom:8px}.bc-desc{font-size:13px;font-weight:300;color:var(--t2);margin-bottom:20px}
 .bc-btns{display:flex;gap:8px}.bc-btns button{flex:1}
 </style>
+<script>!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init("phc_UxeoAAlu2hyrfoJf9CrLKX4ySqWiYYQJ5ROsHwyhjx",{api_host:"https://app.posthog.com",capture_pageview:false});</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 <body>
@@ -190,7 +192,11 @@ button{font-family:'Inter',sans-serif;cursor:pointer}
 <script>
 const IG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>';
 const WA='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>';
-const shareURL=window.location.origin+window.location.pathname;
+function getRef(){try{const p=new URLSearchParams(window.location.search);return p.get('ref')}catch(e){return null}}
+const _ref=getRef();
+if(_ref){try{localStorage.setItem('questly_ref',_ref)}catch(e){}}
+if(window.location.pathname==='/auth'){setTimeout(()=>{try{window.history.replaceState({},document.title,'/')}catch(e){}},50)}
+const shareURL=window.location.origin+(window.location.pathname==='/'?'':window.location.pathname);
 
 // ===== SUPABASE =====
 const SB_URL='https://aymztaxwncpsegnibbut.supabase.co';
@@ -198,7 +204,7 @@ const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZ
 const sb=window.supabase.createClient(SB_URL,SB_KEY);
 
 async function sbSendMagicLink(email){
-  const{error}=await sb.auth.signInWithOtp({email,options:{emailRedirectTo:window.location.origin+window.location.pathname}});
+  const{error}=await sb.auth.signInWithOtp({email,options:{emailRedirectTo:window.location.origin+'/auth'}});
   return error;
 }
 async function sbGetUser(){
@@ -260,26 +266,57 @@ const DAYS=[
 const Q_TIME=10,GATE=3,LS='questly_v2';
 const MS=[{d:3,type:'banner',msg:'🔥 3-day streak! You\'re building a habit!'},{d:7,type:'confetti',emoji:'🎉',title:'7-day streak!',desc:'One whole week! Most quit by day 3. You didn\'t.'},{d:14,type:'confetti',emoji:'🏆',title:'14-day streak!',desc:'Two weeks strong. Top 1% of daily players.'}];
 
-function log(e,d){console.log(`[Questly ${new Date().toLocaleString()}] ${e}`,d||'')}
+function log(e,d){console.log(`[Questly ${new Date().toLocaleString()}] ${e}`,d||'');try{if(window.posthog&&posthog.capture)posthog.capture(e,d||{})}catch(x){}}
 function localDate(d){d=d||new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 function yday(){const d=new Date();d.setDate(d.getDate()-1);return localDate(d)}
 function dayIdx(){const e=new Date(2025,0,1),n=new Date();n.setHours(0,0,0,0);return((Math.floor((n-e)/864e5)%10)+10)%10}
-function save(){try{localStorage.setItem(LS,JSON.stringify({logged:G.logged,email:G.email||'',streak:G.streak,xp:G.xp,days:G.days,playedDate:G.playedDate,score:G.score,ans:G.ans,firstVisit:false,msShown:G.msShown||[],quizActive:G.quizActive,qi:G.qi,qAns:G.qAns,qScore:G.qScore,qStart:G.qStart,qDay:G.qDay}))}catch(e){}}
-function load(){try{const r=localStorage.getItem(LS);return r?JSON.parse(r):null}catch(e){return null}}
+function save(){try{const d=JSON.stringify({logged:G.logged,email:G.email||'',streak:G.streak,xp:G.xp,days:G.days,playedDate:G.playedDate,score:G.score,ans:G.ans,firstVisit:false,msShown:G.msShown||[],quizActive:G.quizActive,qi:G.qi,qAns:G.qAns,qScore:G.qScore,qStart:G.qStart,qDay:G.qDay});localStorage.setItem(LS,d);localStorage.setItem(LS+'_backup',d)}catch(e){}}
+function load(){
+  let r=null;
+  try{const raw=localStorage.getItem(LS);if(raw)r=JSON.parse(raw)}catch(e){
+    try{localStorage.setItem(LS+'_corrupt_backup',localStorage.getItem(LS)||'');localStorage.removeItem(LS)}catch(x){}
+    log('storage_recovered');r=null;
+  }
+  if(!r){try{const bk=localStorage.getItem(LS+'_backup');if(bk){r=JSON.parse(bk);log('backup_restored')}}catch(e){r=null}}
+  if(r){
+    let fixed=false;
+    if(typeof r.streak!=='number'||r.streak<0){r.streak=0;fixed=true}
+    if(typeof r.days!=='number'||r.days<0||r.days>3650){r.days=Math.min(Math.max(r.days||0,0),3650);fixed=true}
+    if(r.streak>r.days){r.streak=r.days;fixed=true}
+    if(typeof r.score!=='number'||r.score<0||r.score>10){r.score=Math.min(Math.max(r.score||0,0),10);fixed=true}
+    if(typeof r.qi!=='number'||r.qi<0||r.qi>9){r.qi=Math.min(Math.max(r.qi||0,0),9);fixed=true}
+    if(fixed)log('state_corrected');
+  }
+  return r;
+}
 
 let G={logged:false,email:'',streak:0,xp:0,days:0,played:false,missed:false,qi:0,score:0,ans:[],busy:false,cd:null,qt:null,t0:0,playedDate:'',firstVisit:true,msShown:[],quizActive:false,qAns:[],qScore:0,qStart:0,qDay:'',inQuiz:false};
 
+let _lastPick=0; // rapid click guard timestamp
+
 function initApp(){
-  log('app_open');const s=load();
+  const s=load();
   if(s){for(const k in s)if(s[k]!==undefined)G[k]=s[k]}
+  // Analytics AFTER state loaded
+  log('app_open',{day_index:dayIdx(),already_played:G.playedDate===localDate(),streak:G.streak});
+  // Referral tracking
+  if(_ref)log('referred_open',{referrer:_ref});
+  // Retention: returned next day
+  if(G.playedDate===yday())log('returned_next_day',{previous_streak:G.streak});
 
   // Check Supabase session and sync
   (async()=>{
     const session=await sbGetSession();
     if(session&&session.user){
       G.logged=true;G.email=session.user.email||G.email;
-      const synced=await sbSyncFromCloud();
-      if(synced)save();
+      try{
+        const synced=await sbSyncFromCloud();
+        if(synced)save();
+      }catch(e){
+        // Cloud fetch failed — keep local, retry in 5s
+        log('cloud_sync_retry');
+        setTimeout(async()=>{try{const r=await sbSyncFromCloud();if(r)save()}catch(x){}},5000);
+      }
     }
     // Now run normal init logic with potentially updated state
     const today=localDate();
@@ -330,7 +367,7 @@ function showResults(){
   go('sRes');clearInterval(G.cd);G.cd=setInterval(()=>{const e=$('rCd');if(e)e.textContent=midCd()},1000);
 }
 
-function startQuiz(){if(G.played){showHome();return}log('quiz_start',{day:dayIdx()});G.qi=0;G.qScore=0;G.qAns=[];G.busy=false;G.t0=Date.now();G.quizActive=true;G.qDay=localDate();G.qStart=G.t0;G.inQuiz=true;save();go('sQuiz');showQ();history.pushState({quiz:true},'','')}
+function startQuiz(){if(G.played){showHome();return}if(!G.playedDate){G.playedDate=localDate();save()}log('quiz_start',{day:dayIdx()});G.qi=0;G.qScore=0;G.qAns=[];G.busy=false;G.t0=Date.now();G.quizActive=true;G.qDay=localDate();G.qStart=G.t0;G.inQuiz=true;save();go('sQuiz');showQ();history.pushState({quiz:true},'','')}
 function resumeQuiz(){log('quiz_resume',{qi:G.qi});G.busy=false;G.t0=G.qStart||Date.now();G.inQuiz=true;go('sQuiz');showQ();history.pushState({quiz:true},'','')}
 function showQ(){
   clearInterval(G.qt);$('qExp').innerHTML='';const qs=todayQs(),q=qs[G.qi],k=['A','B','C','D'];
@@ -340,16 +377,18 @@ function showQ(){
   G.qt=setInterval(()=>{tl--;tf.style.width=Math.max(0,tl/(Q_TIME*10)*100)+'%';if(tl<=0){clearInterval(G.qt);autoSkip()}},100);
 }
 function autoSkip(){if(G.busy)return;G.busy=true;const qs=todayQs(),q=qs[G.qi],c=q.a,bs=document.querySelectorAll('.qz-o');bs.forEach((b,i)=>{b.classList.add('off');if(i===c)b.classList.add('reveal')});G.qAns.push({ok:false});log('question_answered',{q:G.qi+1,correct:false,timeout:true});save();setTimeout(()=>{G.qi++;save();G.qi>=10?finish():showQ()},1500)}
-function pick(i){if(G.busy)return;G.busy=true;clearInterval(G.qt);const qs=todayQs(),q=qs[G.qi],c=q.a,bs=document.querySelectorAll('.qz-o');bs.forEach((b,j)=>{b.classList.add('off');if(j===c)b.classList.add('correct');if(j===i&&i!==c){b.classList.add('wrong');bs[c].classList.add('reveal')}});const ok=i===c;G.qAns.push({ok});if(ok)G.qScore++;log('question_answered',{q:G.qi+1,correct:ok});save();if(!ok){$('qOpts').classList.add('shake');setTimeout(()=>$('qOpts').classList.remove('shake'),250)}setTimeout(()=>{G.qi++;save();G.qi>=10?finish():showQ()},ok?1200:1500)}
+function pick(i){if(G.busy)return;const now=Date.now();if(now-_lastPick<150)return;_lastPick=now;G.busy=true;clearInterval(G.qt);const qs=todayQs(),q=qs[G.qi],c=q.a,bs=document.querySelectorAll('.qz-o');bs.forEach((b,j)=>{b.classList.add('off');if(j===c)b.classList.add('correct');if(j===i&&i!==c){b.classList.add('wrong');bs[c].classList.add('reveal')}});const ok=i===c;G.qAns.push({ok});if(ok)G.qScore++;log('question_answered',{q:G.qi+1,correct:ok});save();if(!ok){$('qOpts').classList.add('shake');setTimeout(()=>$('qOpts').classList.remove('shake'),250)}setTimeout(()=>{G.qi++;save();G.qi>=10?finish():showQ()},ok?1200:1500)}
 
 function finish(){
   clearInterval(G.qt);G.inQuiz=false;const today=localDate();
+  if(G.played&&G.playedDate===today){log('duplicate_finish_blocked');showHome();return}
   if(G.playedDate===today){showHome();return}
   if(G.playedDate&&G.playedDate!==yday())G.streak=0;
   G.streak++;G.days++;G.played=true;G.missed=false;G.playedDate=today;G.score=G.qScore;G.ans=G.qAns;G.quizActive=false;
   const tt=Math.round((Date.now()-G.t0)/1000),xp=calcXP(G.score,tt);G.xp+=xp;save();
   if(G.logged)sbSyncToCloud(); // sync to Supabase
   log('quiz_complete',{score:G.score,streak:G.streak,xp});
+  try{if(window.posthog&&posthog.people)posthog.people.set({current_streak:G.streak,total_days_played:G.days,total_xp:G.xp})}catch(x){}
   $('qBar').style.width='100%';
   const cls=G.score===10?'s10':G.score>=8?'s8':G.score>=5?'s5':'s0',ns=G.streak+1;
   let pct;if(G.score>=9)pct=Math.floor(Math.random()*10)+85;else if(G.score>=7)pct=Math.floor(Math.random()*15)+55;else if(G.score>=4)pct=Math.floor(Math.random()*20)+20;else pct=-1;
@@ -360,11 +399,11 @@ function finish(){
   setTimeout(()=>checkMS(),600);
 }
 
-function getShareText(){return`🧠 *Questly* — Daily Challenge\n\n${G.ans.map(a=>a.ok?'🟩':'⬜').join('')}\n\nI scored *${G.score}/10* today!\n🔥 ${G.streak}-day streak\n\nThink you can beat me? 👇\n${shareURL}`}
+function getShareText(){const sURL=shareURL+'?ref='+encodeURIComponent(G.email||'anon');return`🧠 *Questly* — Daily Challenge\n\n${G.ans.map(a=>a.ok?'🟩':'⬜').join('')}\n\nI scored *${G.score}/10* today!\n🔥 ${G.streak}-day streak\n\nThink you can beat me? 👇\n${sURL}`}
 function openWA(){log('share_clicked',{type:'whatsapp'});window.open(`https://wa.me/?text=${encodeURIComponent(getShareText())}`,'_blank')}
 function shareImg(){
   log('share_clicked',{type:'instagram'});
-  try{const cvs=document.createElement('canvas');cvs.width=540;cvs.height=340;const ctx=cvs.getContext('2d');ctx.fillStyle='#fafaf8';ctx.beginPath();ctx.roundRect(0,0,540,340,16);ctx.fill();ctx.fillStyle='#1a1a18';ctx.font='bold 20px Inter,sans-serif';ctx.textAlign='center';ctx.fillText('Questly',270,40);ctx.fillStyle='#9b9b94';ctx.font='300 12px Inter,sans-serif';ctx.fillText(new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}),270,60);const c={s10:'#e85d2a',s8:'#2d9b5a',s5:'#2d7fb5',s0:'#d44040'};const cl=G.score===10?'s10':G.score>=8?'s8':G.score>=5?'s5':'s0';ctx.fillStyle=c[cl];ctx.font='bold 60px Inter,sans-serif';ctx.fillText(G.score+'/10',270,135);const bw=24,gap=4,t=10*bw+9*gap,sx=(540-t)/2;G.ans.forEach((a,i)=>{ctx.fillStyle=a.ok?'#2d9b5a':'#d4d4d0';ctx.beginPath();ctx.roundRect(sx+i*(bw+gap),170,bw,bw,4);ctx.fill()});ctx.fillStyle='#e85d2a';ctx.font='600 13px Inter,sans-serif';ctx.fillText('🔥 '+G.streak+' day streak',270,225);ctx.fillStyle='#9b9b94';ctx.font='300 12px Inter,sans-serif';ctx.fillText(shareURL.replace(/^https?:\/\//,''),270,255);
+  try{const cvs=document.createElement('canvas');cvs.width=540;cvs.height=340;const ctx=cvs.getContext('2d');ctx.fillStyle='#fafaf8';ctx.beginPath();ctx.roundRect(0,0,540,340,16);ctx.fill();ctx.fillStyle='#1a1a18';ctx.font='bold 20px Inter,sans-serif';ctx.textAlign='center';ctx.fillText('Questly',270,40);ctx.fillStyle='#9b9b94';ctx.font='300 12px Inter,sans-serif';ctx.fillText(new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}),270,60);const c={s10:'#e85d2a',s8:'#2d9b5a',s5:'#2d7fb5',s0:'#d44040'};const cl=G.score===10?'s10':G.score>=8?'s8':G.score>=5?'s5':'s0';ctx.fillStyle=c[cl];ctx.font='bold 60px Inter,sans-serif';ctx.fillText(G.score+'/10',270,135);const bw=24,gap=4,t=10*bw+9*gap,sx=(540-t)/2;G.ans.forEach((a,i)=>{ctx.fillStyle=a.ok?'#2d9b5a':'#d4d4d0';ctx.beginPath();ctx.roundRect(sx+i*(bw+gap),170,bw,bw,4);ctx.fill()});ctx.fillStyle='#e85d2a';ctx.font='600 13px Inter,sans-serif';ctx.fillText('🔥 '+G.streak+' day streak',270,225);ctx.fillStyle='#9b9b94';ctx.font='300 12px Inter,sans-serif';ctx.fillText(shareURL.replace(/^https?:\/\//,'').replace(/\/$/,''),270,255);
   cvs.toBlob(blob=>{if(navigator.share&&navigator.canShare){const f=new File([blob],'questly.png',{type:'image/png'});if(navigator.canShare({files:[f]})){navigator.share({files:[f],text:getShareText()}).catch(()=>{});return}}const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download='questly-score.png';a.click();URL.revokeObjectURL(u);toast('Image saved!')},'image/png')}catch(e){toast('Image saved!')}}
 
 function checkMS(){if(!G.msShown)G.msShown=[];for(const ms of MS){if(G.streak>=ms.d&&!G.msShown.includes(ms.d)){G.msShown.push(ms.d);save();if(ms.type==='banner')showBanner(ms.msg);else showConfetti(ms.emoji,ms.title,ms.desc);return}}}
@@ -397,6 +436,7 @@ sb.auth.onAuthStateChange(async(event,session)=>{
   if(event==='SIGNED_IN'&&session&&!G.logged){
     G.logged=true;
     G.email=session.user.email||G.email;
+    try{if(window.posthog){posthog.identify(session.user.id,{email:session.user.email});posthog.capture('login_success')}}catch(x){}
     // Merge: cloud wins if it has a higher streak
     const existing=await sbFetchProfile(session.user.id);
     if(existing&&existing.streak>G.streak){
@@ -413,7 +453,7 @@ sb.auth.onAuthStateChange(async(event,session)=>{
 $('loginOL').addEventListener('click',function(e){if(e.target===this)closeLogin()});
 
 window.addEventListener('beforeunload',()=>{if(G.inQuiz)save()});
-document.addEventListener('visibilitychange',()=>{if(document.hidden&&G.inQuiz)save()});
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&G.inQuiz){save();if(!G.played)log('quiz_abandoned',{question_index:G.qi})}});
 
 initApp();
 
