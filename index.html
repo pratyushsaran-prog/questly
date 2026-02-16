@@ -7,152 +7,133 @@
 <title>Questly</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,800;9..144,900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{color-scheme:light only;--bg:#fafaf8;--surface:#fff;--sh:#f5f5f2;--border:#e8e8e4;--bl:#f0f0ec;--text:#1a1a18;--t2:#6b6b64;--t3:#9b9b94;--accent:#e85d2a;--al:#fef0eb;--green:#2d9b5a;--gl:#edf8f1;--red:#d44040;--rl:#fdf0f0;--gold:#c49a20;--r:12px}
+:root{color-scheme:light only;--bg:#fafaf8;--surface:#fff;--sh:#f5f5f2;--border:#e8e8e4;--bl:#f0f0ec;--text:#1a1a18;--t2:#6b6b64;--t3:#9b9b94;--accent:#e85d2a;--al:#fef0eb;--green:#2d9b5a;--gl:#edf8f1;--red:#d44040;--rl:#fdf0f0;--gold:#c49a20;--r:14px}
 @media(prefers-color-scheme:dark){:root{color-scheme:light only;--bg:#fafaf8;--surface:#fff;--text:#1a1a18;--t2:#6b6b64;--t3:#9b9b94}}
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100dvh;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 button{font-family:'Inter',sans-serif;cursor:pointer}
-.app{max-width:400px;margin:0 auto;min-height:100dvh}
+.app{max-width:420px;margin:0 auto;min-height:100dvh;position:relative}
 .screen{display:none;min-height:100dvh}.screen.active{display:flex;flex-direction:column}
 .fade{animation:fi .45s cubic-bezier(.16,1,.3,1)}
 @keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-.btn-p{width:100%;padding:14px;border-radius:var(--r);border:none;background:var(--text);color:#fff;font-size:15px;font-weight:500;transition:all .15s}
-.btn-p:hover{opacity:.9}.btn-p:active{transform:scale(.98)}
+.btn-p{width:100%;padding:14px;border-radius:var(--r);border:none;background:var(--text);color:#fff;font-size:15px;font-weight:600;transition:all .15s;letter-spacing:-.2px}
+.btn-p:hover{opacity:.9}.btn-p:active{transform:scale(.98)}.btn-p:disabled{opacity:.35;pointer-events:none}
 .btn-o{padding:12px;border-radius:var(--r);border:1px solid var(--border);background:transparent;font-size:13px;font-weight:500;color:var(--t2);transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px}
-.btn-o:hover{background:var(--sh)}.btn-o svg{width:15px;height:15px}
+.btn-o:hover{background:var(--sh)}
 .btn-t{background:none;border:none;font-size:14px;font-weight:400;color:var(--t3);padding:8px 16px}.btn-t:hover{color:var(--t2)}
-
-/* WELCOME */
-.welcome{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;text-align:center}
-.w-logo{font-family:'Fraunces',serif;font-size:36px;font-weight:900;letter-spacing:-1px;margin-bottom:4px}
-.w-sub{font-size:15px;font-weight:400;color:var(--t2);margin-bottom:32px}
-.w-desc{font-size:14px;font-weight:400;color:var(--t2);line-height:1.7;margin-bottom:40px;max-width:300px}
-.w-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:40px;max-width:340px}
-.w-chip{display:flex;align-items:center;gap:5px;border:1px solid var(--border);border-radius:100px;padding:8px 14px;font-size:13px;font-weight:400;color:var(--t2)}
-.w-cta{width:100%;max-width:280px}
-
-/* HEADER */
-.header{display:flex;justify-content:space-between;align-items:center;padding:16px 24px;position:sticky;top:0;z-index:50;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);background:rgba(250,250,248,.88)}
+.header{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;position:sticky;top:0;z-index:50;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);background:rgba(250,250,248,.88)}
 .logo{font-family:'Fraunces',serif;font-size:20px;font-weight:900;letter-spacing:-.3px}
-.h-right{display:flex;align-items:center;gap:8px}
-.h-pill{font-size:13px;font-weight:600;color:var(--t2);display:flex;align-items:center;gap:4px}
+.h-right{display:flex;align-items:center;gap:10px}
+.h-pill{font-size:13px;font-weight:600;color:var(--t2);display:flex;align-items:center;gap:4px;background:var(--sh);padding:6px 12px;border-radius:100px}
 .h-pill .v{color:var(--accent)}.h-pill .xv{color:var(--gold)}
-.avatar{width:28px;height:28px;border-radius:50%;background:var(--al);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--accent);border:1px solid var(--accent)}
-
-/* HOME */
-.home-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center}
-.missed{font-size:14px;font-weight:300;color:var(--t3);margin-bottom:24px;line-height:1.5;max-width:300px}
-.missed strong{font-weight:500;color:var(--t2);display:block;margin-bottom:2px}
-.hm-streak{display:flex;align-items:center;gap:16px;margin-bottom:16px;max-width:300px;width:100%}
-.hms-num{font-size:40px;font-weight:700;color:var(--accent);line-height:1}
-.hms-info{text-align:left}.hms-label{font-size:14px;font-weight:500}.hms-sub{font-size:12px;font-weight:300;color:var(--t3)}
-.hm-xp{font-size:13px;font-weight:300;color:var(--t3);margin-bottom:32px}.hm-xp strong{color:var(--gold);font-weight:600}
-.ch{max-width:300px;width:100%}.ch-title{font-size:20px;font-weight:700;margin-bottom:8px}
-.ch-sub{font-size:14px;font-weight:300;color:var(--t3);margin-bottom:24px;line-height:1.5}
-.ch-rules{display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
-.ch-rule{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:400;color:var(--t2)}
-.ch-rule-ic{font-size:13px;width:18px;text-align:center;flex-shrink:0}
-.ch-note{font-size:12px;font-weight:300;color:var(--t3);margin-top:16px}
-
-/* Done */
-.dw{max-width:300px;width:100%;text-align:center}
-.dw-check{font-size:32px;margin-bottom:16px}
-.dw-title{font-size:18px;font-weight:600;margin-bottom:4px}
-.dw-score{font-size:14px;font-weight:300;color:var(--t3);margin-bottom:16px}
-.dw-streak{font-size:15px;font-weight:600;color:var(--accent);margin-bottom:24px;display:flex;align-items:center;justify-content:center;gap:6px}
-.dw-next{width:100%;padding:14px;border-radius:var(--r);background:var(--bl);font-size:14px;font-weight:400;color:var(--t3);margin-bottom:24px;text-align:center;line-height:1.5}
-.dw-next .cd{color:var(--red);font-weight:600;font-variant-numeric:tabular-nums}
-.dw-actions{display:flex;gap:8px;width:100%}.dw-actions .btn-o{flex:1}
-
-/* QUIZ */
-.qz-top{padding:16px 24px 0;position:sticky;top:0;z-index:10;background:var(--bg)}
-.qz-prog{height:2px;background:var(--bl);border-radius:100px;overflow:hidden}
-.qz-bar{height:100%;border-radius:100px;background:var(--text);transition:width .4s cubic-bezier(.16,1,.3,1)}
-.qz-qt{height:2px;background:var(--bl);border-radius:100px;overflow:hidden;margin-top:6px}
-.qz-qtf{height:100%;background:var(--red);border-radius:100px}
-.qz-body{padding:32px 24px;flex:1}
-.qz-num{font-size:12px;font-weight:300;color:var(--t3);letter-spacing:.5px;text-transform:uppercase;margin-bottom:16px}
-.qz-q{font-size:18px;font-weight:600;line-height:1.45;margin-bottom:32px}
-.qz-opts{display:flex;flex-direction:column;gap:8px}
-.qz-o{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;font-size:15px;font-weight:400;color:var(--text);display:flex;align-items:center;gap:12px;text-align:left;transition:all .12s;width:100%;-webkit-tap-highlight-color:transparent}
-@media(hover:hover){.qz-o:hover{border-color:#d0d0cc;background:var(--sh)}}
-.qz-o:active{transform:scale(.985)}
-.qz-k{width:26px;height:26px;border-radius:8px;background:var(--bg);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--t3);flex-shrink:0;transition:all .12s}
-.qz-o.correct{border-color:var(--green);background:var(--gl)}.qz-o.correct .qz-k{background:var(--green);color:#fff;border-color:var(--green)}
-.qz-o.wrong{border-color:var(--red);background:var(--rl)}.qz-o.wrong .qz-k{background:var(--red);color:#fff;border-color:var(--red)}
-.qz-o.off{pointer-events:none;opacity:.3}
-.qz-o.reveal{border-color:var(--green);background:var(--gl);opacity:1!important}.qz-o.reveal .qz-k{background:var(--green);color:#fff;border-color:var(--green)}
-/* Explanation after answer */
-.qz-exp{margin-top:12px;padding:12px 16px;background:var(--sh);border-radius:var(--r);font-size:13px;font-weight:300;color:var(--t2);line-height:1.5;text-align:left;animation:fi .3s ease}
-
-/* RESULTS */
-.res{flex:1;display:flex;flex-direction:column;align-items:center;padding:40px 24px;text-align:center}
-.r-check{font-size:28px;margin-bottom:16px;animation:pop .5s cubic-bezier(.16,1,.3,1)}
+.home-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 20px 40px;text-align:center}
+.home-headline{font-family:'Fraunces',serif;font-size:32px;font-weight:900;letter-spacing:-.5px;margin-bottom:8px}
+.home-sub{font-size:15px;font-weight:300;color:var(--t2);margin-bottom:36px;line-height:1.5;max-width:300px}
+.home-cta{width:100%;max-width:280px;margin-bottom:12px}
+.home-save{width:100%;max-width:280px;margin-bottom:12px}
+.home-save .btn-o{width:100%;background:var(--al);border-color:var(--accent);color:var(--accent);font-weight:600}
+.htp-btn{font-size:13px;font-weight:400;color:var(--t3);background:none;border:none;cursor:pointer;padding:8px 0;text-decoration:underline;text-underline-offset:3px}.htp-btn:hover{color:var(--t2)}
+.play-body{flex:1;display:flex;flex-direction:column;align-items:center;padding:8px 20px 32px}
+.play-title{font-size:18px;font-weight:700;margin-bottom:4px;letter-spacing:-.3px}
+.play-sub{font-size:13px;color:var(--t3);margin-bottom:16px;font-weight:300}
+.board-wrapper{width:100%;max-width:320px;margin:0 auto 20px}
+.board{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;aspect-ratio:1;width:100%}
+.tile{background:var(--surface);border:2px solid var(--border);border-radius:var(--r);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:28px;cursor:pointer;transition:all .2s;position:relative;-webkit-tap-highlight-color:transparent;user-select:none;overflow:hidden}
+@media(hover:hover){.tile:hover:not(.claimed):not(.locked){border-color:#d0d0cc;background:var(--sh)}}
+@media(hover:none){.tile:hover{border-color:var(--border)!important;background:var(--surface)!important}}
+.tile:active:not(.claimed):not(.locked){transform:scale(.96)}
+.tile .tile-icon{font-size:32px;line-height:1;transition:all .3s}
+.tile .tile-cat{font-size:9px;font-weight:500;color:var(--t3);margin-top:2px;text-transform:uppercase;letter-spacing:.4px;max-width:90%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center}
+.tile .tile-label{font-size:8px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:1px}
+.tile.x{background:var(--gl);border-color:var(--green)}.tile.x .tile-icon{color:var(--green)}
+.tile.o{background:var(--rl);border-color:var(--red)}.tile.o .tile-icon{color:var(--red)}
+.tile.skipped{background:#fff8f0;border-color:var(--accent);border-style:dashed;cursor:pointer;opacity:1}
+.tile.skipped .tile-icon{color:var(--accent);font-size:11px;font-weight:500;font-family:'Inter',sans-serif}
+.tile.skipped .tile-cat{color:var(--accent);opacity:1;font-weight:600}
+.tile.skipped .tile-label{color:var(--t3)}
+.tile.locked{pointer-events:none}
+.tile.win-highlight{animation:winPulse .6s ease infinite alternate;box-shadow:0 0 0 3px var(--green)}
+@keyframes winPulse{from{transform:scale(1)}to{transform:scale(1.04)}}
+.done-msg{background:var(--gl);border:1px solid var(--green);border-radius:var(--r);padding:16px;margin-bottom:16px;width:100%;max-width:320px}
+.done-msg.loss{background:var(--rl);border-color:var(--red)}
+.done-msg .dm-title{font-size:15px;font-weight:600;color:var(--green);margin-bottom:2px}
+.done-msg.loss .dm-title{color:var(--red)}
+.done-msg .dm-sub{font-size:13px;font-weight:300;color:var(--t2)}
+.q-overlay{display:none;position:fixed;inset:0;z-index:100;background:rgba(250,250,248,.97);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.q-overlay.active{display:flex;flex-direction:column}
+.q-inner{max-width:420px;margin:0 auto;width:100%;flex:1;display:flex;flex-direction:column;padding:20px;overflow-y:auto}
+.q-timer-bar{width:100%;height:4px;background:var(--bl);border-radius:100px;overflow:hidden;margin-bottom:20px;flex-shrink:0}
+.q-timer-fill{height:100%;background:var(--accent);border-radius:100px;transition:width .1s linear;width:100%}
+.q-timer-fill.urgent{background:var(--red)}
+.q-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
+.q-cat{display:inline-flex;align-items:center;gap:6px;background:var(--sh);padding:6px 14px;border-radius:100px;font-size:12px;font-weight:500;color:var(--t2);text-transform:uppercase;letter-spacing:.3px}
+.q-move{font-size:12px;font-weight:400;color:var(--t3)}
+.q-text{font-size:18px;font-weight:600;line-height:1.5;margin-bottom:28px;letter-spacing:-.2px}
+.q-opts{display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
+.q-opt{background:var(--surface);border:2px solid var(--border);border-radius:var(--r);padding:14px 16px;font-size:15px;font-weight:400;color:var(--text);display:flex;align-items:center;gap:12px;text-align:left;transition:all .15s;width:100%;-webkit-tap-highlight-color:transparent}
+@media(hover:hover){.q-opt:hover:not(.off):not(.correct):not(.wrong){border-color:#d0d0cc;background:var(--sh)}}
+.q-opt:active:not(.off){transform:scale(.985)}
+.q-key{width:28px;height:28px;border-radius:8px;background:var(--bg);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--t3);flex-shrink:0;transition:all .15s}
+.q-opt.correct{border-color:var(--green);background:var(--gl)}.q-opt.correct .q-key{background:var(--green);color:#fff;border-color:var(--green)}
+.q-opt.wrong{border-color:var(--red);background:var(--rl)}.q-opt.wrong .q-key{background:var(--red);color:#fff;border-color:var(--red)}
+.q-opt.off{pointer-events:none;opacity:.25}
+.q-opt.reveal{border-color:var(--green);background:var(--gl);opacity:1!important}.q-opt.reveal .q-key{background:var(--green);color:#fff;border-color:var(--green)}
+.q-opt.fifty-hidden{display:none}
+.lifelines{display:flex;gap:8px;margin-top:auto;padding-top:16px}
+.ll-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 8px;border-radius:var(--r);border:1px solid var(--border);background:var(--surface);font-size:12px;font-weight:500;color:var(--t2);transition:all .15s}
+@media(hover:hover){.ll-btn:hover:not(:disabled){background:var(--sh);border-color:#d0d0cc}}
+.ll-btn:disabled{opacity:.3;pointer-events:none}
+.ll-btn .ll-icon{font-size:18px}.ll-btn .ll-cost{font-size:10px;color:var(--t3);font-weight:400}
+.res{flex:1;display:flex;flex-direction:column;align-items:center;padding:40px 20px;text-align:center}
+.r-emoji{font-size:48px;margin-bottom:16px;animation:pop .5s cubic-bezier(.16,1,.3,1)}
 @keyframes pop{0%{transform:scale(0);opacity:0}60%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
-.r-title{font-size:18px;font-weight:600;margin-bottom:4px}
-.r-score-line{font-size:14px;font-weight:300;color:var(--t3);margin-bottom:32px}
-.r-streak{background:var(--al);border-radius:var(--r);padding:24px;margin-bottom:16px;max-width:300px;width:100%;text-align:center}
-.r-s-fire{font-size:28px;margin-bottom:8px}
-.r-s-num{font-size:56px;font-weight:700;color:var(--accent);line-height:1;margin-bottom:4px}
-.r-s-text{font-size:15px;font-weight:500;margin-bottom:8px}
-.r-s-hint{font-size:13px;font-weight:300;color:var(--t2)}
-.r-s-micro{font-size:12px;font-weight:300;color:var(--t3);margin-top:8px;font-style:italic}
-.r-sc{display:flex;align-items:center;justify-content:space-between;max-width:300px;width:100%;padding:16px 0}
-.r-sc-left{text-align:left}.r-sc-label{font-size:12px;font-weight:300;color:var(--t3);margin-bottom:2px}
-.r-sc-num{font-size:22px;font-weight:700}
-.r-sc-num.s10{color:var(--accent)}.r-sc-num.s8{color:var(--green)}.r-sc-num.s5{color:#2d7fb5}.r-sc-num.s0{color:var(--red)}
-.r-sc-pct{font-size:13px;font-weight:300;color:var(--t3);text-align:right;line-height:1.4}.r-sc-pct strong{font-weight:500;color:var(--t2)}
-.r-cd{font-size:13px;font-weight:300;color:var(--t3);margin-bottom:24px;max-width:340px;width:100%;text-align:center;white-space:nowrap}
-.r-cd .time{color:var(--red);font-weight:600;font-variant-numeric:tabular-nums}
-.r-div{width:100%;max-width:300px;height:2px;background:var(--border);margin-bottom:24px}
-.r-xp{font-size:13px;font-weight:300;color:var(--t3);margin-bottom:24px}.r-xp strong{color:var(--gold);font-weight:600}
+.r-title{font-size:22px;font-weight:700;margin-bottom:4px;letter-spacing:-.3px}
+.r-sub{font-size:14px;font-weight:300;color:var(--t2);margin-bottom:24px;line-height:1.6;max-width:280px}
+.r-board-mini{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;width:120px;margin:0 auto 24px}
+.r-cell{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;border:1px solid var(--border)}
+.r-cell.rx{background:var(--gl);color:var(--green);border-color:var(--green)}
+.r-cell.ro{background:var(--rl);color:var(--red);border-color:var(--red)}
+.r-cell.re{background:var(--sh);color:var(--t3)}
+.r-moves{font-size:14px;font-weight:400;color:var(--t2);margin-bottom:20px}
+.r-streak-box{background:var(--al);border-radius:var(--r);padding:20px;margin-bottom:20px;width:100%;max-width:300px}
+.r-streak-num{font-size:36px;font-weight:700;color:var(--accent);line-height:1}
+.r-streak-label{font-size:13px;font-weight:500;margin-top:4px}
+.r-xp-line{font-size:13px;font-weight:300;color:var(--t3);margin-bottom:16px}.r-xp-line strong{color:var(--gold);font-weight:600}
+.r-bonus-msg{font-size:13px;color:var(--t2);font-weight:400;background:var(--sh);padding:12px 16px;border-radius:var(--r);margin-bottom:20px;max-width:300px;width:100%;line-height:1.5}
+.r-cd{font-size:13px;font-weight:300;color:var(--t3);margin-bottom:24px}.r-cd .time{color:var(--red);font-weight:600;font-variant-numeric:tabular-nums}
 .r-actions{max-width:300px;width:100%;display:flex;flex-direction:column;gap:8px}
-.r-share-row{display:flex;gap:8px}.r-share-row .btn-o{flex:1}
-.r-login{background:var(--accent);border:none;border-radius:var(--r);padding:16px 20px;cursor:pointer;transition:all .15s;text-align:left;color:#fff;display:flex;align-items:center;gap:12px;width:100%}
-.r-login:hover{opacity:.92}
-.rl-text{flex:1}.rl-title{font-size:14px;font-weight:500;color:#fff;margin-bottom:2px}.rl-desc{font-size:12px;font-weight:300;color:rgba(255,255,255,.8)}
-.rl-arrow{font-size:16px;color:rgba(255,255,255,.6)}
-
-/* LOGIN */
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.18);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:200;align-items:flex-end;justify-content:center}
-.overlay.active{display:flex}
-.sheet{background:#fff;border-radius:16px 16px 0 0;padding:24px;max-width:420px;width:100%;animation:su .4s cubic-bezier(.16,1,.3,1)}
-@keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-ol{display:none;position:fixed;inset:0;background:rgba(0,0,0,.25);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:200;align-items:center;justify-content:center;padding:20px}.modal-ol.active{display:flex}
+.modal-box{background:#fff;border-radius:20px;padding:28px 24px;max-width:380px;width:100%;max-height:80vh;overflow-y:auto;position:relative;animation:mIn .4s cubic-bezier(.16,1,.3,1)}
+@keyframes mIn{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-close{position:absolute;top:16px;right:16px;background:var(--sh);border:none;width:32px;height:32px;border-radius:50%;font-size:16px;color:var(--t2);display:flex;align-items:center;justify-content:center;cursor:pointer}.modal-close:hover{background:var(--border)}
+.modal-title{font-family:'Fraunces',serif;font-size:22px;font-weight:900;margin-bottom:20px;letter-spacing:-.3px}
+.modal-section{margin-bottom:18px}.modal-section h3{font-size:14px;font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:6px}.modal-section p{font-size:13px;font-weight:300;color:var(--t2);line-height:1.7}
+.tut-ol{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:250;align-items:center;justify-content:center;padding:20px}.tut-ol.active{display:flex}
+.tut-box{background:#fff;border-radius:20px;padding:32px 24px;max-width:340px;width:100%;text-align:center;animation:mIn .5s cubic-bezier(.16,1,.3,1)}
+.tut-emoji{font-size:40px;margin-bottom:12px}.tut-title{font-family:'Fraunces',serif;font-size:24px;font-weight:900;margin-bottom:8px}
+.tut-desc{font-size:14px;font-weight:300;color:var(--t2);line-height:1.7;margin-bottom:24px}
+.tut-steps{text-align:left;margin-bottom:24px}.tut-step{display:flex;gap:10px;margin-bottom:12px;font-size:13px;color:var(--t2);line-height:1.5}
+.tut-step-num{width:24px;height:24px;border-radius:50%;background:var(--text);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.18);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:200;align-items:flex-end;justify-content:center}.overlay.active{display:flex}
+.sheet{background:#fff;border-radius:16px 16px 0 0;padding:24px;max-width:420px;width:100%;animation:mIn .4s cubic-bezier(.16,1,.3,1)}
 .s-handle{width:32px;height:4px;background:var(--border);border-radius:100px;margin:0 auto 20px}
 .s-title{font-size:18px;font-weight:600;text-align:center;margin-bottom:4px}
 .s-desc{font-size:14px;font-weight:300;color:var(--t2);text-align:center;margin-bottom:24px}
 .s-dismiss{background:none;border:none;color:var(--t3);font-size:13px;font-weight:400;cursor:pointer;margin-top:8px;width:100%;padding:8px;text-align:center}
-.login-hl{display:flex;gap:8px;margin-bottom:24px}
-.lh-item{flex:1;background:var(--bg);border-radius:var(--r);padding:12px 8px;text-align:center}
+.login-hl{display:flex;gap:8px;margin-bottom:24px}.lh-item{flex:1;background:var(--bg);border-radius:var(--r);padding:12px 8px;text-align:center}
 .lh-ic{font-size:18px;margin-bottom:4px}.lh-tx{font-size:11px;font-weight:400;color:var(--t3)}
-.phone-row{display:flex;gap:8px;margin-bottom:12px}
-.ph-code{width:64px;padding:12px 8px;border-radius:var(--r);border:1px solid var(--border);font-size:15px;font-weight:400;background:var(--bg);color:var(--text);text-align:center;outline:none;font-family:'Inter',sans-serif}
-.ph-input{flex:1;padding:12px 16px;border-radius:var(--r);border:1px solid var(--border);font-size:15px;font-weight:400;background:var(--bg);color:var(--text);outline:none;font-family:'Inter',sans-serif}
-.ph-code:focus,.ph-input:focus{border-color:var(--text)}.ph-input::placeholder{color:var(--t3);font-weight:300}
+.ph-input{width:100%;padding:12px 16px;border-radius:var(--r);border:1px solid var(--border);font-size:15px;font-weight:400;background:var(--bg);color:var(--text);outline:none;font-family:'Inter',sans-serif;margin-bottom:12px}
+.ph-input:focus{border-color:var(--text)}.ph-input::placeholder{color:var(--t3);font-weight:300}
 .otp-g{display:none;flex-direction:column;gap:12px}.otp-g.active{display:flex}
-.otp-row{display:flex;gap:8px;justify-content:center}
-.otp-b{width:42px;height:52px;border-radius:var(--r);border:1px solid var(--border);font-size:20px;font-weight:700;text-align:center;background:var(--bg);color:var(--text);outline:none;font-family:'Inter',sans-serif}
-.otp-b:focus{border-color:var(--text)}
 .otp-note{font-size:13px;font-weight:300;color:var(--t2);text-align:center}
 .otp-resend{background:none;border:none;color:var(--accent);font-weight:500;cursor:pointer;font-size:13px}
 .login-terms{font-size:11px;font-weight:300;color:var(--t3);text-align:center;margin-top:16px}.login-terms a{color:var(--t2)}
-.toast{position:fixed;top:16px;left:50%;transform:translateX(-50%) translateY(-80px);background:var(--text);color:#fff;padding:10px 20px;border-radius:100px;font-size:13px;font-weight:500;z-index:999;transition:transform .35s cubic-bezier(.16,1,.3,1);white-space:nowrap}
-.toast.show{transform:translateX(-50%) translateY(0)}
+.toast{position:fixed;top:16px;left:50%;transform:translateX(-50%) translateY(-80px);background:var(--text);color:#fff;padding:10px 20px;border-radius:100px;font-size:13px;font-weight:500;z-index:999;transition:transform .35s cubic-bezier(.16,1,.3,1);white-space:nowrap}.toast.show{transform:translateX(-50%) translateY(0)}
+.confetti-container{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:300;overflow:hidden}
+.confetti-piece{position:absolute;top:-20px;width:10px;height:10px;border-radius:2px;animation:cFall 2.5s ease-in forwards}
+@keyframes cFall{0%{transform:translateY(0) rotate(0deg);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
 @keyframes shake{20%{transform:translateX(-4px)}40%{transform:translateX(4px)}60%{transform:translateX(-2px)}80%{transform:translateX(2px)}}.shake{animation:shake .25s ease}
-
-.ms-banner{position:fixed;top:0;left:0;right:0;background:var(--accent);color:#fff;text-align:center;padding:12px 24px;font-size:14px;font-weight:600;z-index:300;transform:translateY(-100%);transition:transform .4s cubic-bezier(.16,1,.3,1)}.ms-banner.show{transform:translateY(0)}
-.confetti-ol{display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);backdrop-filter:blur(6px);z-index:300;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:32px}.confetti-ol.active{display:flex}
-.confetti-box{background:#fff;border-radius:16px;padding:32px 24px;max-width:320px;width:100%;position:relative;overflow:hidden;animation:pop .5s cubic-bezier(.16,1,.3,1)}
-.confetti-emoji{font-size:48px;margin-bottom:12px}.confetti-title{font-size:20px;font-weight:700;margin-bottom:4px}
-.confetti-desc{font-size:14px;font-weight:300;color:var(--t2);margin-bottom:20px;line-height:1.5}
-.confetti-box .btn-p{max-width:200px;margin:0 auto}
-.confetti-bits{position:absolute;top:0;left:0;right:0;height:100%;pointer-events:none;overflow:hidden}
-.confetti-bit{position:absolute;width:8px;height:8px;border-radius:2px;top:-10px;animation:cfall 2.5s ease-in forwards}
-@keyframes cfall{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(400px) rotate(720deg);opacity:0}}
-.back-confirm{display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);backdrop-filter:blur(6px);z-index:300;align-items:center;justify-content:center;padding:24px}.back-confirm.active{display:flex}
-.bc-box{background:#fff;border-radius:16px;padding:24px;max-width:300px;width:100%;text-align:center}
-.bc-title{font-size:16px;font-weight:600;margin-bottom:8px}.bc-desc{font-size:13px;font-weight:300;color:var(--t2);margin-bottom:20px}
-.bc-btns{display:flex;gap:8px}.bc-btns button{flex:1}
+@keyframes claimA{0%{transform:scale(0) rotate(-10deg);opacity:0}60%{transform:scale(1.2) rotate(3deg)}100%{transform:scale(1) rotate(0);opacity:1}}.claim-anim .tile-icon{animation:claimA .4s cubic-bezier(.16,1,.3,1)}
 </style>
 <script>!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
 posthog.init("phc_UxeoAAlu2hyrfoJf9CrLKX4ySqWiYYQJ5ROsHwyhjx",{api_host:"https://app.posthog.com",capture_pageview:false});</script>
@@ -160,303 +141,343 @@ posthog.init("phc_UxeoAAlu2hyrfoJf9CrLKX4ySqWiYYQJ5ROsHwyhjx",{api_host:"https:/
 </head>
 <body>
 <div class="app">
-<div class="screen fade" id="sWelcome"><div class="welcome">
-<div class="w-logo">Questly</div>
-<div class="w-sub">A 2-minute daily brain break.</div>
-<div class="w-desc">10 mixed questions. Some you'll know. Some you'll guess. You'll learn at least one thing.</div>
-<div class="w-chips"><div class="w-chip">🎯 One challenge per day</div><div class="w-chip">⏱️ Takes only 2 mins</div><div class="w-chip">👥 Same set for everyone</div><div class="w-chip">🔥 Build your streak</div></div>
-<div class="w-cta"><button class="btn-p" onclick="enterApp()">Play now</button><div style="font-size:12px;font-weight:300;color:var(--t3);margin-top:16px">No signup needed</div></div>
-</div></div>
-
 <div class="screen" id="sHome"><div class="header"><div class="logo">Questly</div><div class="h-right" id="hRight"></div></div><div class="home-body" id="homeBody"></div></div>
-
-<div class="screen" id="sQuiz"><div style="display:flex;flex-direction:column;min-height:100dvh">
-<div class="qz-top"><div class="qz-prog"><div class="qz-bar" id="qBar" style="width:0%"></div></div><div class="qz-qt"><div class="qz-qtf" id="qTf" style="width:100%"></div></div></div>
-<div class="qz-body"><div class="qz-num" id="qNum"></div><div class="qz-q" id="qTxt"></div><div class="qz-opts" id="qOpts"></div><div id="qExp"></div></div>
-</div></div>
-
-<div class="screen" id="sRes"><div class="res fade" id="resBody"></div></div>
+<div class="screen" id="sPlay"><div class="header"><div class="logo">Questly</div><div class="h-right" id="hRightPlay"></div></div><div class="play-body" id="playBody"></div></div>
+<div class="screen" id="sRes"><div class="header"><div class="logo">Questly</div><div class="h-right" id="hRightRes"></div></div><div class="res fade" id="resBody"></div></div>
 </div>
-
-<div class="overlay" id="loginOL"><div class="sheet"><div class="s-handle"></div><div class="s-title">Don't lose your streak</div><div class="s-desc" id="loginDesc">Login and save it to your account.</div>
-<div class="login-hl"><div class="lh-item"><div class="lh-ic">🔥</div><div class="lh-tx">Keep streak</div></div><div class="lh-item"><div class="lh-ic">⚡</div><div class="lh-tx">Save XP</div></div><div class="lh-item"><div class="lh-ic">📊</div><div class="lh-tx">Track stats</div></div></div>
-<div id="phoneG"><input type="email" class="ph-input" placeholder="Enter your email" id="emailIn" style="margin-bottom:12px"><button class="btn-p" onclick="sendMagicLink()">Send login link</button></div>
-<div class="otp-g" id="otpG"><div class="otp-note">✉️ Magic link sent to <strong id="otpPh"></strong></div><div style="font-size:13px;font-weight:300;color:var(--t3);text-align:center;margin-top:8px;line-height:1.5">Check your inbox and click the link.<br>You'll be logged in automatically.</div><div style="text-align:center;margin-top:12px"><button class="otp-resend" onclick="sendMagicLink()">Resend link</button></div></div>
-<button class="s-dismiss" onclick="closeLogin()">Not now</button><div class="login-terms">By continuing you agree to our <a href="#">Terms</a> & <a href="#">Privacy</a></div>
-</div></div>
-<div class="ms-banner" id="msBanner"></div>
-<div class="confetti-ol" id="confettiOL"><div class="confetti-box"><div class="confetti-bits" id="confettiBits"></div><div class="confetti-emoji" id="confettiEmoji"></div><div class="confetti-title" id="confettiTitle"></div><div class="confetti-desc" id="confettiDesc"></div><button class="btn-p" onclick="closeConfetti()">Keep going</button></div></div>
-<div class="back-confirm" id="backConfirm"><div class="bc-box"><div class="bc-title">Leave the quiz?</div><div class="bc-desc">Leaving now will forfeit today's challenge. You won't be able to retry.</div><div class="bc-btns"><button class="btn-o" onclick="confirmLeave()">Leave</button><button class="btn-p" onclick="cancelLeave()">Stay</button></div></div></div>
+<div class="q-overlay" id="qOverlay"><div class="q-inner"><div class="q-timer-bar"><div class="q-timer-fill" id="qTimerFill"></div></div><div class="q-header"><div class="q-cat" id="qCat"></div><div class="q-move" id="qMove"></div></div><div class="q-text" id="qText"></div><div class="q-opts" id="qOpts"></div><div class="lifelines" id="lifelines"><button class="ll-btn" id="llFifty" onclick="useFiftyFifty()"><span class="ll-icon">🎯</span><span>50:50</span><span class="ll-cost">80 XP</span></button><button class="ll-btn" id="llSkip" onclick="useSkipTile()"><span class="ll-icon">⏭️</span><span>Skip Tile</span><span class="ll-cost">120 XP</span></button></div></div></div>
+<div class="modal-ol" id="htpModal"><div class="modal-box"><button class="modal-close" onclick="closeHTP()">✕</button><div class="modal-title">How Questly Works</div><div class="modal-section"><h3>🎮 The Board</h3><p>You play on a 3×3 board. Tap a square to reveal a question.</p></div><div class="modal-section"><h3>✅ Claiming Squares</h3><p>Answer correctly → you claim the square with <strong>X</strong>.<br>Answer wrong or time runs out → the square is marked <strong>O</strong>.</p></div><div class="modal-section"><h3>🏆 Winning</h3><p>Connect 3 X's in a row (horizontal, vertical, or diagonal) to win the day.</p></div><div class="modal-section"><h3>🛟 Lifelines</h3><p>You get two lifelines each day:<br><strong>50:50</strong> — removes two wrong answers (costs 80 XP).<br><strong>Skip Tile</strong> — skip the question (costs 120 XP). A new question replaces it and you can try the tile again.<br>Each lifeline can be used only once per day.</p></div><div class="modal-section"><h3>⏱️ Timer</h3><p>You have 12 seconds per question. If time runs out, the square is marked O.</p></div><div class="modal-section"><h3>📅 Daily Play</h3><p>You can play only once per day. Come back tomorrow to continue your streak and claim your daily XP.</p></div></div></div>
+<div class="tut-ol" id="tutModal"><div class="tut-box"><div class="tut-emoji">🧠</div><div class="tut-title">Welcome to Questly!</div><div class="tut-desc">A daily tic-tac-toe game powered by trivia.</div><div class="tut-steps"><div class="tut-step"><div class="tut-step-num">1</div><div>Tap a square to reveal a question</div></div><div class="tut-step"><div class="tut-step-num">2</div><div>Answer correctly to claim it with <strong>X</strong></div></div><div class="tut-step"><div class="tut-step-num">3</div><div>Wrong answer or timeout marks it <strong>O</strong></div></div><div class="tut-step"><div class="tut-step-num">4</div><div>Connect 3 X's in a row to win!</div></div></div><button class="btn-p" onclick="closeTutorial()">Got it, let's play!</button></div></div>
+<div class="overlay" id="loginOL"><div class="sheet"><div class="s-handle"></div><div class="s-title">Don't lose your streak</div><div class="s-desc" id="loginDesc">Create an account so your streak is never lost.</div><div class="login-hl"><div class="lh-item"><div class="lh-ic">🔥</div><div class="lh-tx">Keep streak</div></div><div class="lh-item"><div class="lh-ic">⚡</div><div class="lh-tx">Save XP</div></div><div class="lh-item"><div class="lh-ic">📊</div><div class="lh-tx">Track stats</div></div></div><div id="phoneG"><input type="email" class="ph-input" placeholder="Enter your email" id="emailIn"><button class="btn-p" onclick="sendMagicLink()">Send login link</button></div><div class="otp-g" id="otpG"><div class="otp-note">✉️ Magic link sent to <strong id="otpPh"></strong></div><div style="font-size:13px;font-weight:300;color:var(--t3);text-align:center;margin-top:8px;line-height:1.5">Check your inbox and click the link.<br>You'll be logged in automatically.</div><div style="text-align:center;margin-top:12px"><button class="otp-resend" onclick="sendMagicLink()">Resend link</button></div></div><button class="s-dismiss" onclick="closeLogin()">Not now</button><div class="login-terms">By continuing you agree to our <a href="#">Terms</a> & <a href="#">Privacy</a></div></div></div>
 <div class="toast" id="toastEl"></div>
-
 <script>
-const IG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>';
-const WA='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>';
-function getRef(){try{const p=new URLSearchParams(window.location.search);return p.get('ref')}catch(e){return null}}
-const _ref=getRef();
-if(_ref){try{localStorage.setItem('questly_ref',_ref)}catch(e){}}
-if(window.location.pathname==='/auth'){setTimeout(()=>{try{window.history.replaceState({},document.title,'/')}catch(e){}},50)}
-const shareURL=window.location.origin+(window.location.pathname==='/'?'':window.location.pathname);
+function getRef(){try{return new URLSearchParams(window.location.search).get('ref')}catch(e){return null}}
+var _ref=getRef();if(_ref){try{localStorage.setItem('questly_ref',_ref)}catch(e){}}
+if(window.location.pathname==='/auth'){setTimeout(function(){try{window.history.replaceState({},document.title,'/')}catch(e){}},50)}
+var shareURL=window.location.origin+(window.location.pathname==='/'?'':window.location.pathname);
 
-// ===== SUPABASE =====
-const SB_URL='https://aymztaxwncpsegnibbut.supabase.co';
-const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF5bXp0YXh3bmNwc2VnbmliYnV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzExMzQwNDMsImV4cCI6MjA4NjcxMDA0M30.rMkRjk6_dfMndTFxinSHiT4jpcDAxeE1hYTmGIbbwH4';
-const sb=window.supabase.createClient(SB_URL,SB_KEY);
+// SUPABASE (PRESERVED)
+var SB_URL='https://aymztaxwncpsegnibbut.supabase.co';
+var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF5bXp0YXh3bmNwc2VnbmliYnV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzExMzQwNDMsImV4cCI6MjA4NjcxMDA0M30.rMkRjk6_dfMndTFxinSHiT4jpcDAxeE1hYTmGIbbwH4';
+var sb=window.supabase.createClient(SB_URL,SB_KEY);
+async function sbSendMagicLink(email){var r=await sb.auth.signInWithOtp({email:email,options:{emailRedirectTo:window.location.origin+'/auth'}});return r.error}
+async function sbGetUser(){var r=await sb.auth.getUser();return r.data.user}
+async function sbGetSession(){var r=await sb.auth.getSession();return r.data.session}
+async function sbFetchProfile(uid){var r=await sb.from('users').select('*').eq('id',uid).single();if(r.error&&r.error.code==='PGRST116')return null;return r.data}
+async function sbUpsertProfile(uid,f){var r=await sb.from('users').upsert(Object.assign({id:uid},f),{onConflict:'id'});if(r.error)console.error('sbUpsert:',r.error)}
+async function sbSyncToCloud(){var u=await sbGetUser();if(!u)return;await sbUpsertProfile(u.id,{email:G.email||u.email||'',streak:G.streak,xp:G.xp,played_date:G.playedDate,score:0})}
+async function sbSyncFromCloud(){var u=await sbGetUser();if(!u)return false;var p=await sbFetchProfile(u.id);if(!p)return false;G.email=p.email||u.email||G.email;G.streak=p.streak!=null?p.streak:G.streak;G.xp=p.xp!=null?p.xp:G.xp;G.playedDate=p.played_date||G.playedDate;G.logged=true;save();return true}
 
-async function sbSendMagicLink(email){
-  const{error}=await sb.auth.signInWithOtp({email,options:{emailRedirectTo:window.location.origin+'/auth'}});
-  return error;
-}
-async function sbGetUser(){
-  const{data:{user}}=await sb.auth.getUser();
-  return user;
-}
-async function sbGetSession(){
-  const{data:{session}}=await sb.auth.getSession();
-  return session;
-}
-async function sbFetchProfile(uid){
-  const{data,error}=await sb.from('users').select('*').eq('id',uid).single();
-  if(error&&error.code==='PGRST116') return null; // no row
-  return data;
-}
-async function sbUpsertProfile(uid,fields){
-  const{error}=await sb.from('users').upsert({id:uid,...fields},{onConflict:'id'});
-  if(error)console.error('sbUpsert error:',error);
-}
-async function sbSyncToCloud(){
-  const user=await sbGetUser();
-  if(!user)return;
-  await sbUpsertProfile(user.id,{
-    email:G.email||user.email||'',streak:G.streak,xp:G.xp,days:G.days,
-    played_date:G.playedDate,score:G.score,
-    ms_shown:G.msShown||[]
-  });
-}
-async function sbSyncFromCloud(){
-  const user=await sbGetUser();
-  if(!user)return false;
-  const p=await sbFetchProfile(user.id);
-  if(!p)return false;
-  G.email=p.email||user.email||G.email;
-  G.streak=p.streak??G.streak;
-  G.xp=p.xp??G.xp;
-  G.days=p.days??G.days;
-  G.playedDate=p.played_date||G.playedDate;
-  G.score=p.score??G.score;
-  G.msShown=p.ms_shown||G.msShown;
-  G.logged=true;
-  save();
-  return true;
-}
+// ANONYMOUS PLAYER ID for server-side daily lock
+function getPlayerId(){var id=localStorage.getItem('questly_player_id');if(!id){id='xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,function(c){var r=Math.random()*16|0;return(c==='x'?r:(r&0x3|0x8)).toString(16)});localStorage.setItem('questly_player_id',id)}return id}
 
-const DAYS=[
-[{q:"You have one in your wallet. What image is on the back of the new stone-grey ₹500 note?",o:["The Red Fort","Mangalyaan","Sanchi Stupa","Hampi Chariot"],a:0},{q:"In WhatsApp, what does a \"single grey tick\" strictly mean?",o:["Message delivered","Sent from your phone","User blocked you","Their internet is off"],a:1},{q:"You see them everywhere. What is the correct color combination for a private EV (Electric Vehicle) number plate?",o:["White plate, Green text","Green plate, White text","Green plate, Yellow text","Blue plate, White text"],a:1},{q:"Which of these popular quick-commerce apps is majority-owned by the Tata Group?",o:["Zepto","Dunzo","Blinkit","BigBasket"],a:3},{q:"Look closely next time: The \"Non-Vegetarian\" symbol on food packets was recently changed from a Brown Circle to a...?",o:["Red Circle","Brown Triangle","Red Square","Black Cross"],a:1},{q:"Which of these monthly subscriptions actually costs the most (Standard/Individual plans)?",o:["Netflix Premium (4K)","Amazon Prime","YouTube Premium","Spotify Premium"],a:0},{q:"A standard domestic LPG cylinder (Indane/HP) contains exactly how much gas (net weight)?",o:["10 kg","12.5 kg","14.2 kg","19 kg"],a:2},{q:"In an ODI cricket match, how many distinct \"Powerplay\" phases are there in one innings?",o:["Just 1","2","3","4"],a:2},{q:"On Google Maps, a \"Red\" line means slow traffic. What does a \"Dark Red\" (Maroon) line mean?",o:["Accident ahead","Road closed","Stop-and-go traffic","Toll booth ahead"],a:2},{q:"Before Reels and Shorts, which app made 6-second looping videos famous?",o:["TikTok","Snapchat","Vine","Dubsmash"],a:2}],
-[{q:"You do this daily. When you \"double-tap\" the right side of a YouTube video, how many seconds does it skip by default?",o:["5 seconds","10 seconds","15 seconds","20 seconds"],a:1},{q:"If you are driving and see a milestone with a YELLOW top, which type of road are you on?",o:["National Highway","State Highway","City District Road","Rural Road"],a:0},{q:"Pull out your PAN Card. The 4th character is almost certainly \"P\". What does \"P\" stand for?",o:["Permanent","Personal","Person","Private"],a:2},{q:"You might have seen a vertical RED line on some medicine strips. What does it strictly mean?",o:["Sugar-free medicine","For external use only","Prescription only (Don't buy without)","Contains antibiotics"],a:2},{q:"Nostalgia check: In the iconic show \"Shaktimaan\", what was the profession of his alter-ego Gangadhar?",o:["News Reporter","Press Photographer","School Teacher","Scientist"],a:1},{q:"In a standard deck of playing cards, which \"King\" is the only one WITHOUT a moustache?",o:["King of Spades","King of Clubs","King of Hearts","King of Diamonds"],a:2},{q:"Look at your laptop keyboard. What is unique about the \"F\" and \"J\" keys?",o:["They are slightly concave","They have small raised bumps","They are darker in color","They make a louder click"],a:1},{q:"In Cricket, a Red ball is for Tests and a White ball is for ODIs/T20s. What color ball is used for a \"Day-Night\" Test match?",o:["Yellow","Orange","Pink","White"],a:2},{q:"The very last coach of an Indian Railways train usually has a big yellow \"X\" painted on the back. Why?",o:["To indicate \"Express\" train","Confirmation that it's the last coach","To mark the guard's cabin","Caution for cars behind"],a:1},{q:"We think it's Indian, but the brand \"Bisleri\" actually originated in which country?",o:["Switzerland","France","Italy","Germany"],a:2}],
-[{q:"A standard Aadhaar number consists of how many digits?",o:["10","12","14","16"],a:1},{q:"Which brand's mascot is a little girl in a polka-dotted dress saying \"Utterly Butterly Delicious\"?",o:["Britannia","Mother Dairy","Amul","Nandini"],a:2},{q:"In Gmail, what is the maximum attachment size you can send in a single email without using Google Drive?",o:["10 MB","20 MB","25 MB","50 MB"],a:2},{q:"Which of these is NOT owned by Meta (Facebook)?",o:["Instagram","WhatsApp","Snapchat","Threads"],a:2},{q:"Look at a standard Indian 3-pin plug. Which pin is the thickest and longest?",o:["The top pin (Earth)","The left pin (Neutral)","The right pin (Live)","All are same size"],a:0},{q:"\"Thanda Matlab...\" was the famous tagline for which soft drink?",o:["Sprite","Thums Up","Coca-Cola","Limca"],a:2},{q:"In the Indian stock market, what animal represents a \"rising\" market?",o:["Bear","Tiger","Bull","Elephant"],a:2},{q:"On a standard Monopoly board, which color property set is the most expensive?",o:["Green","Yellow","Dark Blue","Red"],a:2},{q:"Which Indian city has the airport code \"BOM\"?",o:["Bombay (Mumbai)","Bangalore","Bhubaneswar","Bhopal"],a:0},{q:"In the game of Ludo, you need a \"6\" to start a token. What is the safety zone (home column) usually colored?",o:["White","Black","Same color as the token","Grey"],a:2}],
-[{q:"Which of these uses \"fastest finger first\" logic to book tickets?",o:["Tatkal (IRCTC)","BookMyShow","Uber","Zomato Gold"],a:0},{q:"What color is the \"dot\" on a vegetarian food packet?",o:["Red","Green","Blue","Yellow"],a:1},{q:"If you buy a pack of \"Lays Classic Salted\", what color is the packet?",o:["Blue","Green","Yellow","Red"],a:2},{q:"In MS Excel, which symbol must you type first to start a formula?",o:["=","#","@","$"],a:0},{q:"Which came first: The \"Like\" button or the \"Retweet\" button?",o:["Like button (Facebook)","Retweet button (Twitter)","Both same year","Upvote (Reddit)"],a:0},{q:"\"Mutual Funds Sahi Hai\" ads are issued in public interest by whom?",o:["RBI","SEBI","AMFI","LIC"],a:2},{q:"In cricket, what is the maximum number of overs a single bowler can bowl in a T20 match?",o:["2","4","5","10"],a:1},{q:"What is the shortcut key to \"Undo\" an action on Windows?",o:["Ctrl + C","Ctrl + Z","Ctrl + Y","Alt + F4"],a:1},{q:"Which browser is the default on an iPhone?",o:["Chrome","Edge","Safari","Firefox"],a:2},{q:"In the iconic game \"Mario\", what happens when Mario eats a mushroom?",o:["He shoots fireballs","He becomes invincible","He gets bigger","He gets an extra life"],a:2}],
-[{q:"Which side of the car is the fuel tank lid on? Hint: Look at your dashboard fuel icon.",o:["Always Left","Always Right","The side the arrow points to","Random"],a:2},{q:"In India, which document is strictly mandatory for checking into a hotel?",o:["Pan Card","Office ID","Government Photo ID","Credit Card"],a:2},{q:"\"Just Do It\" is the tagline of?",o:["Adidas","Puma","Nike","Reebok"],a:2},{q:"How many zeros are there in \"One Crore\"?",o:["5","6","7","8"],a:2},{q:"Which Indian state is known as \"God's Own Country\"?",o:["Himachal Pradesh","Goa","Kerala","Uttarakhand"],a:2},{q:"In the game of Chess, which is the only piece that can \"jump\" over others?",o:["Bishop","Knight (Horse)","Rook (Elephant)","Queen"],a:1},{q:"Which of these apps does NOT let you pay via UPI?",o:["WhatsApp","Amazon","Instagram","Truecaller"],a:2},{q:"Standard Indian pincodes have how many digits?",o:["5","6","7","8"],a:1},{q:"Who is on the ₹10 coin?",o:["Gandhi","Nehru","Ambedkar","No face, just the emblem"],a:3},{q:"\"Android\" versions were famously named after what?",o:["Planets","Sweets/Desserts","Greek Gods","Animals"],a:1}],
-[{q:"Which chocolate bar has a distinctive \"triangular\" shape?",o:["KitKat","Dairy Milk Silk","Toblerone","Snickers"],a:2},{q:"In a standard \"Traffic Light\", which color is at the very top?",o:["Green","Yellow","Red","Orange"],a:2},{q:"\"Dhak Dhak Go\" was a viral jingle associated with which brand?",o:["Hero Honda","Bajaj Pulsar","TVS Jupiter","Yamaha RX100"],a:0},{q:"If you are flying \"Indigo\", what color is the ramp used to board the plane?",o:["Red","Blue","White","Yellow"],a:1},{q:"Which of these is a \"Direct Tax\"?",o:["GST","Income Tax","VAT","Service Tax"],a:1},{q:"In the 90s, what object did you use to rewind a cassette tape to save battery?",o:["A coin","A pencil","A scale","Your finger"],a:1},{q:"Which key on your keyboard usually allows you to \"Refresh\" a webpage?",o:["F1","F5","F11","Esc"],a:1},{q:"What is the minimum age to vote in India?",o:["16","18","21","25"],a:1},{q:"Which streaming service uses the sound \"Tudum\" when it opens?",o:["Prime Video","Hotstar","Netflix","SonyLIV"],a:2},{q:"The \"QR\" in QR Code stands for?",o:["Quick Response","Quality Read","Quick Register","Quiet Record"],a:0}],
-[{q:"Which company owns the rights to the \"Marvel\" universe (Avengers, Spider-Man)?",o:["Sony","Disney","Universal","Warner Bros"],a:1},{q:"If a cricket umpire taps their shoulder, what does it signal?",o:["Out","Four runs","Six runs","Leg byes / Byes (Runs off body)"],a:3},{q:"Which of these is NOT a Tata brand?",o:["Westside","Croma","Tanishq","Pantaloons"],a:3},{q:"Which \"mode\" on your phone turns off all cellular and Wi-Fi signals?",o:["Silent Mode","Do Not Disturb","Airplane Mode","Reading Mode"],a:2},{q:"Look at your credit/debit card. The CVV number on the back has how many digits?",o:["2","3","4","5"],a:1},{q:"Which Indian currency note is \"Pink\" in color?",o:["₹50","₹200","₹500","₹2000"],a:3},{q:"\"Vicco Turmeric, Nahi Cosmetic...\" What comes next?",o:["Ayurvedic cream","Skin cream","Herbal cream","Face cream"],a:0},{q:"Which of these is an \"Operating System\"?",o:["Dell","Intel","Linux","Nvidia"],a:2},{q:"In a standard fan regulator, does \"1\" mean fastest or slowest speed?",o:["Fastest","Slowest","Off","Medium"],a:1},{q:"Which social media app's logo is a \"Ghost\"?",o:["Snapchat","Discord","Twitter","Telegram"],a:0}],
-[{q:"In the game \"Rock, Paper, Scissors\", what beats Paper?",o:["Rock","Scissors","Nothing","Paper"],a:1},{q:"Which of these biscuits has the \"girl with a finger on her lips\" logo?",o:["Parle-G","Monaco","Good Day","Marie Gold"],a:0},{q:"What is the full form of \"WiFi\"?",o:["Wireless Fidelity","Wireless Finance","Wired Fiber","Wireless Field"],a:0},{q:"\"Noida\" is technically in which state?",o:["Delhi","Haryana","Uttar Pradesh","Rajasthan"],a:2},{q:"Which browser uses a \"Fox wrapping around a globe\" as its logo?",o:["Chrome","Safari","Opera","Mozilla Firefox"],a:3},{q:"\"Fevicol ka...\" what? (Referring to the famous song/ad).",o:["Jod","Bandhan","Chipak","Mazboot"],a:0},{q:"If you see a \"Blue Tick\" on Instagram/Twitter, what does it signify?",o:["Online status","Verified account","Premium user","Admin"],a:1},{q:"In which sport can you get a \"Red Card\"?",o:["Cricket","Football","Tennis","Badminton"],a:1},{q:"What does \"CC\" stand for in an email?",o:["Carbon Copy","Create Copy","Contact Copy","Company Copy"],a:0},{q:"The \"Statue of Unity\" depicts which Indian leader?",o:["Gandhi","Nehru","Sardar Vallabhbhai Patel","Subhas Chandra Bose"],a:2}],
-[{q:"Which Indian telecom provider uses the tagline \"An Idea can change your life\"?",o:["Airtel","Vodafone","Idea (Vi)","Jio"],a:2},{q:"On a standard keyboard, the \"Spacebar\" is usually operated by which finger?",o:["Index Finger","Middle Finger","Thumb","Pinky"],a:2},{q:"Which of these is NOT a fruit?",o:["Tomato","Cucumber","Pumpkin","Rhubarb"],a:3},{q:"\"Paytm Karo\" jingle is associated with which sound?",o:["A whistle","A drum beat","A melodic chime","A voice saying it"],a:2},{q:"Which of these is a \"Cryptocurrency\"?",o:["NFT","Blockchain","Bitcoin","Metaverse"],a:2},{q:"Who is known as the \"God of Cricket\"?",o:["Virat Kohli","MS Dhoni","Sachin Tendulkar","Kapil Dev"],a:2},{q:"In the URL \"https://\", what does the \"s\" stand for?",o:["Standard","Secure","Site","Speed"],a:1},{q:"\"Taste the Thunder\" is the slogan for?",o:["Mountain Dew","Thums Up","Pepsi","Sprite"],a:1},{q:"Which of these companies was started in a garage?",o:["Amazon","Google","Apple","All of the above"],a:3},{q:"The \"Ashoka Chakra\" in the Indian flag has how many spokes?",o:["20","22","24","26"],a:2}],
-[{q:"Which key is used to take a \"Screenshot\" on Windows (Standard keyboard)?",o:["Scroll Lock","PrtSc (Print Screen)","Pause/Break","Insert"],a:1},{q:"\"Open Happiness\" was a global campaign for?",o:["Pepsi","Coca-Cola","McDonald's","Cadbury"],a:1},{q:"Which planet is known as the \"Red Planet\"?",o:["Venus","Jupiter","Mars","Saturn"],a:2},{q:"What file extension is used for a standard image?",o:[".txt",".mp3",".jpg",".pdf"],a:2},{q:"\"Connecting People\" was the famous tagline of which phone brand?",o:["Motorola","Samsung","Nokia","BlackBerry"],a:2},{q:"Which of these is NOT a Google product?",o:["Docs","Sheets","Slides","Word"],a:3},{q:"In a car, the \"clutch\" pedal is operated by which foot?",o:["Left Foot","Right Foot","Both","Hands"],a:0},{q:"Which shape is a \"Stop\" sign on the road?",o:["Circle","Triangle","Octagon (8 sides)","Square"],a:2},{q:"\"Baa, Baa, Black Sheep, have you any...?\"",o:["Milk","Wool","Grass","Friends"],a:1},{q:"Which Indian currency note features the \"Ellora Caves\"?",o:["₹10","₹20","₹50","₹100"],a:1}]
+// Check if already played today (server-side)
+async function checkServerPlayed(){try{var r=await sb.from('daily_attempts').select('score').eq('player_id',getPlayerId()).eq('date',localDate());if(r.data&&r.data.length>0)return r.data[0].score;return null}catch(e){return null}}
+// Record attempt to server
+async function recordAttempt(score){try{await sb.from('daily_attempts').insert({player_id:getPlayerId(),date:localDate(),score:score})}catch(e){console.error('recordAttempt:',e)}}
+
+// QUESTIONS — Indianized, 18 total, mixed difficulty (easy/medium/hard)
+var ALL_Q=[
+{cat:"Bollywood",q:"Which Bollywood film features the iconic dialogue \"Kitne aadmi the\"?",o:["Deewar","Sholay","Don","Zanjeer"],a:1},
+{cat:"Bollywood",q:"Who directed the 2001 blockbuster \"Lagaan\"?",o:["Sanjay Leela Bhansali","Rakeysh Omprakash Mehra","Ashutosh Gowariker","Rajkumar Hirani"],a:2},
+{cat:"Cricket",q:"Who holds the record for most runs in international cricket?",o:["Ricky Ponting","Sachin Tendulkar","Virat Kohli","Kumar Sangakkara"],a:1},
+{cat:"Cricket",q:"In which year did India win their first ICC T20 World Cup?",o:["2007","2009","2011","2013"],a:0},
+{cat:"Indian Food",q:"Which Indian bread is traditionally made in a tandoor oven?",o:["Paratha","Naan","Puri","Chapati"],a:1},
+{cat:"Indian Food",q:"Rogan Josh is a famous curry dish originating from which region?",o:["Punjab","Rajasthan","Kashmir","Goa"],a:2},
+{cat:"Tech & Apps",q:"Which Indian company developed the UPI payments system?",o:["Paytm","NPCI","Infosys","Razorpay"],a:1},
+{cat:"Tech & Apps",q:"Zerodha is India's largest platform for which service?",o:["Food Delivery","Online Shopping","Stock Trading","Hotel Booking"],a:2},
+{cat:"Indian Brands",q:"Amul is headquartered in which Indian state?",o:["Maharashtra","Gujarat","Rajasthan","Karnataka"],a:1},
+{cat:"Indian Brands",q:"Which Indian company makes the \"Tata Nano\" car?",o:["Mahindra","Maruti Suzuki","Tata Motors","Hindustan Motors"],a:2},
+{cat:"School GK",q:"How many states are there in India as of 2024?",o:["28","29","30","31"],a:0},
+{cat:"School GK",q:"Which planet is known as the \"Red Planet\"?",o:["Venus","Mars","Jupiter","Saturn"],a:1},
+{cat:"Geography",q:"Which is the longest river in India?",o:["Yamuna","Godavari","Ganga","Brahmaputra"],a:2},
+{cat:"Geography",q:"Jog Falls, one of India's highest waterfalls, is in which state?",o:["Kerala","Tamil Nadu","Karnataka","Goa"],a:2},
+{cat:"History",q:"Who was the first President of independent India?",o:["Dr. Rajendra Prasad","Jawaharlal Nehru","Sardar Patel","B.R. Ambedkar"],a:0},
+{cat:"History",q:"The Jallianwala Bagh massacre took place in which city?",o:["Delhi","Lahore","Amritsar","Lucknow"],a:2},
+{cat:"Sports",q:"How many players are there in a standard Kabaddi team on the court?",o:["5","6","7","8"],a:2},
+{cat:"Sports",q:"P.V. Sindhu won an Olympic medal in which sport?",o:["Tennis","Table Tennis","Badminton","Archery"],a:2}
 ];
+var CAT_E={"Bollywood":"🎬","Cricket":"🏏","Indian Food":"🍛","Tech & Apps":"💻","Indian Brands":"🏷️","School GK":"📚","Geography":"🗺️","History":"🏛️","Sports":"🏅"};
+var LS='questly_ttt_v5',Q_TIME=12,START_XP=200,FIFTY_COST=80,SKIP_COST=120;
+var WIN_LINES=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
 
-const Q_TIME=10,GATE=3,LS='questly_v2';
-const MS=[{d:3,type:'banner',msg:'🔥 3-day streak! You\'re building a habit!'},{d:7,type:'confetti',emoji:'🎉',title:'7-day streak!',desc:'One whole week! Most quit by day 3. You didn\'t.'},{d:14,type:'confetti',emoji:'🏆',title:'14-day streak!',desc:'Two weeks strong. Top 1% of daily players.'}];
-
-function log(e,d){console.log(`[Questly ${new Date().toLocaleString()}] ${e}`,d||'');try{if(window.posthog&&posthog.capture)posthog.capture(e,d||{})}catch(x){}}
-function localDate(d){d=d||new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
-function yday(){const d=new Date();d.setDate(d.getDate()-1);return localDate(d)}
-function dayIdx(){const e=new Date(2025,0,1),n=new Date();n.setHours(0,0,0,0);return((Math.floor((n-e)/864e5)%10)+10)%10}
-function save(){try{const d=JSON.stringify({logged:G.logged,email:G.email||'',streak:G.streak,xp:G.xp,days:G.days,playedDate:G.playedDate,score:G.score,ans:G.ans,firstVisit:false,msShown:G.msShown||[],quizActive:G.quizActive,qi:G.qi,qAns:G.qAns,qScore:G.qScore,qStart:G.qStart,qDay:G.qDay});localStorage.setItem(LS,d);localStorage.setItem(LS+'_backup',d)}catch(e){}}
-function load(){
-  let r=null;
-  try{const raw=localStorage.getItem(LS);if(raw)r=JSON.parse(raw)}catch(e){
-    try{localStorage.setItem(LS+'_corrupt_backup',localStorage.getItem(LS)||'');localStorage.removeItem(LS)}catch(x){}
-    log('storage_recovered');r=null;
-  }
-  if(!r){try{const bk=localStorage.getItem(LS+'_backup');if(bk){r=JSON.parse(bk);log('backup_restored')}}catch(e){r=null}}
-  if(r){
-    let fixed=false;
-    if(typeof r.streak!=='number'||r.streak<0){r.streak=0;fixed=true}
-    if(typeof r.days!=='number'||r.days<0||r.days>3650){r.days=Math.min(Math.max(r.days||0,0),3650);fixed=true}
-    if(r.streak>r.days){r.streak=r.days;fixed=true}
-    if(typeof r.score!=='number'||r.score<0||r.score>10){r.score=Math.min(Math.max(r.score||0,0),10);fixed=true}
-    if(typeof r.qi!=='number'||r.qi<0||r.qi>9){r.qi=Math.min(Math.max(r.qi||0,0),9);fixed=true}
-    if(fixed)log('state_corrected');
-  }
-  return r;
-}
-
-let G={logged:false,email:'',streak:0,xp:0,days:0,played:false,missed:false,qi:0,score:0,ans:[],busy:false,cd:null,qt:null,t0:0,playedDate:'',firstVisit:true,msShown:[],quizActive:false,qAns:[],qScore:0,qStart:0,qDay:'',inQuiz:false};
-
-let _lastPick=0; // rapid click guard timestamp
-
-function initApp(){
-  const s=load();
-  if(s){for(const k in s)if(s[k]!==undefined)G[k]=s[k]}
-  // Analytics AFTER state loaded
-  log('app_open',{day_index:dayIdx(),already_played:G.playedDate===localDate(),streak:G.streak});
-  // Referral tracking
-  if(_ref)log('referred_open',{referrer:_ref});
-  // Retention: returned next day
-  if(G.playedDate===yday())log('returned_next_day',{previous_streak:G.streak});
-
-  // Check Supabase session and sync
-  (async()=>{
-    const session=await sbGetSession();
-    if(session&&session.user){
-      G.logged=true;G.email=session.user.email||G.email;
-      try{
-        const synced=await sbSyncFromCloud();
-        if(synced)save();
-      }catch(e){
-        // Cloud fetch failed — keep local, retry in 5s
-        log('cloud_sync_retry');
-        setTimeout(async()=>{try{const r=await sbSyncFromCloud();if(r)save()}catch(x){}},5000);
-      }
-    }
-    // Now run normal init logic with potentially updated state
-    const today=localDate();
-    if(G.playedDate===today){G.played=true;G.missed=false;G.quizActive=false}
-    else{
-      G.played=false;
-      if(G.quizActive&&G.qDay===today){G.firstVisit=false;save();go('sQuiz');resumeQuiz();scheduleMN();return}
-      G.quizActive=false;
-      if(G.playedDate&&G.playedDate!==yday()){G.missed=!!G.playedDate;G.streak=0;save()}else G.missed=false;
-    }
-    if(G.firstVisit&&!G.playedDate)go('sWelcome');else showHome();
-    scheduleMN();
-  })();
-}
-function scheduleMN(){const n=new Date(),t=new Date(n);t.setDate(t.getDate()+1);t.setHours(0,0,0,100);setTimeout(()=>{G.played=false;G.missed=false;G.quizActive=false;if($('sHome').classList.contains('active')||$('sRes').classList.contains('active'))showHome();scheduleMN()},Math.min(t-n,864e5))}
 function $(id){return document.getElementById(id)}
-function go(id){document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active','fade')});$(id).classList.add('active','fade');window.scrollTo(0,0)}
-function calcXP(s,t){let x=s*10;if(t<40)x+=50;else if(t<60)x+=25;if(s===10)x+=50;return x}
-function midCd(){const n=new Date(),t=new Date(n);t.setDate(t.getDate()+1);t.setHours(0,0,0,0);const d=Math.max(0,t-n),h=Math.floor(d/36e5),m=Math.floor((d%36e5)/6e4),s=Math.floor((d%6e4)/1e3);return`${h}h ${String(m).padStart(2,'0')}m ${String(s).padStart(2,'0')}s`}
-function toast(m){const t=$('toastEl');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
-function todayQs(){return DAYS[dayIdx()]}
-function enterApp(){G.firstVisit=false;save();if(G.played){showHome();return}startQuiz()}
+function localDate(d){d=d||new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function yday(){var d=new Date();d.setDate(d.getDate()-1);return localDate(d)}
+function go(id){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active','fade')});$(id).classList.add('active','fade');window.scrollTo(0,0)}
+function midCd(){var n=new Date(),t=new Date(n);t.setDate(t.getDate()+1);t.setHours(0,0,0,0);var d=Math.max(0,t-n),h=Math.floor(d/36e5),m=Math.floor((d%36e5)/6e4),s=Math.floor((d%6e4)/1e3);return h+'h '+String(m).padStart(2,'0')+'m '+String(s).padStart(2,'0')+'s'}
+function toast(m){var t=$('toastEl');t.textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},2500)}
+var _fired={};
+function log(e,d){console.log('[Q] '+e,d||'');try{if(window.posthog&&posthog.capture)posthog.capture(e,d||{})}catch(x){}}
+function logOnce(e,d){var k=e+JSON.stringify(d||{});if(_fired[k])return;_fired[k]=true;log(e,d)}
 
-function showHome(){
-  if(G.logged){let p=`<div class="h-pill">🔥 <span class="v">${G.streak}</span></div>`;if(G.days>=GATE)p+=`<div class="h-pill">✦ <span class="xv">${G.xp}</span></div>`;p+=`<div class="avatar">${(G.email||'?')[0].toUpperCase()}</div>`;$('hRight').innerHTML=p}else $('hRight').innerHTML='';
-  let h='';
-  if(G.missed)h+=`<div class="missed"><strong>You missed yesterday.</strong>Your streak was reset — but today's challenge is ready.</div>`;
-  if(G.played){
-    h+=`<div class="dw"><div class="dw-check">✅</div><div class="dw-title">Today's Challenge Complete</div><div class="dw-score">${G.score} / 10 correct</div>`;
-    if(G.streak>=GATE)h+=`<div class="dw-streak">🔥 ${G.streak}-day streak</div>`;
-    h+=`<div class="dw-next">Next challenge unlocks at 12:00 AM<br><span class="cd" id="hCd">${midCd()}</span></div><div class="dw-actions"><button class="btn-o" onclick="shareImg()">${IG} Instagram</button><button class="btn-o" onclick="openWA()">${WA} Share</button></div><button class="btn-t" onclick="showResults()" style="margin-top:8px">Back to results</button></div>`;
-    setTimeout(()=>{clearInterval(G.cd);G.cd=setInterval(()=>{const e=$('hCd');if(e)e.textContent=midCd()},1000)},50);
-  }else{
-    if(G.logged&&G.streak>=GATE)h+=`<div class="hm-streak"><div class="hms-num">🔥 ${G.streak}</div><div class="hms-info"><div class="hms-label">Day streak</div><div class="hms-sub">Play daily to keep it alive</div></div></div>`;
-    if(G.logged&&G.days>=GATE&&G.xp>0)h+=`<div class="hm-xp">✦ <strong>${G.xp} XP</strong> total</div>`;
-    h+=`<div class="ch"><div class="ch-title">Today's Challenge</div><div class="ch-sub">10 mixed questions. Takes only 2 mins.</div><div class="ch-rules"><div class="ch-rule"><span class="ch-rule-ic">🎯</span> Mixed difficulty</div><div class="ch-rule"><span class="ch-rule-ic">1️⃣</span> One attempt per day</div></div><button class="btn-p" onclick="startQuiz()">Play today</button><div class="ch-note">Same questions for everyone today.</div></div>`;
-  }
-  $('homeBody').innerHTML=h;go('sHome');G.inQuiz=false;
-}
-function goHome(){clearInterval(G.qt);clearInterval(G.cd);showHome()}
-
-function showResults(){
-  const cls=G.score===10?'s10':G.score>=8?'s8':G.score>=5?'s5':'s0',ns=G.streak+1;
-  let pct;if(G.score>=9)pct=Math.floor(Math.random()*10)+85;else if(G.score>=7)pct=Math.floor(Math.random()*15)+55;else if(G.score>=4)pct=Math.floor(Math.random()*20)+20;else pct=-1;
-  let xpLine=G.days>=GATE?`<div class="r-xp">✦ Total <strong>${G.xp} XP</strong></div>`:'';
-  let loginHtml=(!G.logged&&G.streak>=GATE)?`<div class="r-login" onclick="openLogin()"><div class="rl-text"><div class="rl-title">Don't lose your ${G.streak}-day streak.</div><div class="rl-desc">Login and save it to your account.</div></div><span class="rl-arrow">→</span></div>`:'';
-  $('resBody').innerHTML=`<div class="r-check">✅</div><div class="r-title">Today's Challenge Complete</div><div class="r-score-line">${G.score} / 10 correct</div>${G.streak>=1?`<div class="r-streak"><div class="r-s-fire">🔥</div><div class="r-s-num">${G.streak}</div><div class="r-s-text">day streak</div><div class="r-s-hint">Play tomorrow to reach a ${ns}-day streak.</div><div class="r-s-micro">Most players don't make it past 3 days.</div></div>`:''}<div class="r-sc"><div class="r-sc-left"><div class="r-sc-label">Your score</div><div class="r-sc-num ${cls}">${G.score}/10</div></div><div class="r-sc-pct">${pct>=0?'You are among the<br><strong>top '+(100-pct)+'%</strong> of players today':'Hard set today.<br>You still did better than many.'}</div></div><div class="r-cd">New challenge unlocks at 12:00 AM · <span class="time" id="rCd">${midCd()}</span></div><div class="r-div"></div>${xpLine}<div class="r-actions"><div class="r-share-row"><button class="btn-o" onclick="shareImg()">${IG} Instagram</button><button class="btn-o" onclick="openWA()">${WA} Share with Friends</button></div>${loginHtml}<button class="btn-t" onclick="goHome()">Back to home</button></div>`;
-  go('sRes');clearInterval(G.cd);G.cd=setInterval(()=>{const e=$('rCd');if(e)e.textContent=midCd()},1000);
-}
-
-function startQuiz(){if(G.played){showHome();return}if(!G.playedDate){G.playedDate=localDate();save()}log('quiz_start',{day:dayIdx()});G.qi=0;G.qScore=0;G.qAns=[];G.busy=false;G.t0=Date.now();G.quizActive=true;G.qDay=localDate();G.qStart=G.t0;G.inQuiz=true;save();go('sQuiz');showQ();history.pushState({quiz:true},'','')}
-function resumeQuiz(){log('quiz_resume',{qi:G.qi});G.busy=false;G.t0=G.qStart||Date.now();G.inQuiz=true;go('sQuiz');showQ();history.pushState({quiz:true},'','')}
-function showQ(){
-  clearInterval(G.qt);$('qExp').innerHTML='';const qs=todayQs(),q=qs[G.qi],k=['A','B','C','D'];
-  $('qNum').textContent=`${G.qi+1} of 10`;$('qTxt').textContent=q.q;$('qBar').style.width=(G.qi/10*100)+'%';
-  const el=$('qOpts');el.innerHTML='';q.o.forEach((o,i)=>{const b=document.createElement('button');b.className='qz-o';b.innerHTML=`<span class="qz-k">${k[i]}</span><span>${o}</span>`;b.onclick=()=>pick(i);el.appendChild(b)});
-  G.busy=false;let tl=Q_TIME*10;const tf=$('qTf');tf.style.transition='none';tf.style.width='100%';tf.offsetHeight;tf.style.transition='width .1s linear';
-  G.qt=setInterval(()=>{tl--;tf.style.width=Math.max(0,tl/(Q_TIME*10)*100)+'%';if(tl<=0){clearInterval(G.qt);autoSkip()}},100);
-}
-function autoSkip(){if(G.busy)return;G.busy=true;const qs=todayQs(),q=qs[G.qi],c=q.a,bs=document.querySelectorAll('.qz-o');bs.forEach((b,i)=>{b.classList.add('off');if(i===c)b.classList.add('reveal')});G.qAns.push({ok:false});log('question_answered',{q:G.qi+1,correct:false,timeout:true});save();setTimeout(()=>{G.qi++;save();G.qi>=10?finish():showQ()},1500)}
-function pick(i){if(G.busy)return;const now=Date.now();if(now-_lastPick<150)return;_lastPick=now;G.busy=true;clearInterval(G.qt);const qs=todayQs(),q=qs[G.qi],c=q.a,bs=document.querySelectorAll('.qz-o');bs.forEach((b,j)=>{b.classList.add('off');if(j===c)b.classList.add('correct');if(j===i&&i!==c){b.classList.add('wrong');bs[c].classList.add('reveal')}});const ok=i===c;G.qAns.push({ok});if(ok)G.qScore++;log('question_answered',{q:G.qi+1,correct:ok});save();if(!ok){$('qOpts').classList.add('shake');setTimeout(()=>$('qOpts').classList.remove('shake'),250)}setTimeout(()=>{G.qi++;save();G.qi>=10?finish():showQ()},ok?1200:1500)}
-
-function finish(){
-  clearInterval(G.qt);G.inQuiz=false;const today=localDate();
-  if(G.played&&G.playedDate===today){log('duplicate_finish_blocked');showHome();return}
-  if(G.playedDate===today){showHome();return}
-  if(G.playedDate&&G.playedDate!==yday())G.streak=0;
-  G.streak++;G.days++;G.played=true;G.missed=false;G.playedDate=today;G.score=G.qScore;G.ans=G.qAns;G.quizActive=false;
-  const tt=Math.round((Date.now()-G.t0)/1000),xp=calcXP(G.score,tt);G.xp+=xp;save();
-  if(G.logged)sbSyncToCloud(); // sync to Supabase
-  log('quiz_complete',{score:G.score,streak:G.streak,xp});
-  try{if(window.posthog&&posthog.people)posthog.people.set({current_streak:G.streak,total_days_played:G.days,total_xp:G.xp})}catch(x){}
-  $('qBar').style.width='100%';
-  const cls=G.score===10?'s10':G.score>=8?'s8':G.score>=5?'s5':'s0',ns=G.streak+1;
-  let pct;if(G.score>=9)pct=Math.floor(Math.random()*10)+85;else if(G.score>=7)pct=Math.floor(Math.random()*15)+55;else if(G.score>=4)pct=Math.floor(Math.random()*20)+20;else pct=-1;
-  let xpLine=G.days>=GATE?`<div class="r-xp">✦ <strong>+${xp} XP</strong> earned today</div>`:'';
-  let loginHtml=(!G.logged&&G.streak>=GATE)?`<div class="r-login" onclick="openLogin()"><div class="rl-text"><div class="rl-title">Don't lose your ${G.streak}-day streak.</div><div class="rl-desc">Login and save it to your account.</div></div><span class="rl-arrow">→</span></div>`:'';
-  $('resBody').innerHTML=`<div class="r-check">✅</div><div class="r-title">Today's Challenge Complete</div><div class="r-score-line">${G.score} / 10 correct</div>${G.streak>=1?`<div class="r-streak"><div class="r-s-fire">🔥</div><div class="r-s-num">${G.streak}</div><div class="r-s-text">day streak</div><div class="r-s-hint">Play tomorrow to reach a ${ns}-day streak.</div><div class="r-s-micro">Most players don't make it past 3 days.</div></div>`:''}<div class="r-sc"><div class="r-sc-left"><div class="r-sc-label">Your score</div><div class="r-sc-num ${cls}">${G.score}/10</div></div><div class="r-sc-pct">${pct>=0?'You are among the<br><strong>top '+(100-pct)+'%</strong> of players today':'Hard set today.<br>You still did better than many.'}</div></div><div class="r-cd">New challenge unlocks at 12:00 AM · <span class="time" id="rCd">${midCd()}</span></div><div class="r-div"></div>${xpLine}<div class="r-actions"><div class="r-share-row"><button class="btn-o" onclick="shareImg()">${IG} Instagram</button><button class="btn-o" onclick="openWA()">${WA} Share with Friends</button></div>${loginHtml}<button class="btn-t" onclick="goHome()">Back to home</button></div>`;
-  go('sRes');clearInterval(G.cd);G.cd=setInterval(()=>{const e=$('rCd');if(e)e.textContent=midCd()},1000);
-  setTimeout(()=>checkMS(),600);
+function seededRNG(seed){var s=0;for(var i=0;i<seed.length;i++)s=((s<<5)-s)+seed.charCodeAt(i);s=Math.abs(s)||1;return function(){s=(s*1103515245+12345)&0x7fffffff;return(s&0xfffffff)/0x10000000}}
+var _dailyBoard=null,_dailyBoardDate='',_dailySpares=[];
+function getDailyBoard(){var today=localDate();if(_dailyBoard&&_dailyBoardDate===today)return _dailyBoard;var rng=seededRNG(today);
+// Step 1: shuffle all question indices
+var idx=[];for(var i=0;i<ALL_Q.length;i++)idx.push(i);
+for(var i=idx.length-1;i>0;i--){var j=Math.floor(rng()*(i+1));var tmp=idx[i];idx[i]=idx[j];idx[j]=tmp}
+var picked=idx.slice(0,9);
+// Store remaining as spares for skip tile (#3)
+_dailySpares=idx.slice(9);
+// Step 2: Balanced answer distribution (#1)
+// Create target correct positions: [0,0,1,1,2,2,3,3] + 1 random = 9 slots
+// Each of A/B/C/D gets 2-3 correct answers
+var slots=[0,0,1,1,2,2,3,3];
+var extra=Math.floor(rng()*4);slots.push(extra);
+// Shuffle slots deterministically
+for(var i=slots.length-1;i>0;i--){var j=Math.floor(rng()*(i+1));var tmp=slots[i];slots[i]=slots[j];slots[j]=tmp}
+// Step 3: Build board — place correct answer at target slot, fill others
+_dailyBoard=picked.map(function(qi,tileIdx){
+  var orig=ALL_Q[qi];var targetPos=slots[tileIdx];
+  var correctText=orig.o[orig.a];
+  var wrongs=[];for(var i=0;i<orig.o.length;i++){if(i!==orig.a)wrongs.push(orig.o[i])}
+  // Shuffle wrongs deterministically
+  for(var i=wrongs.length-1;i>0;i--){var j=Math.floor(rng()*(i+1));var tmp=wrongs[i];wrongs[i]=wrongs[j];wrongs[j]=tmp}
+  // Build options array with correct at targetPos
+  var opts=[];var wi=0;
+  for(var i=0;i<4;i++){if(i===targetPos)opts.push(correctText);else{opts.push(wrongs[wi]);wi++}}
+  return{cat:orig.cat,q:orig.q,o:opts,a:targetPos,origIdx:qi};
+});_dailyBoardDate=today;return _dailyBoard}
+// Get a spare question for skip tile (#3) — returns new board entry or null
+function getSpareQuestion(tileIdx,rng2){
+  if(_dailySpares.length===0)return null;
+  var qi=_dailySpares.shift(); // take first spare, remove from pool
+  var orig=ALL_Q[qi];
+  // Random correct position
+  var targetPos=Math.floor(rng2()*4);
+  var correctText=orig.o[orig.a];
+  var wrongs=[];for(var i=0;i<orig.o.length;i++){if(i!==orig.a)wrongs.push(orig.o[i])}
+  for(var i=wrongs.length-1;i>0;i--){var j=Math.floor(rng2()*(i+1));var tmp=wrongs[i];wrongs[i]=wrongs[j];wrongs[j]=tmp}
+  var opts=[];var wi=0;
+  for(var i=0;i<4;i++){if(i===targetPos)opts.push(correctText);else{opts.push(wrongs[wi]);wi++}}
+  return{cat:orig.cat,q:orig.q,o:opts,a:targetPos,origIdx:qi};
 }
 
-function getShareText(){const sURL=shareURL+'?ref='+encodeURIComponent(G.email||'anon');return`🧠 *Questly* — Daily Challenge\n\n${G.ans.map(a=>a.ok?'🟩':'⬜').join('')}\n\nI scored *${G.score}/10* today!\n🔥 ${G.streak}-day streak\n\nThink you can beat me? 👇\n${sURL}`}
-function openWA(){log('share_clicked',{type:'whatsapp'});window.open(`https://wa.me/?text=${encodeURIComponent(getShareText())}`,'_blank')}
-function shareImg(){
-  log('share_clicked',{type:'instagram'});
-  try{const cvs=document.createElement('canvas');cvs.width=540;cvs.height=340;const ctx=cvs.getContext('2d');ctx.fillStyle='#fafaf8';ctx.beginPath();ctx.roundRect(0,0,540,340,16);ctx.fill();ctx.fillStyle='#1a1a18';ctx.font='bold 20px Inter,sans-serif';ctx.textAlign='center';ctx.fillText('Questly',270,40);ctx.fillStyle='#9b9b94';ctx.font='300 12px Inter,sans-serif';ctx.fillText(new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}),270,60);const c={s10:'#e85d2a',s8:'#2d9b5a',s5:'#2d7fb5',s0:'#d44040'};const cl=G.score===10?'s10':G.score>=8?'s8':G.score>=5?'s5':'s0';ctx.fillStyle=c[cl];ctx.font='bold 60px Inter,sans-serif';ctx.fillText(G.score+'/10',270,135);const bw=24,gap=4,t=10*bw+9*gap,sx=(540-t)/2;G.ans.forEach((a,i)=>{ctx.fillStyle=a.ok?'#2d9b5a':'#d4d4d0';ctx.beginPath();ctx.roundRect(sx+i*(bw+gap),170,bw,bw,4);ctx.fill()});ctx.fillStyle='#e85d2a';ctx.font='600 13px Inter,sans-serif';ctx.fillText('🔥 '+G.streak+' day streak',270,225);ctx.fillStyle='#9b9b94';ctx.font='300 12px Inter,sans-serif';ctx.fillText(shareURL.replace(/^https?:\/\//,'').replace(/\/$/,''),270,255);
-  cvs.toBlob(blob=>{if(navigator.share&&navigator.canShare){const f=new File([blob],'questly.png',{type:'image/png'});if(navigator.canShare({files:[f]})){navigator.share({files:[f],text:getShareText()}).catch(()=>{});return}}const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download='questly-score.png';a.click();URL.revokeObjectURL(u);toast('Image saved!')},'image/png')}catch(e){toast('Image saved!')}}
+// STATE
+var G={logged:false,email:'',xp:START_XP,streak:0,playedDate:'',gameDate:'',board:['','','','','','','','',''],skippedTiles:[],discardedQs:[],moveCount:0,activeTile:-1,usedFifty:false,usedSkip:false,fiftyHidden:[],result:'',gameStarted:false,answered:false,firstVisit:true,serverRecorded:false,xpEarned:0};
+function save(){try{localStorage.setItem(LS,JSON.stringify({logged:G.logged,email:G.email,xp:G.xp,streak:G.streak,playedDate:G.playedDate,gameDate:G.gameDate,board:G.board,skippedTiles:G.skippedTiles,discardedQs:G.discardedQs,moveCount:G.moveCount,activeTile:G.activeTile,usedFifty:G.usedFifty,usedSkip:G.usedSkip,fiftyHidden:G.fiftyHidden,result:G.result,gameStarted:G.gameStarted,answered:G.answered,firstVisit:G.firstVisit,serverRecorded:G.serverRecorded,xpEarned:G.xpEarned}))}catch(e){}}
+function load(){try{var r=localStorage.getItem(LS);if(r)return JSON.parse(r)}catch(e){}return null}
+function checkWin(mark){for(var i=0;i<WIN_LINES.length;i++){var l=WIN_LINES[i];if(G.board[l[0]]===mark&&G.board[l[1]]===mark&&G.board[l[2]]===mark)return l}return null}
+function isBoardFull(){for(var i=0;i<9;i++)if(G.board[i]==='')return false;return true}
+function getScore(){var s=0;for(var i=0;i<9;i++)if(G.board[i]==='x')s++;return s}
+// XP reward based on score (#5)
+function calcXpReward(sc){if(sc>=9)return 50;if(sc>=7)return 35;if(sc>=5)return 20;if(sc>=3)return 10;return 5}
 
-function checkMS(){if(!G.msShown)G.msShown=[];for(const ms of MS){if(G.streak>=ms.d&&!G.msShown.includes(ms.d)){G.msShown.push(ms.d);save();if(ms.type==='banner')showBanner(ms.msg);else showConfetti(ms.emoji,ms.title,ms.desc);return}}}
-function showBanner(msg){const el=$('msBanner');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),4000)}
-function showConfetti(emoji,title,desc){$('confettiEmoji').textContent=emoji;$('confettiTitle').textContent=title;$('confettiDesc').textContent=desc;const bits=$('confettiBits');bits.innerHTML='';const colors=['#e85d2a','#2d9b5a','#c49a20','#d44040','#2d7fb5','#9b5de5'];for(let i=0;i<30;i++){const b=document.createElement('div');b.className='confetti-bit';b.style.left=Math.random()*100+'%';b.style.background=colors[Math.floor(Math.random()*colors.length)];b.style.animationDelay=Math.random()*1+'s';b.style.width=(4+Math.random()*6)+'px';b.style.height=(4+Math.random()*6)+'px';bits.appendChild(b)}$('confettiOL').classList.add('active')}
-function closeConfetti(){$('confettiOL').classList.remove('active')}
+// Streak protection eligibility
+function shouldShowSaveStreak(){return !G.logged&&G.streak>=3}
 
-window.addEventListener('popstate',function(e){if(G.inQuiz){e.preventDefault();$('backConfirm').classList.add('active');history.pushState({quiz:true},'','')}});
-function confirmLeave(){$('backConfirm').classList.remove('active');G.inQuiz=false;clearInterval(G.qt);G.played=true;G.playedDate=localDate();G.score=G.qScore;G.ans=G.qAns;G.quizActive=false;if(!G.ans.length){G.score=0;G.ans=[]}save();showHome()}
-function cancelLeave(){$('backConfirm').classList.remove('active')}
+function renderHeader(tid){var el=$(tid);if(!el)return;el.innerHTML='<div class="h-pill">🔥 <span class="v">'+G.streak+'</span></div><div class="h-pill">🪙 <span class="xv">'+G.xp+'</span></div>'}
 
-function openLogin(){log('login_opened');$('loginDesc').textContent=`You have a ${G.streak}-day streak. Login to keep it safe.`;$('phoneG').style.display='block';$('otpG').classList.remove('active');$('emailIn').value='';$('loginOL').classList.add('active')}
-function closeLogin(){$('loginOL').classList.remove('active')}
-async function sendMagicLink(){
-  const email=$('emailIn').value.trim();
-  if(!email||!email.includes('@')){toast('Enter a valid email');return}
-  G.email=email;
-  const btn=$('phoneG').querySelector('.btn-p');
-  btn.textContent='Sending...';btn.disabled=true;
-  const err=await sbSendMagicLink(email);
-  btn.textContent='Send login link';btn.disabled=false;
-  if(err){toast('Failed: '+err.message);return}
-  $('otpPh').textContent=email;
-  $('phoneG').style.display='none';
-  $('otpG').classList.add('active');
-  toast('Check your email!');
-}
-// Listen for magic link callback (user returns from email click)
-sb.auth.onAuthStateChange(async(event,session)=>{
-  if(event==='SIGNED_IN'&&session&&!G.logged){
-    G.logged=true;
-    G.email=session.user.email||G.email;
-    try{if(window.posthog){posthog.identify(session.user.id,{email:session.user.email});posthog.capture('login_success')}}catch(x){}
-    // Merge: cloud wins if it has a higher streak
-    const existing=await sbFetchProfile(session.user.id);
-    if(existing&&existing.streak>G.streak){
-      await sbSyncFromCloud();
+// RENDER BOARD — #3: show category names instead of ? on unclaimed tiles
+function renderBoard(){
+  var db=getDailyBoard(),h='';
+  for(var i=0;i<9;i++){
+    var val=G.board[i],isSkip=G.skippedTiles.indexOf(i)>=0,q=db[i],cat=q.cat,em=CAT_E[cat]||'❓';
+    var cls='tile';
+    if(val==='x')cls+=' x claimed';
+    else if(val==='o'&&!isSkip)cls+=' o claimed';
+    else if(isSkip&&val==='')cls+=' skipped'; // #4: skipped tile is replayable
+    if(G.result)cls+=' locked';
+    var inner='';
+    if(val==='x'){inner='<span class="tile-icon">✕</span><span class="tile-cat">'+em+' '+cat+'</span>'}
+    else if(val==='o'){inner='<span class="tile-icon">○</span><span class="tile-cat">'+em+' '+cat+'</span>'}
+    else if(isSkip){
+      // #4: Skipped tile — replayable. Shows "Play this tile" on top, category in middle, "Skipped" on bottom
+      inner='<span class="tile-icon">Play again</span><span class="tile-cat">'+em+' '+cat+'</span><span class="tile-label">Skipped</span>';
     } else {
-      await sbSyncToCloud();
+      // #3: Show category name instead of ?
+      inner='<span class="tile-icon" style="font-size:16px">'+em+'</span><span class="tile-cat" style="opacity:1">'+cat+'</span>';
     }
-    save();closeLogin();toast('Signed in!');
-    const r=document.querySelector('.r-login');if(r)r.remove();
-    if($('sHome').classList.contains('active'))showHome();
-    if($('sRes').classList.contains('active'))showResults();
+    h+='<div class="'+cls+'" onclick="tileClick('+i+')">'+inner+'</div>';
   }
-});
+  return h;
+}
+
+// HOME SCREEN
+function showHome(){
+  renderHeader('hRight');
+  if(G.gameStarted||G.result){showPlayScreen();return}
+  var h='<div class="home-headline">Questly</div><div class="home-sub">Beat the system at tic-tac-toe using your knowledge.</div><div class="home-cta"><button class="btn-p" onclick="openBoard()">Play Today\'s Puzzle</button></div>';
+  // #5.3: Persistent save streak button on home if eligible
+  if(shouldShowSaveStreak())h+='<div class="home-save"><button class="btn-o" onclick="openLogin()">🔒 Save your streak</button></div>';
+  h+='<button class="htp-btn" onclick="openHTP()">How to Play</button>';
+  $('homeBody').innerHTML=h;go('sHome');logOnce('home_viewed');
+}
+
+// OPEN BOARD — with server-side check
+async function openBoard(){
+  if(G.firstVisit){G.firstVisit=false;save();showTutorial();return}
+  // Server-side daily lock: check if already played
+  var serverScore=await checkServerPlayed();
+  if(serverScore!==null){
+    toast("You already played today's puzzle.");
+    // Reconstruct done state
+    G.result=G.result||'loss';G.playedDate=localDate();save();
+    showPlayScreen();return;
+  }
+  G.gameStarted=true;G.gameDate=localDate();save();
+  log('play_pressed');log('daily_board_started');showPlayScreen();
+}
+
+// PLAY SCREEN
+function showPlayScreen(){
+  renderHeader('hRightPlay');
+  var today=localDate(),done=G.playedDate===today&&G.result!=='',h='';
+  if(done){
+    var isW=G.result==='win',sc=getScore();
+    h+='<div class="done-msg'+(isW?'':' loss')+'"><div class="dm-title">'+(isW?'✅ Victory!':'❌ You ran out of correct answers today.')+'</div><div class="dm-sub">'+(isW?'Your streak continues!':'Come back tomorrow and try again.')+'</div></div>';
+    h+='<div class="board-wrapper"><div class="board" id="boardGrid">'+renderBoard()+'</div></div>';
+    h+='<div style="font-size:13px;color:var(--t3);margin-bottom:16px">Next puzzle: <span class="time" id="playCd" style="color:var(--red);font-weight:600">'+midCd()+'</span></div>';
+    h+='<div style="display:flex;gap:8px;width:100%;max-width:300px"><button class="btn-o" style="flex:1" onclick="shareToClipboard()">📋 Share</button><button class="btn-o" style="flex:1" onclick="showResult()">View Result</button></div>';
+  } else {
+    h+='<div class="board-wrapper"><div class="play-title">Today\'s Puzzle</div><div class="play-sub">Tap a square</div><div class="board" id="boardGrid">'+renderBoard()+'</div></div>';
+  }
+  $('playBody').innerHTML=h;go('sPlay');
+  if(G.result==='win'){var wl=checkWin('x');if(wl)setTimeout(function(){var tiles=document.querySelectorAll('.tile');wl.forEach(function(i){if(tiles[i])tiles[i].classList.add('win-highlight')})},100)}
+  if(done){clearInterval(G._cdI);G._cdI=setInterval(function(){var e=$('playCd');if(e)e.textContent=midCd()},1000)}
+}
+
+// TILE CLICK — #4: skipped tiles are replayable
+var _tileGuard=0;
+function tileClick(idx){
+  var now=Date.now();if(now-_tileGuard<300)return;_tileGuard=now;
+  if(!G.gameStarted||G.result)return;
+  // Allow click on empty tiles OR skipped tiles (replayable)
+  var isSkip=G.skippedTiles.indexOf(idx)>=0;
+  if(G.board[idx]!==''&&!isSkip)return;
+  if(G.board[idx]===''&&!isSkip&&G.activeTile>=0&&G.activeTile!==idx)return;
+  if(G.activeTile===idx){showQuestion();return}
+  G.activeTile=idx;G.answered=false;G.fiftyHidden=[];G.moveCount++;save();
+  log('tile_selected',{tile_position:idx,move_number:G.moveCount});
+  showQuestion();
+}
+
+// TIMER
+var _timerInt=null,_timerStart=0;
+function startTimer(){clearInterval(_timerInt);var fill=$('qTimerFill');fill.style.transition='none';fill.style.width='100%';fill.classList.remove('urgent');fill.offsetHeight;fill.style.transition='width 0.1s linear';_timerStart=Date.now();_timerInt=setInterval(function(){if(G.answered){clearInterval(_timerInt);return}var el=(Date.now()-_timerStart)/1000,pct=Math.max(0,(1-el/Q_TIME)*100);fill.style.width=pct+'%';if(pct<30)fill.classList.add('urgent');if(el>=Q_TIME){clearInterval(_timerInt);timeUp()}},100)}
+function stopTimer(){clearInterval(_timerInt)}
+function timeUp(){if(G.answered)return;G.answered=true;var ti=G.activeTile,db=getDailyBoard(),q=db[ti];var opts=document.querySelectorAll('.q-opt');opts.forEach(function(b,j){b.classList.add('off');if(j===q.a)b.classList.add('reveal')});$('lifelines').style.display='none';G.board[ti]='o';
+// Remove from skipped if it was a retry
+var si=G.skippedTiles.indexOf(ti);if(si>=0)G.skippedTiles.splice(si,1);
+log('question_answered',{correct:false,category:q.cat,tile_position:ti,move_number:G.moveCount,timeout:true});save();setTimeout(function(){closeQuestion();afterAnswer(ti)},1400)}
+
+function showQuestion(){var ti=G.activeTile;if(ti<0)return;var db=getDailyBoard(),q=db[ti];$('qCat').innerHTML=(CAT_E[q.cat]||'')+' '+q.cat;$('qMove').textContent='Move '+G.moveCount+' of 9';$('qText').textContent=q.q;var keys=['A','B','C','D'],el=$('qOpts');el.innerHTML='';q.o.forEach(function(opt,i){var b=document.createElement('button');b.className='q-opt';if(G.fiftyHidden.indexOf(i)>=0)b.classList.add('fifty-hidden');b.innerHTML='<span class="q-key">'+keys[i]+'</span><span>'+opt+'</span>';b.onclick=function(){answerQuestion(i)};if(G.answered)b.classList.add('off');el.appendChild(b)});updateLL();$('lifelines').style.display=G.answered?'none':'flex';$('qOverlay').classList.add('active');if(!G.answered){startTimer()}else{$('qTimerFill').style.width='0%'}}
+function updateLL(){$('llFifty').disabled=G.usedFifty||G.xp<FIFTY_COST||G.answered;$('llSkip').disabled=G.usedSkip||G.xp<SKIP_COST||G.answered}
+
+var _lastPick=0;
+function answerQuestion(i){if(G.answered)return;var now=Date.now();if(now-_lastPick<200)return;_lastPick=now;stopTimer();G.answered=true;var ti=G.activeTile,db=getDailyBoard(),q=db[ti],correct=i===q.a;var opts=document.querySelectorAll('.q-opt');opts.forEach(function(b,j){b.classList.add('off');if(j===q.a)b.classList.add('correct');if(j===i&&!correct){b.classList.add('wrong');opts[q.a].classList.add('reveal')}});$('lifelines').style.display='none';G.board[ti]=correct?'x':'o';
+// Remove from skipped if retried
+var si=G.skippedTiles.indexOf(ti);if(si>=0)G.skippedTiles.splice(si,1);
+log('question_answered',{correct:correct,category:q.cat,tile_position:ti,move_number:G.moveCount,used_5050:G.fiftyHidden.length>0,used_skip:false});save();if(!correct){$('qOpts').classList.add('shake');setTimeout(function(){$('qOpts').classList.remove('shake')},250)}setTimeout(function(){closeQuestion();afterAnswer(ti)},correct?1000:1400)}
+
+function afterAnswer(ti){setTimeout(function(){var tiles=document.querySelectorAll('.tile');if(tiles[ti])tiles[ti].classList.add('claim-anim')},50);var xW=checkWin('x'),oW=checkWin('o');
+if(xW){G.result='win';G.streak++;var sc=getScore();var reward=calcXpReward(sc);G.xp+=reward;G.xpEarned=reward;G.playedDate=localDate();save();if(G.logged)sbSyncToCloud();recordResult();log('game_won',{moves_taken:G.moveCount,streak_after:G.streak,xp_earned:reward});setTimeout(function(){showConfetti();showResult()},500)}
+else if(oW||isBoardFull()){G.result='loss';var sc=getScore();var reward=calcXpReward(sc);G.xp+=reward;G.xpEarned=reward;G.playedDate=localDate();save();if(G.logged)sbSyncToCloud();recordResult();log('game_lost',{moves_taken:G.moveCount,final_board_state:G.board.join(','),xp_earned:reward});setTimeout(function(){showResult()},600)}
+else{showPlayScreen()}}
+
+// Record result to server (once)
+function recordResult(){if(!G.serverRecorded){G.serverRecorded=true;save();recordAttempt(getScore())}}
+
+function closeQuestion(){G.activeTile=-1;G.answered=false;G.fiftyHidden=[];stopTimer();save();$('qOverlay').classList.remove('active')}
+
+// 50:50
+function useFiftyFifty(){if(G.usedFifty||G.xp<FIFTY_COST||G.answered)return;var ti=G.activeTile;if(ti<0)return;var db=getDailyBoard(),q=db[ti],xpB=G.xp;G.usedFifty=true;G.xp-=FIFTY_COST;var wrong=[];for(var i=0;i<4;i++)if(i!==q.a&&G.fiftyHidden.indexOf(i)<0)wrong.push(i);for(var i=wrong.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=wrong[i];wrong[i]=wrong[j];wrong[j]=t}G.fiftyHidden=wrong.slice(0,2);save();var opts=document.querySelectorAll('.q-opt');G.fiftyHidden.forEach(function(idx){if(opts[idx])opts[idx].classList.add('fifty-hidden')});log('lifeline_used',{type:'50:50',xp_before:xpB,xp_after:G.xp,tile_position:ti,move_number:G.moveCount});updateLL();renderHeader('hRightPlay');toast('Two options removed!')}
+
+// SKIP TILE (#3 new): discard current question, assign NEW unused question, tile stays empty
+function useSkipTile(){if(G.usedSkip||G.xp<SKIP_COST||G.answered||G.activeTile<0)return;stopTimer();var xpB=G.xp,ti=G.activeTile;G.usedSkip=true;G.xp-=SKIP_COST;
+// Discard current question permanently
+var db=getDailyBoard();var oldQ=db[ti];
+G.discardedQs.push(oldQ.origIdx);
+// Assign a new spare question to this tile
+var rng2=seededRNG(localDate()+'skip'+ti+G.moveCount);
+var spare=getSpareQuestion(ti,rng2);
+if(spare){db[ti]=spare}// If no spares left, tile keeps old question (shouldn't happen with 18 questions)
+// Tile stays empty — replayable with new question
+G.board[ti]='';
+if(G.skippedTiles.indexOf(ti)<0)G.skippedTiles.push(ti);
+log('lifeline_used',{type:'skip_tile',xp_before:xpB,xp_after:G.xp,tile_position:ti,move_number:G.moveCount});
+G.activeTile=-1;G.answered=false;G.fiftyHidden=[];G.moveCount--;save();
+$('qOverlay').classList.remove('active');toast('New question assigned — tap the tile again!');showPlayScreen()}
+
+// RESULT SCREEN — with XP reward display (#5)
+function showResult(){
+  renderHeader('hRightRes');var isW=G.result==='win',sc=getScore(),h='';
+  h+='<div class="r-emoji">'+(isW?'🏆':'😔')+'</div>';
+  h+='<div class="r-title">'+(isW?'Mission Accomplished!':'Puzzle Complete')+'</div>';
+  h+='<div class="r-sub">'+(isW?'Your streak continues. Great strategy!':'You ran out of correct answers today.')+'</div>';
+  h+='<div class="r-moves">You got '+sc+'/9 correct in '+G.moveCount+' move'+(G.moveCount===1?'':'s')+'.</div>';
+  h+='<div class="r-board-mini">';
+  for(var i=0;i<9;i++){var v=G.board[i],isSk=G.skippedTiles.indexOf(i)>=0,cls=v==='x'?'rx':v==='o'?'ro':'re',txt=v==='x'?'✕':v==='o'?'○':'';h+='<div class="r-cell '+cls+'">'+txt+'</div>'}
+  h+='</div>';
+  if(isW)h+='<div class="r-streak-box"><div class="r-streak-num">🔥 '+G.streak+'</div><div class="r-streak-label">Day Streak</div></div>';
+  // XP earned message (#5)
+  h+='<div style="font-size:15px;font-weight:600;color:var(--gold);margin-bottom:12px">You earned +'+G.xpEarned+' XP today ⚡</div>';
+  h+='<div class="r-xp-line">🪙 <strong>'+G.xp+' XP</strong> balance</div>';
+  h+='<div class="r-bonus-msg">Come back tomorrow to claim <strong>50 XP</strong> daily bonus and continue your streak.</div>';
+  h+='<div class="r-cd">Next puzzle: <span class="time" id="rCd">'+midCd()+'</span></div>';
+  h+='<div class="r-actions">';
+  if(shouldShowSaveStreak())h+='<button class="btn-p" onclick="openLogin()">🔒 Save your streak now</button>';
+  h+='<button class="btn-o" onclick="shareToClipboard()">📋 Share Result</button>';
+  h+='<button class="btn-t" onclick="showPlayScreen()">View Board</button></div>';
+  $('resBody').innerHTML=h;go('sRes');
+  if(isW){var wl=checkWin('x');if(wl){var cells=document.querySelectorAll('.r-cell');wl.forEach(function(i){if(cells[i])cells[i].style.boxShadow='0 0 0 2px var(--green)'})}}
+  clearInterval(G._cdI);G._cdI=setInterval(function(){var e=$('rCd');if(e)e.textContent=midCd()},1000);
+  logOnce('result_screen_viewed',{result:G.result,streak:G.streak,xp_balance:G.xp,xp_earned:G.xpEarned})}
+
+// SHARE — clean plain text format (#4)
+function getShareText(){
+  var grid=G.board.map(function(v){return v==='x'?'🟩':v==='o'?'🟥':'⬜'});
+  var r1=grid.slice(0,3).join(''),r2=grid.slice(3,6).join(''),r3=grid.slice(6,9).join('');
+  var sc=getScore();
+  return '🧠 Questly \u2014 Today\u0027s Puzzle\n\n'+r1+'\n'+r2+'\n'+r3+'\n\nI scored '+sc+'/9 today.\n\nTry it:\n'+shareURL+'\n'}
+function shareToClipboard(){log('share_clicked',{type:'clipboard'});var text=getShareText();if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(function(){toast('Copied! Paste on WhatsApp or your status.')}).catch(function(){fallbackCopy(text)})}else{fallbackCopy(text)}}
+function fallbackCopy(text){var ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.left='-999px';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');toast('Copied! Paste on WhatsApp or your status.')}catch(e){toast('Could not copy.')}document.body.removeChild(ta)}
+
+function openHTP(){$('htpModal').classList.add('active')}
+function closeHTP(){$('htpModal').classList.remove('active')}
+$('htpModal').addEventListener('click',function(e){if(e.target===this)closeHTP()});
+function showTutorial(){$('tutModal').classList.add('active')}
+function closeTutorial(){$('tutModal').classList.remove('active');G.gameStarted=true;G.gameDate=localDate();save();log('play_pressed');log('daily_board_started');showPlayScreen()}
+function showConfetti(){var c=document.createElement('div');c.className='confetti-container';document.body.appendChild(c);var colors=['#e85d2a','#2d9b5a','#c49a20','#d44040','#3b82f6','#9b5de5','#00bbf9','#f15bb5'];for(var i=0;i<40;i++){var p=document.createElement('div');p.className='confetti-piece';p.style.left=Math.random()*100+'%';p.style.background=colors[Math.floor(Math.random()*colors.length)];p.style.animationDelay=(Math.random()*0.8)+'s';p.style.animationDuration=(2+Math.random()*1.5)+'s';p.style.width=(6+Math.random()*8)+'px';p.style.height=(6+Math.random()*8)+'px';if(Math.random()>0.5)p.style.borderRadius='50%';c.appendChild(p)}setTimeout(function(){c.remove()},4000)}
+
+// LOGIN — #5.6: dynamic microcopy
+function openLogin(){log('login_opened');$('loginDesc').textContent='You have a '+G.streak+'-day streak. Create an account so it\'s never lost.';$('phoneG').style.display='block';$('otpG').classList.remove('active');$('emailIn').value='';$('loginOL').classList.add('active')}
+function closeLogin(){$('loginOL').classList.remove('active')}
+async function sendMagicLink(){var email=$('emailIn').value.trim();if(!email||!email.includes('@')){toast('Enter a valid email');return}G.email=email;var btn=$('phoneG').querySelector('.btn-p');btn.textContent='Sending...';btn.disabled=true;var err=await sbSendMagicLink(email);btn.textContent='Send login link';btn.disabled=false;if(err){toast('Failed: '+err.message);return}$('otpPh').textContent=email;$('phoneG').style.display='none';$('otpG').classList.add('active');toast('Check your email!')}
+// #5.5: After login, hide save streak buttons, refresh screens
+sb.auth.onAuthStateChange(async function(event,session){if(event==='SIGNED_IN'&&session&&!G.logged){G.logged=true;G.email=session.user.email||G.email;try{if(window.posthog){posthog.identify(session.user.id,{email:session.user.email});posthog.capture('login_success')}}catch(x){}var existing=await sbFetchProfile(session.user.id);if(existing&&existing.streak>G.streak){await sbSyncFromCloud()}else{await sbSyncToCloud()}save();closeLogin();toast('Signed in!');
+// Re-render current screen to hide save streak buttons
+var today=localDate(),done=G.playedDate===today&&G.result!=='';
+if(done){if($('sRes').classList.contains('active'))showResult();else showPlayScreen()}else showHome()}});
 $('loginOL').addEventListener('click',function(e){if(e.target===this)closeLogin()});
 
-window.addEventListener('beforeunload',()=>{if(G.inQuiz)save()});
-document.addEventListener('visibilitychange',()=>{if(document.hidden&&G.inQuiz){save();if(!G.played)log('quiz_abandoned',{question_index:G.qi})}});
-
+// INIT
+function initApp(){
+  var s=load();if(s){for(var k in s){if(s[k]!==undefined)G[k]=s[k]}}
+  var today=localDate();
+  log('app_opened',{date:today,streak:G.streak,xp_balance:G.xp,has_played_today:G.playedDate===today&&G.result!==''});
+  if(G.gameDate&&G.gameDate!==today){resetForNewDay()}
+  if(G.playedDate&&G.playedDate!==today&&G.playedDate!==yday()&&G.result!==''){G.streak=0;save()}
+  G.gameDate=localDate();getDailyBoard();
+  (async function(){
+    var session=await sbGetSession();
+    if(session&&session.user){G.logged=true;G.email=session.user.email||G.email;try{await sbSyncFromCloud()}catch(e){}}
+    var done=G.playedDate===today&&G.result!=='';
+    if(done){showPlayScreen()}
+    else if(G.gameStarted&&G.activeTile>=0){showPlayScreen();setTimeout(function(){showQuestion()},150)}
+    else if(G.gameStarted){showPlayScreen()}
+    else{go('sHome');renderHeader('hRight');
+      // Build home content with save streak button if needed
+      var h='<div class="home-headline">Questly</div><div class="home-sub">Beat the system at tic-tac-toe using your knowledge.</div><div class="home-cta"><button class="btn-p" onclick="openBoard()">Play Today\'s Puzzle</button></div>';
+      if(shouldShowSaveStreak())h+='<div class="home-save"><button class="btn-o" onclick="openLogin()">🔒 Save your streak</button></div>';
+      h+='<button class="htp-btn" onclick="openHTP()">How to Play</button>';
+      $('homeBody').innerHTML=h;
+      logOnce('home_viewed')}
+    scheduleMN()})()}
+function resetForNewDay(){G.board=['','','','','','','','',''];G.skippedTiles=[];G.discardedQs=[];G.moveCount=0;G.activeTile=-1;G.usedFifty=false;G.usedSkip=false;G.fiftyHidden=[];G.result='';G.gameStarted=false;G.answered=false;G.serverRecorded=false;G.xpEarned=0;_dailyBoard=null;_dailySpares=[];save()}
+function scheduleMN(){var n=new Date(),t=new Date(n);t.setDate(t.getDate()+1);t.setHours(0,0,0,100);setTimeout(function(){resetForNewDay();G.gameDate=localDate();_dailyBoard=null;showHome();scheduleMN()},Math.min(t-n,864e5))}
+window.addEventListener('beforeunload',function(){save()});
+document.addEventListener('visibilitychange',function(){if(document.hidden)save()});
 initApp();
-
-</script>
-</body>
-</html>
+</script></body></html>
