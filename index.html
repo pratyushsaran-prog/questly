@@ -413,7 +413,7 @@ function fmtD(m){
 }
 function dateHdr(ds){
   const td=todayStr(),[y,mo,d]=ds.split('-').map(Number)
-  const mns=['Jan','Feb','Mar','Apr','May','Jun']
+  const mns=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
   if(ds===td)return`📅 TODAY · ${d} ${mns[mo-1]}`
   const yest=new Date(Date.now()-86400000)
   const yd=`${yest.getUTCFullYear()}-${String(yest.getUTCMonth()+1).padStart(2,'0')}-${String(yest.getUTCDate()).padStart(2,'0')}`
@@ -594,6 +594,17 @@ function buildCard(m){
         </div>
       </div>
     </div>`
+  } else if(st==='ab') {
+    // Abandoned — show grey banner, no points
+    const allV=matchVotes(m.id)
+    h+=`<div class="rz">
+      <div class="rzh">
+        <span class="rzl">${Object.keys(allV).length} votes placed</span>
+        <span class="rzb" style="color:var(--dim2)">🌧 ABANDONED</span>
+      </div>
+      <div style="font-size:11px;color:var(--dim2);padding:4px 0 4px">Match abandoned — no points awarded to anyone.</div>
+      <div class="chs">${buildChips(m,allV)}</div>
+    </div>`
   } else {
     const allV=matchVotes(m.id),total=allV.length
     const hc=allV.filter(v=>v.team===m.home_team).length
@@ -626,7 +637,8 @@ function buildChips(m,allV){
   if(!allV.length)return'<span style="font-size:10px;color:var(--dim)">No picks placed</span>'
   return USERS.map(u=>{
     const v=allV.find(x=>x.user_code===u.code);if(!v)return''
-    const vt=tm(v.team),win=m.winner&&v.team===m.winner,loss=m.winner&&v.team!==m.winner
+    const abandoned=m.winner==='ABANDONED'
+    const vt=tm(v.team),win=!abandoned&&m.winner&&v.team===m.winner,loss=!abandoned&&m.winner&&v.team!==m.winner
     const dog=win&&isDog(m.id,v.team)
     const pts=win?`<span style="color:var(--grn);font-weight:900">+${v.confidence*10+(dog?5:0)}${dog?'🐶':''}</span>`
              :loss?`<span style="color:var(--red);font-weight:900">-${v.confidence*5}</span>`:''
