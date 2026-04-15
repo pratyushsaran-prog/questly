@@ -3,869 +3,1224 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="color-scheme" content="light only">
-<title>Questly</title>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,800;9..144,900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<title>IPL 2026 · Family League</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
-:root{color-scheme:light only;--bg:#fafaf8;--surface:#fff;--sh:#f5f5f2;--border:#e8e8e4;--bl:#f0f0ec;--text:#1a1a18;--t2:#6b6b64;--t3:#9b9b94;--accent:#e85d2a;--al:#fef0eb;--green:#2d9b5a;--gl:#edf8f1;--red:#d44040;--rl:#fdf0f0;--gold:#c49a20;--r:14px}
-@media(prefers-color-scheme:dark){:root{color-scheme:light only;--bg:#fafaf8;--surface:#fff;--text:#1a1a18;--t2:#6b6b64;--t3:#9b9b94}}
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100dvh;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-button{font-family:'Inter',sans-serif;cursor:pointer}
-.app{max-width:420px;margin:0 auto;min-height:100dvh;position:relative}
-.screen{display:none;min-height:100dvh}.screen.active{display:flex;flex-direction:column}
-.fade{animation:fi .45s cubic-bezier(.16,1,.3,1)}
-@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-.btn-p{width:100%;padding:14px;border-radius:var(--r);border:none;background:var(--text);color:#fff;font-size:15px;font-weight:600;transition:all .15s;letter-spacing:-.2px}
-.btn-p:hover{opacity:.9}.btn-p:active{transform:scale(.98)}.btn-p:disabled{opacity:.35;pointer-events:none}
-.btn-o{padding:12px;border-radius:var(--r);border:1px solid var(--border);background:transparent;font-size:13px;font-weight:500;color:var(--t2);transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px}
-.btn-o:hover{background:var(--sh)}
-.btn-t{background:none;border:none;font-size:14px;font-weight:400;color:var(--t3);padding:8px 16px}.btn-t:hover{color:var(--t2)}
-.header{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;position:sticky;top:0;z-index:50;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);background:rgba(250,250,248,.88)}
-.logo{font-family:'Fraunces',serif;font-size:20px;font-weight:900;letter-spacing:-.3px}
-.h-right{display:flex;align-items:center;gap:10px}
-.h-pill{font-size:12px;font-weight:600;color:var(--t2);display:flex;align-items:center;gap:4px;background:var(--sh);padding:5px 10px;border-radius:100px}
-.h-pill .lbl{font-weight:400;color:var(--t3);font-size:11px}
-.h-pill .v{color:var(--accent);font-weight:700}.h-pill .xv{color:var(--gold);font-weight:700}
-.home-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 20px 40px;text-align:center}
-.home-headline{font-family:'Fraunces',serif;font-size:32px;font-weight:900;letter-spacing:-.5px;margin-bottom:8px}
-.home-sub{font-size:15px;font-weight:300;color:var(--t2);margin-bottom:36px;line-height:1.5;max-width:300px}
-.home-cta{width:100%;max-width:280px;margin-bottom:12px}
-.home-save{width:100%;max-width:280px;margin-bottom:12px}
-.home-save .btn-o{width:100%;background:var(--al);border-color:var(--accent);color:var(--accent);font-weight:600}
-.htp-btn{font-size:13px;font-weight:400;color:var(--t3);background:none;border:none;cursor:pointer;padding:8px 0;text-decoration:underline;text-underline-offset:3px}.htp-btn:hover{color:var(--t2)}
-.play-body{flex:1;display:flex;flex-direction:column;align-items:center;padding:8px 20px 32px}
-.play-title{font-size:18px;font-weight:700;margin-bottom:4px;letter-spacing:-.3px}
-.play-sub{font-size:13px;color:var(--t3);margin-bottom:16px;font-weight:300}
-.board-wrapper{width:100%;max-width:320px;margin:0 auto 20px}
-.board{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;aspect-ratio:1;width:100%}
-.tile{background:var(--surface);border:2px solid var(--border);border-radius:var(--r);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:28px;cursor:pointer;transition:all .2s;position:relative;-webkit-tap-highlight-color:transparent;user-select:none;overflow:hidden}
-@media(hover:hover){.tile:hover:not(.claimed):not(.locked){border-color:#d0d0cc;background:var(--sh)}}
-@media(hover:none){.tile:hover{border-color:var(--border)!important;background:var(--surface)!important}}
-.tile:active:not(.claimed):not(.locked){transform:scale(.96)}
-.tile .tile-icon{font-size:32px;line-height:1;transition:all .3s}
-.tile .tile-cat{font-size:9px;font-weight:500;color:var(--t3);margin-top:2px;text-transform:uppercase;letter-spacing:.4px;max-width:90%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center}
-.tile .tile-label{font-size:8px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:1px}
-.tile.x{background:var(--gl);border-color:var(--green)}.tile.x .tile-icon{color:var(--green)}
-.tile.o{background:var(--rl);border-color:var(--red)}.tile.o .tile-icon{color:var(--red)}
-.tile.skipped{background:#fff8f0;border-color:var(--accent);border-style:dashed;cursor:pointer;opacity:1}
-.tile.skipped .tile-icon{color:var(--accent);font-size:11px;font-weight:500;font-family:'Inter',sans-serif}
-.tile.skipped .tile-cat{color:var(--accent);opacity:1;font-weight:600}
-.tile.skipped .tile-label{color:var(--t3)}
-.tile.locked{pointer-events:none}
-.tile.win-highlight{animation:winPulse .6s ease infinite alternate;box-shadow:0 0 0 3px var(--green)}
-@keyframes winPulse{from{transform:scale(1)}to{transform:scale(1.04)}}
-.done-msg{background:var(--gl);border:1px solid var(--green);border-radius:var(--r);padding:16px;margin-bottom:16px;width:100%;max-width:320px}
-.done-msg.loss{background:var(--rl);border-color:var(--red)}
-.done-msg .dm-title{font-size:15px;font-weight:600;color:var(--green);margin-bottom:2px}
-.done-msg.loss .dm-title{color:var(--red)}
-.done-msg .dm-sub{font-size:13px;font-weight:300;color:var(--t2)}
-.q-overlay{display:none;position:fixed;inset:0;z-index:100;background:rgba(250,250,248,.97);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
-.q-overlay.active{display:flex;flex-direction:column}
-.q-inner{max-width:420px;margin:0 auto;width:100%;flex:1;display:flex;flex-direction:column;padding:20px;overflow-y:auto}
-.q-timer-bar{width:100%;height:4px;background:var(--bl);border-radius:100px;overflow:hidden;margin-bottom:20px;flex-shrink:0}
-.q-timer-fill{height:100%;background:var(--accent);border-radius:100px;transition:width .1s linear;width:100%}
-.q-timer-fill.urgent{background:var(--red)}
-.q-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
-.q-cat{display:inline-flex;align-items:center;gap:6px;background:var(--sh);padding:6px 14px;border-radius:100px;font-size:12px;font-weight:500;color:var(--t2);text-transform:uppercase;letter-spacing:.3px}
-.q-move{font-size:12px;font-weight:400;color:var(--t3)}
-.q-text{font-size:18px;font-weight:600;line-height:1.5;margin-bottom:28px;letter-spacing:-.2px}
-.q-opts{display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
-.q-opt{background:var(--surface);border:2px solid var(--border);border-radius:var(--r);padding:14px 16px;font-size:15px;font-weight:400;color:var(--text);display:flex;align-items:center;gap:12px;text-align:left;transition:all .15s;width:100%;-webkit-tap-highlight-color:transparent}
-@media(hover:hover){.q-opt:hover:not(.off):not(.correct):not(.wrong){border-color:#d0d0cc;background:var(--sh)}}
-.q-opt:active:not(.off){transform:scale(.985)}
-.q-key{width:28px;height:28px;border-radius:8px;background:var(--bg);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--t3);flex-shrink:0;transition:all .15s}
-.q-opt.correct{border-color:var(--green);background:var(--gl)}.q-opt.correct .q-key{background:var(--green);color:#fff;border-color:var(--green)}
-.q-opt.wrong{border-color:var(--red);background:var(--rl)}.q-opt.wrong .q-key{background:var(--red);color:#fff;border-color:var(--red)}
-.q-opt.off{pointer-events:none;opacity:.25}
-.q-opt.reveal{border-color:var(--green);background:var(--gl);opacity:1!important}.q-opt.reveal .q-key{background:var(--green);color:#fff;border-color:var(--green)}
-.q-opt.fifty-hidden{display:none}
-.lifelines{display:flex;gap:8px;margin-top:auto;padding-top:16px}
-.ll-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 8px;border-radius:var(--r);border:1px solid var(--border);background:var(--surface);font-size:12px;font-weight:500;color:var(--t2);transition:all .15s}
-@media(hover:hover){.ll-btn:hover:not(:disabled){background:var(--sh);border-color:#d0d0cc}}
-.ll-btn:disabled{opacity:.3;pointer-events:none}
-.ll-btn .ll-icon{font-size:18px}.ll-btn .ll-cost{font-size:10px;color:var(--t3);font-weight:400}
-.res{flex:1;display:flex;flex-direction:column;align-items:center;padding:40px 20px;text-align:center}
-.r-emoji{font-size:48px;margin-bottom:16px;animation:pop .5s cubic-bezier(.16,1,.3,1)}
-@keyframes pop{0%{transform:scale(0);opacity:0}60%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
-.r-title{font-size:22px;font-weight:700;margin-bottom:4px;letter-spacing:-.3px}
-.r-sub{font-size:14px;font-weight:300;color:var(--t2);margin-bottom:24px;line-height:1.6;max-width:280px}
-.r-board-mini{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;width:120px;margin:0 auto 24px}
-.r-cell{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;border:1px solid var(--border)}
-.r-cell.rx{background:var(--gl);color:var(--green);border-color:var(--green)}
-.r-cell.ro{background:var(--rl);color:var(--red);border-color:var(--red)}
-.r-cell.re{background:var(--sh);color:var(--t3)}
-.r-moves{font-size:14px;font-weight:400;color:var(--t2);margin-bottom:20px}
-.r-streak-box{background:var(--al);border-radius:var(--r);padding:20px;margin-bottom:20px;width:100%;max-width:300px}
-.r-streak-num{font-size:36px;font-weight:700;color:var(--accent);line-height:1}
-.r-streak-label{font-size:13px;font-weight:500;margin-top:4px}
-.r-xp-line{font-size:13px;font-weight:300;color:var(--t3);margin-bottom:16px}.r-xp-line strong{color:var(--gold);font-weight:600}
-.r-bonus-msg{font-size:13px;color:var(--t2);font-weight:400;background:var(--sh);padding:12px 16px;border-radius:var(--r);margin-bottom:20px;max-width:300px;width:100%;line-height:1.5}
-.r-cd{font-size:13px;font-weight:300;color:var(--t3);margin-bottom:24px}.r-cd .time{color:var(--red);font-weight:600;font-variant-numeric:tabular-nums}
-.r-actions{max-width:300px;width:100%;display:flex;flex-direction:column;gap:8px}
-.modal-ol{display:none;position:fixed;inset:0;background:rgba(0,0,0,.25);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:200;align-items:center;justify-content:center;padding:20px}.modal-ol.active{display:flex}
-.modal-box{background:#fff;border-radius:20px;padding:28px 24px;max-width:380px;width:100%;max-height:80vh;overflow-y:auto;position:relative;animation:mIn .4s cubic-bezier(.16,1,.3,1)}
-@keyframes mIn{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
-.modal-close{position:absolute;top:16px;right:16px;background:var(--sh);border:none;width:32px;height:32px;border-radius:50%;font-size:16px;color:var(--t2);display:flex;align-items:center;justify-content:center;cursor:pointer}.modal-close:hover{background:var(--border)}
-.modal-title{font-family:'Fraunces',serif;font-size:22px;font-weight:900;margin-bottom:20px;letter-spacing:-.3px}
-.modal-section{margin-bottom:18px}.modal-section h3{font-size:14px;font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:6px}.modal-section p{font-size:13px;font-weight:300;color:var(--t2);line-height:1.7}
-.tut-ol{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:250;align-items:center;justify-content:center;padding:20px}.tut-ol.active{display:flex}
-.tut-box{background:#fff;border-radius:20px;padding:32px 24px;max-width:340px;width:100%;text-align:center;animation:mIn .5s cubic-bezier(.16,1,.3,1)}
-.tut-emoji{font-size:40px;margin-bottom:12px}.tut-title{font-family:'Fraunces',serif;font-size:24px;font-weight:900;margin-bottom:8px}
-.tut-desc{font-size:14px;font-weight:300;color:var(--t2);line-height:1.7;margin-bottom:24px}
-.tut-steps{text-align:left;margin-bottom:24px}.tut-step{display:flex;gap:10px;margin-bottom:12px;font-size:13px;color:var(--t2);line-height:1.5}
-.tut-step-num{width:24px;height:24px;border-radius:50%;background:var(--text);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.18);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:200;align-items:flex-end;justify-content:center}.overlay.active{display:flex}
-.sheet{background:#fff;border-radius:16px 16px 0 0;padding:24px;max-width:420px;width:100%;animation:mIn .4s cubic-bezier(.16,1,.3,1)}
-.s-handle{width:32px;height:4px;background:var(--border);border-radius:100px;margin:0 auto 20px}
-.s-title{font-size:18px;font-weight:600;text-align:center;margin-bottom:4px}
-.s-desc{font-size:14px;font-weight:300;color:var(--t2);text-align:center;margin-bottom:24px}
-.s-dismiss{background:none;border:none;color:var(--t3);font-size:13px;font-weight:400;cursor:pointer;margin-top:8px;width:100%;padding:8px;text-align:center}
-.login-hl{display:flex;gap:8px;margin-bottom:24px}.lh-item{flex:1;background:var(--bg);border-radius:var(--r);padding:12px 8px;text-align:center}
-.lh-ic{font-size:18px;margin-bottom:4px}.lh-tx{font-size:11px;font-weight:400;color:var(--t3)}
-.ph-input{width:100%;padding:12px 16px;border-radius:var(--r);border:1px solid var(--border);font-size:15px;font-weight:400;background:var(--bg);color:var(--text);outline:none;font-family:'Inter',sans-serif;margin-bottom:12px}
-.ph-input:focus{border-color:var(--text)}.ph-input::placeholder{color:var(--t3);font-weight:300}
-.otp-g{display:none;flex-direction:column;gap:12px}.otp-g.active{display:flex}
-.otp-note{font-size:13px;font-weight:300;color:var(--t2);text-align:center}
-.otp-resend{background:none;border:none;color:var(--accent);font-weight:500;cursor:pointer;font-size:13px}
-.login-terms{font-size:11px;font-weight:300;color:var(--t3);text-align:center;margin-top:16px}.login-terms a{color:var(--t2)}
-.toast{position:fixed;top:16px;left:50%;transform:translateX(-50%) translateY(-80px);background:var(--text);color:#fff;padding:10px 20px;border-radius:100px;font-size:13px;font-weight:500;z-index:999;transition:transform .35s cubic-bezier(.16,1,.3,1);white-space:nowrap}.toast.show{transform:translateX(-50%) translateY(0)}
-.confetti-container{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:300;overflow:hidden}
-.confetti-piece{position:absolute;top:-20px;width:10px;height:10px;border-radius:2px;animation:cFall 2.5s ease-in forwards}
-@keyframes cFall{0%{transform:translateY(0) rotate(0deg);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
-@keyframes shake{20%{transform:translateX(-4px)}40%{transform:translateX(4px)}60%{transform:translateX(-2px)}80%{transform:translateX(2px)}}.shake{animation:shake .25s ease}
-@keyframes claimA{0%{transform:scale(0) rotate(-10deg);opacity:0}60%{transform:scale(1.2) rotate(3deg)}100%{transform:scale(1) rotate(0);opacity:1}}.claim-anim .tile-icon{animation:claimA .4s cubic-bezier(.16,1,.3,1)}
+:root{
+  --bg:#08090f;--s1:#0f101c;--s2:#171828;--s3:#1e2030;
+  --b1:#252638;--b2:#31334a;
+  --acc:#f2b830;--red:#e83d5a;--blue:#4285f4;--grn:#1db954;
+  --txt:#ecedf8;--dim:#5e5f7a;--dim2:#9293aa;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;font-family:'Barlow',sans-serif;background:var(--bg);color:var(--txt)}
+body{display:flex;justify-content:center}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.3;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E")}
+#app{width:100%;max-width:430px;height:100vh;display:flex;flex-direction:column;overflow:hidden;position:relative}
+.scr{position:absolute;inset:0;display:flex;flex-direction:column;transition:opacity .22s,transform .22s}
+.scr.off{opacity:0;pointer-events:none;transform:translateY(8px)}
+.scr.on{opacity:1;pointer-events:all;transform:translateY(0)}
 
-.r-headline{font-family:'Fraunces',serif;font-size:20px;font-weight:900;letter-spacing:-.3px;margin-bottom:4px;line-height:1.3}
-.r-meta{font-size:13px;font-weight:400;color:var(--t2);margin-bottom:4px}
-.r-time-compare{font-size:12px;color:var(--t3);font-weight:300;margin-bottom:20px;font-style:italic}
-.streak-dots{display:flex;gap:6px;justify-content:center;margin:12px 0 8px}
-.streak-dot{width:12px;height:12px;border-radius:50%;background:var(--border)}
-.streak-dot.filled{background:var(--accent)}
-.streak-milestone{font-size:12px;color:var(--t3);font-weight:300;margin-bottom:16px}
-.reward-card{background:linear-gradient(135deg,#fff7ed,#fef0eb);border:1px solid var(--accent);border-radius:var(--r);padding:16px;margin-bottom:16px;max-width:300px;width:100%;text-align:center}
-.reward-card .rc-title{font-size:14px;font-weight:600;color:var(--accent);margin-bottom:4px}
-.reward-card .rc-body{font-size:13px;font-weight:300;color:var(--t2)}
-.home-reward{background:linear-gradient(135deg,#edf8f1,#e0f5e8);border:1px solid var(--green);border-radius:var(--r);padding:16px;margin-bottom:16px;max-width:280px;width:100%;text-align:center;animation:fi .45s cubic-bezier(.16,1,.3,1)}
-.home-reward .hr-title{font-size:14px;font-weight:600;color:var(--green);margin-bottom:4px}
-.home-reward .hr-body{font-size:15px;font-weight:700;color:var(--green)}
-.r-xp-badge{display:inline-block;font-size:13px;font-weight:600;color:var(--gold);background:#fdf8eb;border:1px solid #e8d88a;border-radius:100px;padding:4px 14px;margin-bottom:16px}
-.first-play-msg{font-size:13px;color:var(--green);font-weight:500;background:var(--gl);border:1px solid var(--green);border-radius:var(--r);padding:10px 16px;margin-bottom:12px;max-width:300px;width:100%}
-.board-feedback{position:absolute;top:-36px;left:50%;transform:translateX(-50%);font-size:13px;font-weight:600;padding:6px 16px;border-radius:100px;white-space:nowrap;z-index:10;animation:fi .3s ease}
-.board-feedback.correct{background:var(--gl);color:var(--green);border:1px solid var(--green)}
-.board-feedback.wrong{background:var(--rl);color:var(--red);border:1px solid var(--red)}
-.loading-screen{display:flex;align-items:center;justify-content:center;min-height:100dvh;font-size:15px;color:var(--t3);font-weight:300}
-.ttt-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:260;align-items:center;justify-content:center;padding:20px}.ttt-overlay.active{display:flex}
-.ttt-box{background:#fff;border-radius:20px;padding:32px 24px;max-width:340px;width:100%;text-align:center;animation:mIn .5s cubic-bezier(.16,1,.3,1)}
-.ttt-demo{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;width:120px;margin:16px auto;font-size:24px;font-weight:700;color:var(--green)}
-.ttt-demo div{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;border:2px solid var(--border);background:var(--surface)}
-.ttt-demo div.lit{background:var(--gl);border-color:var(--green);animation:fi .4s ease}
-.ftu-blur .board,.ftu-blur .play-title,.ftu-blur .play-sub{filter:blur(5px);pointer-events:none;transition:filter .4s ease}
-.ftu-arrow{position:absolute;top:48px;right:20px;font-size:22px;z-index:60;animation:ftuBounce 1s ease infinite;pointer-events:none}
-@keyframes ftuBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-.daily-reward-banner{background:linear-gradient(135deg,#fdf8eb,#f7edcc);border:1px solid #e8d88a;border-radius:var(--r);padding:10px 16px;text-align:center;font-size:13px;font-weight:600;color:#b8860b;margin-bottom:12px;max-width:280px;width:100%;animation:fi .4s ease}
-.header-tooltip{position:absolute;top:42px;background:var(--text);color:#fff;padding:8px 14px;border-radius:10px;font-size:11px;font-weight:400;line-height:1.4;max-width:180px;z-index:100;animation:fi .3s ease;pointer-events:none}
-.header-tooltip::before{content:'';position:absolute;top:-6px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:6px solid var(--text)}
-.header-tooltip.fade-out{opacity:0;transition:opacity .5s ease}
-.h-float{position:absolute;top:-4px;font-size:11px;font-weight:700;pointer-events:none;animation:floatUp .8s ease forwards;z-index:50}
-.h-float.xp-float{color:var(--gold)}.h-float.streak-float{color:var(--accent)}
-@keyframes floatUp{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-20px)}}
-.review-label{font-size:12px;color:var(--t3);font-weight:500;text-align:center;margin-bottom:8px;padding:6px 12px;background:var(--sh);border-radius:100px;display:inline-block}
-.review-answer{margin-top:8px;padding:8px 12px;border-radius:8px;font-size:13px;text-align:center}
-.review-answer.correct{background:var(--gl);color:var(--green);font-weight:600}
-.review-answer.wrong{background:#fde8e8;color:var(--red);font-weight:600}
-.r-cd-big{background:var(--sh);border-radius:var(--r);padding:16px 24px;text-align:center;font-size:14px;color:var(--t2);margin-bottom:20px;width:100%;max-width:300px}
-.r-cd-big .time{display:block;font-size:28px;font-weight:700;color:var(--accent);margin-top:4px}
-.r-subtitle{font-size:14px;color:var(--t2);font-weight:300;margin-bottom:16px}
-.r-meta-secondary{font-size:12px;color:var(--t3);font-weight:300;margin-bottom:4px}
-.home-micro{font-size:12px;color:var(--t3);font-weight:300;margin-top:4px}
-.home-reward .hr-streak{font-size:13px;color:var(--t2);font-weight:300;margin-top:6px}
+/* LOADING */
+#sLoad{background:var(--bg);justify-content:center;align-items:center;gap:16px}
+.spin{width:36px;height:36px;border:3px solid var(--b1);border-top-color:var(--acc);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loadtxt{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:3px;color:var(--dim)}
+
+/* LOGIN */
+#sL{background:var(--bg);justify-content:center;align-items:center;padding:20px}
+.hero{text-align:center;margin-bottom:28px}
+.cup{font-size:54px;display:block;animation:fl 3s ease-in-out infinite}
+@keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.brand{font-family:'Bebas Neue',sans-serif;font-size:44px;letter-spacing:6px;line-height:1;
+  background:linear-gradient(135deg,#f2b830,#e83d5a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.subt{font-size:11px;letter-spacing:3px;color:var(--dim);text-transform:uppercase;font-weight:700;margin-top:6px}
+.lbox{width:100%;background:var(--s1);border:1px solid var(--b1);border-radius:18px;padding:24px 20px}
+.lbox h2{font-size:18px;font-weight:800;margin-bottom:4px}
+.lbox p{font-size:12px;color:var(--dim2);margin-bottom:18px;line-height:1.5}
+.ci{width:100%;padding:15px;border-radius:11px;border:1.5px solid var(--b1);
+  background:var(--s2);color:var(--acc);font-family:'Bebas Neue',sans-serif;
+  font-size:26px;letter-spacing:7px;text-align:center;outline:none;
+  text-transform:uppercase;transition:border-color .2s;margin-bottom:10px}
+.ci:focus{border-color:var(--acc)}
+.ci::placeholder{color:var(--b2);font-size:20px;letter-spacing:3px}
+.err{background:rgba(232,61,90,.1);border:1px solid rgba(232,61,90,.28);border-radius:8px;
+  padding:9px 12px;font-size:12px;color:var(--red);margin-bottom:10px;text-align:center;display:none}
+.gbtn{width:100%;padding:13px;border-radius:10px;border:none;
+  background:linear-gradient(135deg,var(--acc),var(--red));color:#fff;
+  font-family:'Barlow',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:opacity .15s}
+.gbtn:hover{opacity:.9}
+.gbtn:disabled{opacity:.28;cursor:not-allowed}
+.lfoot{margin-top:18px;font-size:11px;color:var(--dim);text-align:center;line-height:2}
+
+/* MAIN */
+#sM{background:var(--bg)}
+.tb{flex-shrink:0;padding:12px 14px 0;background:linear-gradient(to bottom,var(--bg) 82%,transparent);z-index:50}
+.tr{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;
+  background:linear-gradient(135deg,#f2b830,#e83d5a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.urow{display:flex;align-items:center;gap:6px}
+.upill{display:flex;align-items:center;gap:6px;background:var(--s2);border:1px solid var(--b1);
+  border-radius:20px;padding:4px 11px 4px 5px;font-size:12px;font-weight:700}
+.uav{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:900;color:#fff;flex-shrink:0}
+.upts{font-family:'Bebas Neue',sans-serif;font-size:15px;color:var(--acc);letter-spacing:1px}
+.ck{display:flex;justify-content:space-between;align-items:center;background:var(--s1);
+  border:1px solid var(--b1);border-radius:10px;padding:8px 12px;margin-bottom:8px;font-size:12px}
+.ckl{display:flex;align-items:center;gap:6px;font-weight:600}
+.dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.dot.g{background:var(--grn)}.dot.o{background:var(--acc);animation:bk 1.5s infinite}.dot.r{background:var(--red)}
+@keyframes bk{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(1.6)}}
+.ckr{font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:1px;color:var(--acc)}
+.tabs{display:flex;background:var(--s1);border:1px solid var(--b1);border-radius:10px;padding:3px;gap:2px;margin-bottom:2px}
+.tab{flex:1;padding:7px 2px;border:none;background:transparent;color:var(--dim);
+  font-family:'Barlow',sans-serif;font-size:10px;font-weight:800;border-radius:7px;
+  cursor:pointer;transition:all .15s;letter-spacing:.2px;white-space:nowrap}
+.tab.on{background:var(--s2);color:var(--txt);border:1px solid var(--b1)}
+.panels{flex:1;overflow:hidden;position:relative}
+.panel{position:absolute;inset:0;overflow-y:auto;padding:8px 13px 86px;display:none}
+.panel.on{display:block}
+.panel::-webkit-scrollbar{display:none}
+.panel{scrollbar-width:none}
+.sh{font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:2.5px;color:var(--dim);margin:7px 0 8px}
+
+/* MATCH CARD */
+.mc{background:var(--s1);border:1px solid var(--b1);border-radius:13px;overflow:hidden;margin-bottom:10px;transition:transform .1s}
+.mc:active{transform:scale(.984)}
+.mh{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:1px solid var(--b1)}
+.mm{font-size:9px;color:var(--dim);font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.chip{font-size:9px;font-weight:800;padding:2px 8px;border-radius:20px;letter-spacing:.5px;text-transform:uppercase}
+.chip.op{background:rgba(29,185,84,.11);color:var(--grn)}
+.chip.lk{background:rgba(94,95,122,.15);color:var(--dim2)}
+.chip.dn{background:rgba(242,184,48,.11);color:var(--acc)}
+.chip.ab{background:rgba(94,95,122,.18);color:#9293aa}
+.chip.ft{background:rgba(66,133,244,.1);color:var(--blue)}
+.mt{display:flex;align-items:center;padding:11px 12px 9px;gap:7px}
+.mteam{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.tbadge{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:1px;color:#fff;border:2px solid rgba(255,255,255,.06)}
+.tn{font-size:10px;font-weight:700;text-align:center;line-height:1.25}
+.vs{font-family:'Bebas Neue',sans-serif;font-size:15px;color:var(--dim);letter-spacing:2px;flex-shrink:0}
+.pz{padding:0 12px 12px;border-top:1px solid var(--b1)}
+.pzl{font-size:9px;font-weight:800;color:var(--dim);text-transform:uppercase;letter-spacing:.7px;padding-top:9px;margin-bottom:7px}
+.pg{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px}
+.pb{padding:9px 5px;border-radius:8px;border:1.5px solid var(--b1);background:var(--s2);
+  color:var(--txt);font-family:'Barlow',sans-serif;font-size:11px;font-weight:700;
+  cursor:pointer;transition:all .12s;text-align:center;line-height:1.3}
+.pb:hover{border-color:rgba(242,184,48,.4)}
+.pb.sel{border-color:var(--acc);background:rgba(242,184,48,.08);color:var(--acc)}
+.cr{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.cl{font-size:10px;color:var(--dim2);flex-shrink:0;font-weight:600}
+.cg{display:flex;gap:5px;flex:1}
+.cb{flex:1;padding:6px 3px;border-radius:7px;border:1.5px solid var(--b1);background:var(--s2);
+  color:var(--dim);font-family:'Barlow',sans-serif;font-size:12px;font-weight:800;cursor:pointer;transition:all .12s;text-align:center}
+.cb.sel{border-color:var(--blue);background:rgba(66,133,244,.1);color:var(--blue)}
+.lkb{width:100%;padding:11px;border-radius:8px;border:none;
+  background:linear-gradient(135deg,var(--acc),var(--red));color:#fff;
+  font-family:'Barlow',sans-serif;font-size:13px;font-weight:800;cursor:pointer;transition:opacity .14s}
+.lkb:hover{opacity:.9}
+.lkb:disabled{opacity:.28;cursor:not-allowed}
+.mv{padding-top:9px;display:flex;justify-content:space-between;align-items:center}
+.mvl{font-size:9px;font-weight:800;color:var(--dim);text-transform:uppercase;letter-spacing:.6px}
+.mvi{display:flex;align-items:center;gap:7px}
+.mvt{font-size:12px;font-weight:800}
+.mvc{font-size:11px;color:var(--blue);font-weight:800}
+.mvk{font-size:9px;background:rgba(29,185,84,.1);color:var(--grn);padding:2px 7px;border-radius:20px;font-weight:800}
+.rz{padding:9px 12px 12px;border-top:1px solid var(--b1)}
+.rzh{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.rzl{font-size:9px;font-weight:800;color:var(--dim);text-transform:uppercase;letter-spacing:.7px}
+.rzb{font-size:9px;font-weight:800;letter-spacing:.5px}
+.dr{display:flex;align-items:center;gap:7px;margin-bottom:5px}
+.dn2{width:40px;font-size:9px;font-weight:800;flex-shrink:0}
+.dtr{flex:1;height:15px;background:var(--s3);border-radius:4px;overflow:hidden}
+.df{height:100%;border-radius:4px;transition:width .8s cubic-bezier(.34,1.56,.64,1)}
+.dp{width:28px;text-align:right;font-size:10px;font-weight:800;flex-shrink:0}
+.dtag{font-size:8px;padding:1px 4px;border-radius:20px;background:rgba(232,61,90,.12);color:var(--red);font-weight:800}
+.chs{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.pch{display:flex;align-items:center;gap:3px;padding:3px 7px 3px 4px;border-radius:20px;
+  background:var(--s2);border:1px solid var(--b1);font-size:10px;font-weight:700}
+.pch.win{border-color:rgba(29,185,84,.38)}
+.pch.los{border-color:rgba(232,61,90,.25);opacity:.6}
+.mav{width:15px;height:15px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:900;color:#fff;flex-shrink:0}
+
+/* MY PICKS */
+.sr{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--b1);border-radius:12px;overflow:hidden;margin-bottom:11px}
+.sc{background:var(--s1);padding:13px 6px;text-align:center}
+.sv{font-family:'Bebas Neue',sans-serif;font-size:30px;line-height:1}
+.sl{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.6px;margin-top:2px}
+.pr{display:flex;align-items:center;gap:10px;background:var(--s1);border:1px solid var(--b1);border-radius:12px;padding:11px 12px;margin-bottom:8px}
+.pm{flex:1;min-width:0}
+.pmn{font-size:12px;font-weight:800;margin-bottom:2px}
+.pmd{font-size:10px;color:var(--dim2)}
+.ppr{text-align:right;flex-shrink:0}
+.ptb{font-size:10px;font-weight:800;padding:2px 8px;border-radius:20px;display:inline-block;margin-bottom:2px}
+.ppt{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px}
+.ppt.p{color:var(--grn)}.ppt.n{color:var(--red)}
+.ppd{font-size:10px;color:var(--dim);background:var(--s2);padding:2px 8px;border-radius:20px}
+
+/* STANDINGS */
+.lr{display:flex;align-items:center;gap:10px;background:var(--s1);border:1px solid var(--b1);border-radius:12px;padding:11px 12px;margin-bottom:8px}
+.lr.gd{border-color:var(--acc);background:linear-gradient(135deg,rgba(242,184,48,.06),var(--s1))}
+.lr.me{border-color:rgba(66,133,244,.38);background:linear-gradient(135deg,rgba(66,133,244,.05),var(--s1))}
+.lrk{font-family:'Bebas Neue',sans-serif;font-size:20px;width:22px;text-align:center;flex-shrink:0;color:var(--dim)}
+.lr.gd .lrk{color:var(--acc)}
+.lav{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#fff;flex-shrink:0}
+.li{flex:1;min-width:0}
+.ln{font-size:13px;font-weight:800;display:flex;align-items:center;gap:5px}
+.mtg{font-size:8px;background:rgba(66,133,244,.15);color:var(--blue);padding:2px 6px;border-radius:20px;font-weight:800}
+.ls{font-size:10px;color:var(--dim2);margin-top:2px}
+.lpw{text-align:right;flex-shrink:0}
+.lpt{font-family:'Bebas Neue',sans-serif;font-size:25px;letter-spacing:1px}
+.lr.gd .lpt{color:var(--acc)}
+.lr.me .lpt{color:var(--blue)}
+.lpl{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;display:block;text-align:right}
+.sk{background:var(--s1);border:1px solid var(--b1);border-radius:12px;padding:13px;margin-top:4px}
+.skh{font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:2px;color:var(--dim);margin-bottom:9px}
+.skr{display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px}
+.skr:last-child{margin-bottom:0}
+
+/* ADMIN */
+.ac{background:var(--s1);border:1px solid var(--b1);border-radius:13px;padding:12px;margin-bottom:10px}
+.ach{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.act{font-size:12px;font-weight:800}
+.wg{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.wb{padding:13px 7px;border-radius:9px;border:none;cursor:pointer;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:2px;transition:all .13s;text-align:center}
+.wb:disabled{opacity:.22;cursor:not-allowed}
+.wbs{font-size:9px;font-family:'Barlow',sans-serif;font-weight:700;display:block;margin-top:3px;opacity:.7}
+.db{display:flex;align-items:center;justify-content:space-between;background:rgba(29,185,84,.07);border:1px solid rgba(29,185,84,.2);border-radius:9px;padding:9px 12px;font-size:12px;font-weight:700;color:var(--grn)}
+.ub{background:none;border:none;color:var(--dim);font-size:11px;font-weight:700;cursor:pointer;text-decoration:underline;padding:0}
+
+/* BOTTOM NAV */
+.bn{flex-shrink:0;display:flex;background:var(--s1);border-top:1px solid var(--b1);padding:6px 0 18px}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px;border:none;background:transparent;color:var(--dim);cursor:pointer;transition:color .14s}
+.nb.on{color:var(--acc)}
+.ni{font-size:17px}
+.nl{font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.5px}
+
+/* MODAL */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:500;align-items:center;justify-content:center;padding:20px;display:none}
+.overlay.open{display:flex}
+.modal{background:var(--s1);border:1px solid var(--b1);border-radius:16px;padding:24px 20px;width:100%;max-width:360px}
+.modal h3{font-size:17px;font-weight:800;margin-bottom:8px}
+.modal p{font-size:13px;color:var(--dim2);margin-bottom:18px;line-height:1.6}
+.mbtns{display:flex;gap:10px}
+.mbtns button{flex:1;padding:11px;border-radius:9px;border:none;font-family:'Barlow',sans-serif;font-size:13px;font-weight:800;cursor:pointer}
+.mbcancel{background:var(--s2);color:var(--dim2)}
+.mbconfirm{background:var(--red);color:#fff}
+
+/* TOAST */
+#toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(12px);
+  background:var(--s2);border:1px solid var(--b2);border-radius:10px;padding:9px 16px;
+  font-size:12px;font-weight:700;opacity:0;transition:all .24s;z-index:9998;
+  white-space:nowrap;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.6)}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 </style>
-<script>!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
-posthog.init("phc_UxeoAAlu2hyrfoJf9CrLKX4ySqWiYYQJ5ROsHwyhjx",{api_host:"https://app.posthog.com",capture_pageview:false});</script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 <body>
-<div class="app">
-<div id="loadingScreen" class="loading-screen">Loading today's puzzle...</div>
-<div class="screen" id="sHome"><div class="header"><div class="logo">Questly</div><div class="h-right" id="hRight"></div></div><div class="home-body" id="homeBody"></div></div>
-<div class="screen" id="sPlay"><div class="header"><div class="logo">Questly</div><div class="h-right" id="hRightPlay"></div></div><div class="play-body" id="playBody"></div></div>
-<div class="screen" id="sRes"><div class="header"><div class="logo">Questly</div><div class="h-right" id="hRightRes"></div></div><div class="res fade" id="resBody"></div></div>
+<div id="app">
+
+<!-- LOADING -->
+<div id="sLoad" class="scr on">
+  <div class="spin"></div>
+  <div class="loadtxt">CONNECTING…</div>
 </div>
-<div class="q-overlay" id="qOverlay"><div class="q-inner"><div class="q-timer-bar"><div class="q-timer-fill" id="qTimerFill"></div></div><div class="q-header"><div class="q-cat" id="qCat"></div><div class="q-move" id="qMove"></div></div><div class="q-text" id="qText"></div><div class="q-opts" id="qOpts"></div><div class="lifelines" id="lifelines"><button class="ll-btn" id="llFifty" onclick="useFiftyFifty()"><span class="ll-icon">🎯</span><span>50:50</span><span class="ll-cost">80 XP</span></button><button class="ll-btn" id="llSkip" onclick="useSkipTile()"><span class="ll-icon">⏭️</span><span>Skip Tile</span><span class="ll-cost">120 XP</span></button></div></div></div>
-<div class="modal-ol" id="htpModal"><div class="modal-box"><button class="modal-close" onclick="closeHTP()">✕</button><div class="modal-title">How Questly Works</div><div class="modal-section"><h3>🎮 The Board</h3><p>You play on a 3×3 board. Tap a square to reveal a question.</p></div><div class="modal-section"><h3>✅ Claiming Squares</h3><p>Answer correctly → you claim the square with <strong>X</strong>.<br>Answer wrong or time runs out → the square is marked <strong>O</strong>.</p></div><div class="modal-section"><h3>🏆 Winning</h3><p>Connect 3 X's in a row (horizontal, vertical, or diagonal) to win the day.</p></div><div class="modal-section"><h3>🛟 Lifelines</h3><p>You get two lifelines each day:<br><strong>50:50</strong> — removes two wrong answers (costs 80 XP).<br><strong>Skip Tile</strong> — skip the question (costs 120 XP). A new question replaces it and you can try the tile again.<br>Each lifeline can be used only once per day.</p></div><div class="modal-section"><h3>⏱️ Timer</h3><p>You have 12 seconds per question. If time runs out, the square is marked O.</p></div><div class="modal-section"><h3>📅 Daily Play</h3><p>You can play only once per day. Come back tomorrow to continue your streak and claim your daily XP.</p></div></div></div>
-<div class="tut-ol" id="tutModal"><div class="tut-box"><div class="tut-emoji">🎉</div><div class="tut-title">Welcome to Questly</div><div class="tut-desc" style="text-align:left;font-size:14px;line-height:1.7">You received <strong>200 XP</strong> to start.<br><br>Use XP to:<br>• Remove two wrong answers (50:50)<br>• Skip difficult questions<br>• Protect your streak<br><br>Play one puzzle daily to build your streak 🔥</div><button class="btn-p" onclick="closeTutorial()">Start Today's Puzzle</button><div class="home-micro" style="margin-top:12px">No signup required • Takes 2 minutes daily</div></div></div>
-<div class="ttt-overlay" id="tttOverlay"><div class="ttt-box"><div style="font-size:18px;font-weight:700;margin-bottom:8px">Your goal: make a line of 3 X's</div><div class="ttt-demo" id="tttDemo"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div><div style="font-size:14px;color:var(--t2);font-weight:300;margin-bottom:20px">Answer questions correctly to claim squares.</div><button class="btn-p" onclick="closeTTTOverlay()">Start</button></div></div>
-<div class="overlay" id="loginOL"><div class="sheet"><div class="s-handle"></div><div class="s-title">Don't lose your streak</div><div class="s-desc" id="loginDesc">Create an account so your streak is never lost.</div><div class="login-hl"><div class="lh-item"><div class="lh-ic">🔥</div><div class="lh-tx">Keep streak</div></div><div class="lh-item"><div class="lh-ic">⚡</div><div class="lh-tx">Save XP</div></div><div class="lh-item"><div class="lh-ic">📊</div><div class="lh-tx">Track stats</div></div></div><div id="phoneG"><input type="email" class="ph-input" placeholder="Enter your email" id="emailIn"><button class="btn-p" onclick="sendMagicLink()">Send login link</button></div><div class="otp-g" id="otpG"><div class="otp-note">✉️ Magic link sent to <strong id="otpPh"></strong></div><div style="font-size:13px;font-weight:300;color:var(--t3);text-align:center;margin-top:8px;line-height:1.5">Check your inbox and click the link.<br>You'll be logged in automatically.</div><div style="text-align:center;margin-top:12px"><button class="otp-resend" onclick="sendMagicLink()">Resend link</button></div></div><button class="s-dismiss" onclick="closeLogin()">Not now</button><div class="login-terms">By continuing you agree to our <a href="#">Terms</a> & <a href="#">Privacy</a></div></div></div>
-<div class="toast" id="toastEl"></div>
+
+<!-- LOGIN -->
+<div id="sL" class="scr off">
+  <div class="hero">
+    <span class="cup">🏆</span>
+    <div class="brand">IPL PREDICTOR</div>
+    <div class="subt">Family League · 2026</div>
+  </div>
+  <div class="lbox">
+    <h2>Enter your code</h2>
+    <p>Type the personal code Pratyush shared with you. All votes are saved in real-time — everyone sees live data.</p>
+    <input class="ci" id="ci" type="text" placeholder="e.g. PRAT321"
+      autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false"
+      oninput="onCI()" onkeydown="if(event.key==='Enter')doLogin()">
+    <div class="err" id="err">❌ Wrong code. Check with Pratyush.</div>
+    <button class="gbtn" id="gbtn" onclick="doLogin()" disabled>Enter the League →</button>
+  </div>
+  <div class="lfoot">
+    All 70 matches · 31 Mar – 24 May 2026<br>
+    <span style="color:var(--dim);font-size:10px">Live · Votes lock at match time · Picks revealed to all after lock</span>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div id="sM" class="scr off">
+  <div class="tb">
+    <div class="tr">
+      <div class="logo">IPL 2026</div>
+      <div class="urow">
+        <div class="upill"><div class="uav" id="uav">P</div><span id="uname">—</span></div>
+        <div class="upts" id="upts">0 PTS</div>
+      </div>
+    </div>
+    <div class="ck">
+      <div class="ckl"><div class="dot g" id="ckd"></div><span id="ckt">Loading…</span></div>
+      <span class="ckr" id="ckr"></span>
+    </div>
+    <div class="tabs">
+      <button class="tab on"  onclick="goTab('matches',this,'n0')">🏏 Matches</button>
+      <button class="tab"     onclick="goTab('picks',this,'n1')">👀 All Picks</button>
+      <button class="tab"     onclick="goTab('mypicks',this,'n2')">🎯 My Picks</button>
+      <button class="tab"     onclick="goTab('standings',this,'n3')">🏆 Standings</button>
+      <button class="tab" id="atab" onclick="goTab('admin',this,'n4')" style="display:none">⚙️ Admin</button>
+    </div>
+  </div>
+  <div class="panels">
+    <div class="panel on" id="p-matches"></div>
+    <div class="panel" id="p-picks"></div>
+    <div class="panel" id="p-mypicks"></div>
+    <div class="panel" id="p-standings"></div>
+    <div class="panel" id="p-admin"></div>
+  </div>
+  <div class="bn">
+    <button class="nb on" id="n0" onclick="goTab('matches',null,'n0')"><span class="ni">🏏</span><span class="nl">Matches</span></button>
+    <button class="nb" id="n1" onclick="goTab('picks',null,'n1')"><span class="ni">👀</span><span class="nl">All Picks</span></button>
+    <button class="nb" id="n2" onclick="goTab('mypicks',null,'n2')"><span class="ni">🎯</span><span class="nl">My Picks</span></button>
+    <button class="nb" id="n3" onclick="goTab('standings',null,'n3')"><span class="ni">🏆</span><span class="nl">Standings</span></button>
+    <button class="nb" id="n4" onclick="goTab('admin',null,'n4')" style="display:none"><span class="ni">⚙️</span><span class="nl">Admin</span></button>
+    <button class="nb" onclick="signOut()"><span class="ni">🚪</span><span class="nl">Out</span></button>
+  </div>
+</div>
+
+<!-- Undo modal -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <h3>Undo Result?</h3>
+    <p id="modal-msg">This will reverse all points for this match.</p>
+    <div class="mbtns">
+      <button class="mbcancel" onclick="closeModal()">Cancel</button>
+      <button class="mbconfirm" onclick="confirmUndo()">Yes, Undo</button>
+    </div>
+  </div>
+</div>
+
+<!-- Reset votes modal -->
+<div class="overlay" id="overlay2">
+  <div class="modal">
+    <h3>Reset All Votes?</h3>
+    <p id="modal2-msg">This will delete all votes for this match. Everyone can vote again from scratch.</p>
+    <div class="mbtns">
+      <button class="mbcancel" onclick="closeModal2()">Cancel</button>
+      <button class="mbconfirm" onclick="confirmResetVotes()">Yes, Reset</button>
+    </div>
+  </div>
+</div>
+</div>
+<div id="toast"></div>
+
 <script>
-function getRef(){try{return new URLSearchParams(window.location.search).get('ref')}catch(e){return null}}
-var _ref=getRef();if(_ref){try{localStorage.setItem('questly_ref',_ref)}catch(e){}}
-if(window.location.pathname==='/auth'){setTimeout(function(){try{window.history.replaceState({},document.title,'/')}catch(e){}},50)}
-var shareURL=window.location.origin+(window.location.pathname==='/'?'':window.location.pathname);
+/* ══════════════════════════════════════════════════════════
+   ⚙️  CONFIGURATION — Replace with your Supabase values
+   Get from: supabase.com → your project → Settings → API
+══════════════════════════════════════════════════════════ */
+const SUPABASE_URL  = 'https://kpfnoppmfvkxdssaabef.supabase.co'  // ← paste your URL
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtwZm5vcHBtZnZreGRzc2FhYmVmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4ODEyODgsImV4cCI6MjA5MDQ1NzI4OH0.Prjaq85U5EDTKdRrn4tqiO0p-7ktlE1d5yjBfXlLVp4'
 
-// SUPABASE (PRESERVED)
-var SB_URL='https://aymztaxwncpsegnibbut.supabase.co';
-var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF5bXp0YXh3bmNwc2VnbmliYnV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzExMzQwNDMsImV4cCI6MjA4NjcxMDA0M30.rMkRjk6_dfMndTFxinSHiT4jpcDAxeE1hYTmGIbbwH4';
-var sb=window.supabase.createClient(SB_URL,SB_KEY);
-async function sbSendMagicLink(email){var r=await sb.auth.signInWithOtp({email:email,options:{emailRedirectTo:window.location.origin+'/auth'}});return r.error}
-async function sbGetUser(){var r=await sb.auth.getUser();return r.data.user}
-async function sbGetSession(){var r=await sb.auth.getSession();return r.data.session}
-async function sbFetchProfile(uid){var r=await sb.from('users').select('*').eq('id',uid).single();if(r.error&&r.error.code==='PGRST116')return null;return r.data}
-async function sbUpsertProfile(uid,f){var r=await sb.from('users').upsert(Object.assign({id:uid},f),{onConflict:'id'});if(r.error)console.error('sbUpsert:',r.error)}
-async function sbSyncToCloud(){var u=await sbGetUser();if(!u)return;await sbUpsertProfile(u.id,{email:G.email||u.email||'',streak:G.streak,xp:G.xp,played_date:G.playedDate,score:0})}
-async function sbSyncFromCloud(){var u=await sbGetUser();if(!u)return false;var p=await sbFetchProfile(u.id);if(!p)return false;G.email=p.email||u.email||G.email;G.streak=p.streak!=null?p.streak:G.streak;G.xp=p.xp!=null?p.xp:G.xp;G.playedDate=p.played_date||G.playedDate;G.logged=true;save();return true}
+/* ══════════════════════════════════════════════════════════
+   USERS
+══════════════════════════════════════════════════════════ */
+const USERS = [
+  {code:'MADH123', name:'Madhukar',  grad:'linear-gradient(135deg,#f77062,#fe5196)'},
+  {code:'AMIT456', name:'Amit',      grad:'linear-gradient(135deg,#4facfe,#00f2fe)'},
+  {code:'PRAT321', name:'Pratyush',  grad:'linear-gradient(135deg,#f2b830,#e83d5a)', admin:true},
+  {code:'SHUB654', name:'Shubham',   grad:'linear-gradient(135deg,#a18cd1,#fbc2eb)'},
+  {code:'ADIT987', name:'Aditya',    grad:'linear-gradient(135deg,#667eea,#764ba2)'},
+  {code:'TANM135', name:'Tanmay',    grad:'linear-gradient(135deg,#0ba360,#3cba92)'},
+  {code:'RAKE246', name:'Rakesh',    grad:'linear-gradient(135deg,#f093fb,#f5576c)'},
+  {code:'MANU008', name:'Manu',      grad:'linear-gradient(135deg,#11998e,#38ef7d)'},
+]
 
-// ANONYMOUS PLAYER ID for server-side daily lock
-function getPlayerId(){var id=localStorage.getItem('questly_player_id');if(!id){id='xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,function(c){var r=Math.random()*16|0;return(c==='x'?r:(r&0x3|0x8)).toString(16)});localStorage.setItem('questly_player_id',id)}return id}
+/* ══════════════════════════════════════════════════════════
+   TEAM COLOURS
+══════════════════════════════════════════════════════════ */
+const TM = {
+  'Royal Challengers Bengaluru':{code:'RCB',dark:'#6b0000',light:'#ff8080',acc:'#DC1C24'},
+  'Sunrisers Hyderabad':        {code:'SRH',dark:'#7a3200',light:'#ffaa6a',acc:'#FF8225'},
+  'Mumbai Indians':             {code:'MI', dark:'#003070',light:'#6ab4ff',acc:'#004C93'},
+  'Kolkata Knight Riders':      {code:'KKR',dark:'#200d35',light:'#c9a4ff',acc:'#3A225D'},
+  'Rajasthan Royals':           {code:'RR', dark:'#7a0f50',light:'#ffb3d9',acc:'#E6006A'},
+  'Chennai Super Kings':        {code:'CSK',dark:'#5a4800',light:'#f9d040',acc:'#F9CD05'},
+  'Punjab Kings':               {code:'PBKS',dark:'#7a0000',light:'#ff9090',acc:'#ED1B24'},
+  'Gujarat Titans':             {code:'GT', dark:'#0e1930',light:'#8a9fd4',acc:'#1C2951'},
+  'Lucknow Super Giants':       {code:'LSG',dark:'#003030',light:'#a2ffff',acc:'#009090'},
+  'Delhi Capitals':             {code:'DC', dark:'#00006b',light:'#7eb3ff',acc:'#0057A8'},
+}
+function tm(n){return TM[n]||{code:n.slice(0,3).toUpperCase(),dark:'#222',light:'#aaa',acc:'#555'}}
+function esc(s){return s.replace(/'/g,"\\'")}
 
-// Check if already played today (server-side)
-async function checkServerPlayed(){try{var r=await sb.from('daily_attempts').select('score').eq('player_id',getPlayerId()).eq('date',localDate());if(r.data&&r.data.length>0)return r.data[0].score;return null}catch(e){return null}}
-// Record attempt to server
-async function recordAttempt(score){try{await sb.from('daily_attempts').insert({player_id:getPlayerId(),date:localDate(),score:score})}catch(e){console.error('recordAttempt:',e)}}
+/* ══════════════════════════════════════════════════════════
+   STATE — all from Supabase, nothing in localStorage
+══════════════════════════════════════════════════════════ */
+let sb, CU=null, CLK=null, RFSH=null, undoMid=null
+let DB = { matches:[], votes:[], users:[] }  // local cache refreshed from Supabase
+const PP = {}  // pending picks (UI state only)
 
-// QUESTIONS from Supabase (#1,#2 doc3)
-var ALL_Q=[];
-var SWAP_Q=[];
-var _qLoaded=false;
-async function loadQuestions(){
-  try{var r=await sb.from('questions').select('*').eq('is_active',true);
-  if(r.data&&r.data.length>0){r.data.forEach(function(row){
-    var q={cat:row.category,q:row.question,o:[row.option_a,row.option_b,row.option_c,row.option_d],a:row.correct_index,origIdx:row.id,difficulty:row.difficulty||'medium'};
-    if(row.is_swap)SWAP_Q.push(q);else ALL_Q.push(q)});_qLoaded=true;return}
-  }catch(e){console.warn('Supabase questions fetch failed, using fallback:',e)}
-  // Fallback hardcoded set
-  ALL_Q=[
-  {cat:"Indian Food",q:"Which Indian street food literally translates to 'water bread'?",o:["Vada Pav","Pani Puri","Pav Bhaji","Dosa"],a:1,origIdx:0,difficulty:"easy"},
-  {cat:"Bollywood",q:"In the movie 'Sholay', what was the iconic villain's name?",o:["Mogambo","Gabbar Singh","Kancha Cheena","Shakaal"],a:1,origIdx:1,difficulty:"easy"},
-  {cat:"Geography",q:"Which state shares a border with only one other Indian state (West Bengal)?",o:["Assam","Sikkim","Meghalaya","Tripura"],a:1,origIdx:2,difficulty:"medium"},
-  {cat:"Brands",q:"Which Indian conglomerate owns Jaguar and Land Rover?",o:["Reliance","Mahindra","Tata Group","Adani"],a:2,origIdx:3,difficulty:"medium"},
-  {cat:"Cricket",q:"Who is known as the 'Master Blaster'?",o:["Virat Kohli","Sachin Tendulkar","MS Dhoni","Sunil Gavaskar"],a:1,origIdx:4,difficulty:"easy"},
-  {cat:"Science",q:"What is the common name for Sodium Chloride?",o:["Sugar","Salt","Turmeric","Baking Soda"],a:1,origIdx:5,difficulty:"easy"},
-  {cat:"Modern India",q:"Which UPI app features a 'blue' icon?",o:["GPay","PhonePe","Paytm","Amazon Pay"],a:1,origIdx:6,difficulty:"easy"},
-  {cat:"History",q:"Which Mughal Emperor built the Taj Mahal?",o:["Akbar","Shah Jahan","Aurangzeb","Humayun"],a:1,origIdx:7,difficulty:"medium"},
-  {cat:"Wildlife",q:"Which animal is India's national animal?",o:["Lion","Royal Bengal Tiger","Elephant","Leopard"],a:1,origIdx:8,difficulty:"easy"},
-  {cat:"Finance",q:"What is the full form of 'GST'?",o:["General Sales Tax","Goods and Services Tax","Global Standard Tax","Government Sales Tax"],a:1,origIdx:9,difficulty:"medium"},
-  {cat:"Space",q:"What was India's first successful Moon mission?",o:["Mangalyaan","Chandrayaan-1","Aditya-L1","Gaganyaan"],a:1,origIdx:10,difficulty:"medium"},
-  {cat:"Festivals",q:"Which festival is the 'Festival of Colors'?",o:["Diwali","Holi","Eid","Christmas"],a:1,origIdx:11,difficulty:"easy"},
-  {cat:"Literature",q:"Who wrote 'Gitanjali' and won India's first Nobel Prize?",o:["Premchand","Rabindranath Tagore","RK Narayan","Vikram Seth"],a:1,origIdx:12,difficulty:"medium"},
-  {cat:"Apps",q:"Which video-sharing platform is owned by Google?",o:["Instagram","TikTok","YouTube","Snapchat"],a:2,origIdx:13,difficulty:"easy"},
-  {cat:"Indian Tech",q:"Which Indian unicorn started booking bus tickets?",o:["Ola","Paytm","redBus","Zomato"],a:2,origIdx:14,difficulty:"medium"},
-  {cat:"Sports",q:"Which sport uses 'LBW'?",o:["Hockey","Cricket","Football","Tennis"],a:1,origIdx:15,difficulty:"easy"},
-  {cat:"Gadgets",q:"Which company makes the iPhone?",o:["Samsung","Apple","Google","Microsoft"],a:1,origIdx:16,difficulty:"easy"},
-  {cat:"Nature",q:"Which river is considered most sacred in India?",o:["Yamuna","Ganga","Brahmaputra","Narmada"],a:1,origIdx:17,difficulty:"easy"}
-  ];
-  SWAP_Q=[
-  {cat:"Indian Food",q:"What is the primary ingredient of 'Idli' batter?",o:["Wheat","Rice & Lentils","Corn","Potato"],a:1,origIdx:100,difficulty:"easy"},
-  {cat:"Bollywood",q:"Which movie first crossed Rs 2000 crore worldwide?",o:["Baahubali 2","Dangal","Jawan","RRR"],a:1,origIdx:101,difficulty:"medium"},
-  {cat:"Geography",q:"Which mountain range separates North India from Asia?",o:["Western Ghats","Aravallis","Himalayas","Satpuras"],a:2,origIdx:102,difficulty:"easy"},
-  {cat:"Cricket",q:"Which team won the first IPL season in 2008?",o:["Mumbai Indians","Rajasthan Royals","CSK","KKR"],a:1,origIdx:103,difficulty:"medium"},
-  {cat:"Indian Tech",q:"Which Indian city is the 'Silicon Valley of India'?",o:["Hyderabad","Mumbai","Bengaluru","Pune"],a:2,origIdx:104,difficulty:"easy"},
-  {cat:"Science",q:"Which vitamin does sunlight help produce?",o:["Vitamin A","Vitamin B12","Vitamin D","Vitamin K"],a:2,origIdx:105,difficulty:"easy"}
-  ];
-  _qLoaded=true}
-var CAT_E={};
-function buildCatEmoji(){CAT_E={"Indian Food":"🍛","Indian Tech":"💻","Bollywood":"🎬","Geography":"🗺️","Brands":"🏷️","Global Sports":"⚽","Everyday Science":"🔬","Modern India":"🇮🇳","Literature":"📚","Global Apps":"📱","History":"🏛️","Wildlife":"🦁","Finance":"💰","Cricket":"🏏","Space":"🚀","Festivals":"🎆","Sports":"🏅","Gadgets":"📱","Movies":"🎬","Auto":"🚗","Music":"🎵","Politics":"🏛️","Nature":"🌿","Business":"💼","Apps":"📲","Mythology":"🕉️","Science":"🔭","Entertainment":"🎬","Economy":"💹","Human Body":"🩸","World History":"🌍","Digital India":"📱","Plants":"🌿","Architecture":"🏛️","Animals":"🐘","Food & Drink":"🍛","Everyday Objects":"💡","Health":"❤️","Technology":"💻","General Knowledge":"📚","Indian Politics":"🏛️","Indian Geography":"🗺️","Global Tech":"💻","Indian History":"🏛️","Corporate India":"🏢","Indian Cities":"🏙️","Global Brands":"🌍","Indian Finance":"💰","Tech Giants":"💻","School GK":"📚","Tech & Apps":"💻","Indian Brands":"🏷️"}}
-var LS='questly_ttt_v7',Q_TIME=12,START_XP=200,FIFTY_COST=80,SKIP_COST=120;
-var WIN_LINES=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-
-function $(id){return document.getElementById(id)}
-function localDate(d){d=d||new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
-function yday(){var d=new Date();d.setDate(d.getDate()-1);return localDate(d)}
-function go(id){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active','fade')});$(id).classList.add('active','fade');window.scrollTo(0,0)}
-function midCd(){var n=new Date(),t=new Date(n);t.setDate(t.getDate()+1);t.setHours(0,0,0,0);var d=Math.max(0,t-n),h=Math.floor(d/36e5),m=Math.floor((d%36e5)/6e4),s=Math.floor((d%6e4)/1e3);return h+'h '+String(m).padStart(2,'0')+'m '+String(s).padStart(2,'0')+'s'}
-function toast(m){var t=$('toastEl');t.textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},2500)}
-var _fired={};
-function log(e,d){console.log('[Q] '+e,d||'');try{if(window.posthog&&posthog.capture)posthog.capture(e,d||{})}catch(x){}}
-function logOnce(e,d){var k=e+JSON.stringify(d||{});if(_fired[k])return;_fired[k]=true;log(e,d)}
-
-function seededRNG(seed){var s=0;for(var i=0;i<seed.length;i++)s=((s<<5)-s)+seed.charCodeAt(i);s=Math.abs(s)||1;return function(){s=(s*1103515245+12345)&0x7fffffff;return(s&0xfffffff)/0x10000000}}
-var _dailyBoard=null,_dailyBoardDate='',_dailySpares=[];
-// Balanced daily board: 4 easy, 3 medium, 2 hard; center never hard (#3 doc3)
-function getDailyBoard(){var today=localDate();if(_dailyBoard&&_dailyBoardDate===today)return _dailyBoard;var rng=seededRNG(today);
-var easy=[],med=[],hard=[];
-for(var i=0;i<ALL_Q.length;i++){var d=(ALL_Q[i].difficulty||'medium').toLowerCase();if(d==='easy')easy.push(i);else if(d==='hard')hard.push(i);else med.push(i)}
-function shuf(arr){for(var i=arr.length-1;i>0;i--){var j=Math.floor(rng()*(i+1));var t=arr[i];arr[i]=arr[j];arr[j]=t}}
-shuf(easy);shuf(med);shuf(hard);
-// Pick 4 easy, 3 medium, 2 hard (fallback gracefully)
-var pe=easy.slice(0,4),pm=med.slice(0,3),ph=hard.slice(0,2);
-while(pe.length+pm.length+ph.length<9&&easy.length>pe.length){pe.push(easy[pe.length])}
-while(pe.length+pm.length+ph.length<9&&med.length>pm.length){pm.push(med[pm.length])}
-var picked9=pe.concat(pm).concat(ph).slice(0,9);shuf(picked9);
-// Ensure center tile (pos 4) is not hard
-if(picked9.length>4){var cQ=ALL_Q[picked9[4]];if(cQ&&cQ.difficulty==='hard'){for(var i=0;i<picked9.length;i++){if(i!==4&&ALL_Q[picked9[i]]&&ALL_Q[picked9[i]].difficulty!=='hard'){var tmp=picked9[4];picked9[4]=picked9[i];picked9[i]=tmp;break}}}}
-var usedSet={};picked9.forEach(function(x){usedSet[x]=true});
-_dailySpares=[];for(var i=0;i<ALL_Q.length;i++){if(!usedSet[i])_dailySpares.push(i)}
-var slots=[0,0,1,1,2,2,3,3];var extra=Math.floor(rng()*4);slots.push(extra);
-for(var i=slots.length-1;i>0;i--){var j=Math.floor(rng()*(i+1));var tmp=slots[i];slots[i]=slots[j];slots[j]=tmp}
-_dailyBoard=picked9.map(function(qi,tileIdx){
-  var orig=ALL_Q[qi];if(!orig)return{cat:'GK',q:'?',o:['A','B','C','D'],a:0,origIdx:qi};
-  var targetPos=slots[tileIdx];var correctText=orig.o[orig.a];
-  var wrongs=[];for(var i=0;i<orig.o.length;i++){if(i!==orig.a)wrongs.push(orig.o[i])}
-  for(var i=wrongs.length-1;i>0;i--){var j=Math.floor(rng()*(i+1));var tmp=wrongs[i];wrongs[i]=wrongs[j];wrongs[j]=tmp}
-  var opts=[];var wi=0;
-  for(var i=0;i<4;i++){if(i===targetPos)opts.push(correctText);else{opts.push(wrongs[wi]);wi++}}
-  return{cat:orig.cat,q:orig.q,o:opts,a:targetPos,origIdx:qi}
-});_dailyBoardDate=today;return _dailyBoard}
-// Skip uses SWAP_Q first, then unused ALL_Q (#4 doc3)
-var _usedSwapIds={};
-function getSpareQuestion(tileIdx,rng2){
-  for(var i=0;i<SWAP_Q.length;i++){if(!_usedSwapIds[SWAP_Q[i].origIdx]){
-    _usedSwapIds[SWAP_Q[i].origIdx]=true;var orig=SWAP_Q[i];
-    var tp=Math.floor(rng2()*4);var ct=orig.o[orig.a];
-    var w=[];for(var j=0;j<orig.o.length;j++){if(j!==orig.a)w.push(orig.o[j])}
-    for(var k=w.length-1;k>0;k--){var m=Math.floor(rng2()*(k+1));var t=w[k];w[k]=w[m];w[m]=t}
-    var opts=[];var wi=0;for(var j=0;j<4;j++){if(j===tp)opts.push(ct);else{opts.push(w[wi]);wi++}}
-    return{cat:orig.cat,q:orig.q,o:opts,a:tp,origIdx:orig.origIdx}}}
-  if(_dailySpares.length>0){var qi=_dailySpares.shift();var orig=ALL_Q[qi];
-    var tp=Math.floor(rng2()*4);var ct=orig.o[orig.a];
-    var w=[];for(var j=0;j<orig.o.length;j++){if(j!==orig.a)w.push(orig.o[j])}
-    for(var k=w.length-1;k>0;k--){var m=Math.floor(rng2()*(k+1));var t=w[k];w[k]=w[m];w[m]=t}
-    var opts=[];var wi=0;for(var j=0;j<4;j++){if(j===tp)opts.push(ct);else{opts.push(w[wi]);wi++}}
-    return{cat:orig.cat,q:orig.q,o:opts,a:tp,origIdx:qi}}
-  return null}
-
-// STATE
-var G={logged:false,email:'',xp:START_XP,streak:0,playedDate:'',gameDate:'',board:['','','','','','','','',''],skippedTiles:[],discardedQs:[],moveCount:0,activeTile:-1,usedFifty:false,usedSkip:false,fiftyHidden:[],result:'',gameStarted:false,answered:false,firstVisit:true,serverRecorded:false,xpEarned:0,solveStartTs:0,solveEndTs:0,bestSolveTime:0,firstPlayDone:false,returnXpClaimed:'',returnXpShown:false,deviceSig:'',tttShown:false,dailyOwner:true,lastClaimedPlayDate:'',reviewMode:false};
-function save(){try{localStorage.setItem(LS,JSON.stringify({logged:G.logged,email:G.email,xp:G.xp,streak:G.streak,playedDate:G.playedDate,gameDate:G.gameDate,board:G.board,skippedTiles:G.skippedTiles,discardedQs:G.discardedQs,moveCount:G.moveCount,activeTile:G.activeTile,usedFifty:G.usedFifty,usedSkip:G.usedSkip,fiftyHidden:G.fiftyHidden,result:G.result,gameStarted:G.gameStarted,answered:G.answered,firstVisit:G.firstVisit,serverRecorded:G.serverRecorded,xpEarned:G.xpEarned,solveStartTs:G.solveStartTs,solveEndTs:G.solveEndTs,bestSolveTime:G.bestSolveTime,firstPlayDone:G.firstPlayDone,returnXpClaimed:G.returnXpClaimed,returnXpShown:G.returnXpShown,deviceSig:G.deviceSig,tttShown:G.tttShown,dailyOwner:G.dailyOwner,lastClaimedPlayDate:G.lastClaimedPlayDate,reviewMode:false}))}catch(e){}}
-function load(){try{var r=localStorage.getItem(LS);if(r)return JSON.parse(r)}catch(e){}return null}
-function checkWin(mark){for(var i=0;i<WIN_LINES.length;i++){var l=WIN_LINES[i];if(G.board[l[0]]===mark&&G.board[l[1]]===mark&&G.board[l[2]]===mark)return l}return null}
-function isBoardFull(){for(var i=0;i<9;i++)if(G.board[i]==='')return false;return true}
-function getScore(){var s=0;for(var i=0;i<9;i++)if(G.board[i]==='x')s++;return s}
-// XP: efficiency-based (#4,#12C). Win=by moves, Loss=correct*3 capped 15
-function calcXpReward(isWin,moves,sc){
-  if(isWin){var m={3:60,4:45,5:35,6:25,7:18,8:12,9:8};return m[moves]||8}
-  return Math.min(sc*3,15)}
-function getSolveTime(){if(!G.solveStartTs||!G.solveEndTs)return 0;return Math.round((G.solveEndTs-G.solveStartTs)/1000)}
-// Device signature for anonymous recovery (#6)
-function genDeviceSig(){var raw=navigator.userAgent+(navigator.platform||'')+(navigator.language||'')+Intl.DateTimeFormat().resolvedOptions().timeZone+screen.width+'x'+screen.height+(window.matchMedia('(prefers-color-scheme:dark)').matches?'d':'l');var h=0;for(var i=0;i<raw.length;i++){h=((h<<5)-h)+raw.charCodeAt(i);h|=0}return'ds'+Math.abs(h).toString(36)}
-// Store device sig with attempt
-async function recordAttemptWithSig(score){try{await sb.from('daily_attempts').insert({player_id:getPlayerId(),date:localDate(),score:score,device_sig:G.deviceSig||genDeviceSig()})}catch(e){console.error('recordAttempt:',e)}}
-// Try to recover streak from matching device sig
-async function tryDeviceRecovery(){if(G.logged||G.streak>0)return;try{G.deviceSig=genDeviceSig();var r=await sb.from('daily_attempts').select('player_id,score').eq('device_sig',G.deviceSig).eq('date',yday()).limit(1);if(r.data&&r.data.length>0&&r.data[0].player_id!==getPlayerId()){var oldId=r.data[0].player_id;var u=await sb.from('users').select('streak,xp').eq('id',oldId).single();if(u.data&&u.data.streak>G.streak){G.streak=u.data.streak;G.xp=Math.max(G.xp,u.data.xp);save();toast('Streak recovered from your device!')}}}catch(e){}}
-// Streak milestone helper (#3)
-function nextMilestone(s){var ms=[3,5,7,14,30];for(var i=0;i<ms.length;i++)if(s<ms[i])return ms[i];return null}
-// Win headline by moves (#1)
-function winHeadline(m){if(m<=3)return'Perfect board — solved instantly';if(m===4)return'You trapped the board';if(m===5)return'Smart play — you found the winning line';return'Hard fight — you eventually broke the board'}
-
-// Streak protection eligibility
-function shouldShowSaveStreak(){return !G.logged&&G.streak>=3}
-// Anti-cheat: record start + claim daily ownership (#11,#12)
-async function recordDailyStart(){try{var sig=genDeviceSig();G.deviceSig=sig;
-  var r=await sb.from('daily_starts').select('device_sig').eq('play_date',localDate()).eq('device_sig',sig);
-  if(r.data&&r.data.length>0)return true;
-  await sb.from('daily_starts').insert({play_date:localDate(),device_sig:sig});
-  var ow=await sb.from('daily_owner').select('device_sig').eq('play_date',localDate());
-  if(!ow.data||ow.data.length===0){await sb.from('daily_owner').insert({play_date:localDate(),device_sig:sig});G.dailyOwner=true}
-  else{G.dailyOwner=(ow.data[0].device_sig===sig)}
-  save();return true}catch(e){G.dailyOwner=true;save();return true}}
-// Labeled header (#4/#9)
-function renderHeader(tid){var el=$(tid);if(!el)return;el.innerHTML='<div class="h-pill"><span class="lbl">Streak:</span> <span class="v">'+G.streak+'</span> 🔥</div><div class="h-pill"><span class="lbl">XP:</span> <span class="xv">'+G.xp+'</span> 🪙</div>'}
-
-// RENDER BOARD — #3: show category names instead of ? on unclaimed tiles
-function renderBoard(){
-  var db=getDailyBoard(),h='';
-  for(var i=0;i<9;i++){
-    var val=G.board[i],isSkip=G.skippedTiles.indexOf(i)>=0,q=db[i],cat=q.cat,em=CAT_E[cat]||'❓';
-    var cls='tile';
-    if(val==='x')cls+=' x claimed';
-    else if(val==='o'&&!isSkip)cls+=' o claimed';
-    else if(isSkip&&val==='')cls+=' skipped'; // #4: skipped tile is replayable
-    if(G.result&&!(G.reviewMode&&val===''))cls+=' locked';
-    var inner='';
-    if(val==='x'){inner='<span class="tile-icon">✕</span><span class="tile-cat">'+em+' '+cat+'</span>'}
-    else if(val==='o'){inner='<span class="tile-icon">○</span><span class="tile-cat">'+em+' '+cat+'</span>'}
-    else if(isSkip){
-      // #4: Skipped tile — replayable. Shows "Play this tile" on top, category in middle, "Skipped" on bottom
-      inner='<span class="tile-icon">Play again</span><span class="tile-cat">'+em+' '+cat+'</span><span class="tile-label">Skipped</span>';
-    } else {
-      // #3: Show category name instead of ?
-      inner='<span class="tile-icon" style="font-size:16px">'+em+'</span><span class="tile-cat" style="opacity:1">'+cat+'</span>';
-    }
-    h+='<div class="'+cls+'" onclick="tileClick('+i+')">'+inner+'</div>';
+/* ══════════════════════════════════════════════════════════
+   INIT
+══════════════════════════════════════════════════════════ */
+window.addEventListener('DOMContentLoaded', async () => {
+  const loadtxt = document.querySelector('.loadtxt')
+  try {
+    // Supabase UMD exposes window.supabase
+    if(!window.supabase) throw new Error('Supabase SDK not loaded')
+    sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON)
+    loadtxt.textContent = 'LOADING DATA…'
+    await refreshDB()
+    // Show login screen
+    document.getElementById('sLoad').classList.replace('on','off')
+    document.getElementById('sL').classList.replace('off','on')
+  } catch(e) {
+    loadtxt.textContent = 'FAILED: ' + e.message
+    loadtxt.style.color = '#e83d5a'
+    loadtxt.style.fontSize = '12px'
+    loadtxt.style.padding = '0 20px'
+    loadtxt.style.textAlign = 'center'
+    console.error('Init error:', e)
   }
-  return h;
+})
+
+async function refreshDB() {
+  const [mRes, vRes, uRes] = await Promise.all([
+    sb.from('matches').select('*').order('id'),
+    sb.from('votes').select('*'),
+    sb.from('users').select('*'),
+  ])
+  if(mRes.error) throw new Error('matches: ' + mRes.error.message)
+  if(uRes.error) throw new Error('users: ' + uRes.error.message)
+  DB.matches = mRes.data || []
+  DB.votes   = vRes.data || []
+  DB.users   = uRes.data || []
 }
 
-// HOME SCREEN
-function showHome(){
-  // NEW: FTU — hide header for first-time users
-  if(G.firstVisit){$('hRight').innerHTML=''}else{renderHeader('hRight')}
-  if(G.gameStarted||G.result){showPlayScreen();return}
-  var h='<div class="home-headline">Questly</div><div class="home-sub">Win tic-tac-toe by answering trivia questions.</div><div class="home-cta"><button class="btn-p" onclick="openBoard()">Play Today\'s Puzzle</button></div>';
-  if(shouldShowSaveStreak())h+='<div class="home-save"><button class="btn-o" onclick="openLogin()">🔒 Save your streak</button></div>';
-  h+='<button class="htp-btn" onclick="openHTP()">How to Play</button>';
-  h+='<div class="home-micro">No sign up required • 2 minutes daily</div>';
-  $('homeBody').innerHTML=h;go('sHome');logOnce('home_viewed')}
-
-// OPEN BOARD — with server-side check
-async function openBoard(){
-  if(G.firstVisit){
-    // FTU FLOW: board renders blurred → TTT overlay → header animates → Start unblurs
-    var serverScore=await checkServerPlayed();
-    if(serverScore!==null){toast("You already played today's puzzle.");G.result=G.result||'loss';G.playedDate=localDate();save();showPlayScreen();return}
-    await recordDailyStart();
-    G.gameStarted=true;G.gameDate=localDate();G.tttShown=true;save();
-    log('play_pressed');log('daily_board_started');
-    // NEW: daily play claim — FTU also gets it
-    if(G.lastClaimedPlayDate!==localDate()){G.xp+=5;G.lastClaimedPlayDate=localDate();save()}
-    // Render board with blur, HIDE header
-    $('hRightPlay').innerHTML='';
-    var h='<div class="board-wrapper ftu-blur" style="position:relative"><div class="play-title">Today\'s Puzzle</div><div class="play-sub">Tap a square</div><div class="board" id="boardGrid">'+renderBoard()+'</div></div>';
-    $('playBody').innerHTML=h;go('sPlay');
-    // Show TTT overlay on top of blurred board
-    showTTTOverlayFTU();
-    return}
-  var serverScore=await checkServerPlayed();
-  if(serverScore!==null){toast("You already played today's puzzle.");G.result=G.result||'loss';G.playedDate=localDate();save();showPlayScreen();return}
-  await recordDailyStart();
-  G.gameStarted=true;G.gameDate=localDate();save();
-  log('play_pressed');log('daily_board_started');
-  // NEW: daily play claim — grant 5 XP on first play of the day
-  var dailyPlayClaimed=false;
-  if(G.lastClaimedPlayDate!==localDate()){
-    G.xp+=5;G.lastClaimedPlayDate=localDate();dailyPlayClaimed=true;save();
-    toast('+5 XP Daily Play Reward');
-    log('daily_reward_claimed',{source:'play_press',xp_granted:5});
-    log('xp_awarded',{source:'daily_play',amount:5,xp_balance_after:G.xp})}
-  if(!G.tttShown){G.tttShown=true;save();showTTTOverlay()}
-  else{showPlayScreen();
-    // NEW: daily reward animation for returning users
-    if(dailyPlayClaimed&&!localStorage.getItem('drAnim_'+localDate())){
-      localStorage.setItem('drAnim_'+localDate(),'1');
-      setTimeout(function(){playDailyRewardAnimation()},400)}
-  }}
-// TTT Overlay (#2/#6 — explain tic-tac-toe on first play)
-function showTTTOverlay(){$('tttOverlay').classList.add('active');log('ttt_tutorial_shown',{is_ftu:false});
-  var cells=$('tttDemo').children;
-  function clearAll(){for(var i=0;i<9;i++){cells[i].classList.remove('lit');cells[i].textContent=''}}
-  function lightUp(indices,delay){indices.forEach(function(idx,j){setTimeout(function(){cells[idx].classList.add('lit');cells[idx].textContent='✕'},delay+j*200)})}
-  lightUp([0,1,2],300);
-  setTimeout(function(){clearAll();lightUp([1,4,7],100)},1200);
-  setTimeout(function(){clearAll();lightUp([0,4,8],100)},2200)}
-// FTU-specific TTT overlay: h→v→d animation, then auto-play header animation
-function showTTTOverlayFTU(){
-  $('tttOverlay').classList.add('active');log('ttt_tutorial_shown',{is_ftu:true});
-  $('tttOverlay').setAttribute('data-ftu','1');
-  var cells=$('tttDemo').children;
-  var btn=$('tttOverlay').querySelector('.btn-p');
-  if(btn){btn.disabled=true;btn.style.opacity='0.4'}
-  function clearAll(){for(var i=0;i<9;i++){cells[i].classList.remove('lit');cells[i].textContent=''}}
-  function lightUp(indices,delay){indices.forEach(function(idx,j){setTimeout(function(){cells[idx].classList.add('lit');cells[idx].textContent='✕'},delay+j*200)})}
-  // 1. Horizontal: top row
-  lightUp([0,1,2],300);
-  // 2. Clear → Vertical: middle column
-  setTimeout(function(){clearAll();lightUp([1,4,7],100)},1200);
-  // 3. Clear → Diagonal
-  setTimeout(function(){clearAll();lightUp([0,4,8],100)},2200);
-  // After animation: close overlay, start header animation
-  setTimeout(function(){
-    $('tttOverlay').classList.remove('active');
-    $('tttOverlay').removeAttribute('data-ftu');
-    log('ttt_tutorial_completed',{is_ftu:true});
-    // Reset demo cells
-    for(var i=0;i<9;i++){cells[i].classList.remove('lit');cells[i].textContent=''}
-    if(btn){btn.disabled=false;btn.style.opacity='1'}
-    // Auto-trigger header animation
-    renderHeaderAnimated('hRightPlay');
-  },3400)}
-function closeTTTOverlay(){
-  $('tttOverlay').classList.remove('active');log('ttt_tutorial_completed',{});
-  // Reset demo cells
-  var cells=$('tttDemo').children;for(var i=0;i<cells.length;i++){cells[i].classList.remove('lit');cells[i].textContent=''}
-  // If FTU auto-close already happened, completeFTU handles it
-  if(!G.firstVisit){showPlayScreen()}
+/* ══════════════════════════════════════════════════════════
+   TIME UTILS (IST)
+══════════════════════════════════════════════════════════ */
+function nowIST(){const n=new Date();return new Date(n.getTime()+(5.5*3600000)+n.getTimezoneOffset()*60000)}
+function lockUTC(m){
+  const[h,mi]=m.match_time.split(':').map(Number)
+  const[y,mo,d]=m.match_date.split('-').map(Number)
+  return new Date(Date.UTC(y,mo-1,d,h-5,mi-30,0))
 }
-// Animate header: XP 0→200, Streak 0→1, then show arrow
-function renderHeaderAnimated(tid){
-  var el=$(tid);if(!el)return;
-  el.innerHTML='<div class="h-pill"><span class="lbl">Streak:</span> <span class="v ftu-streak">0</span> 🔥</div><div class="h-pill"><span class="lbl">XP:</span> <span class="xv ftu-xp">0</span> 🪙</div>';
-  // Animate XP 0→200 over 1.2s
-  var xpEl=el.querySelector('.ftu-xp');
-  var start=Date.now(),dur=1200;
-  function tickXP(){var p=Math.min(1,(Date.now()-start)/dur);
-    xpEl.textContent=Math.round(p*200);
-    if(p<1)requestAnimationFrame(tickXP);
-    else{
-      // Then animate streak 0→1
-      var skEl=el.querySelector('.ftu-streak');
-      skEl.textContent='1';skEl.style.transition='transform .3s ease';skEl.style.transform='scale(1.3)';
-      setTimeout(function(){skEl.style.transform='scale(1)'},300);
-      // Show bouncing arrow pointing at header
-      var arrow=document.createElement('div');arrow.className='ftu-arrow';arrow.id='ftuArrow';arrow.textContent='☝️';
-      document.querySelector('#sPlay .header').appendChild(arrow);
-      // NEW: FTU header tooltips — educate about streak and XP
-      if(!localStorage.getItem('ftuHeaderShown')){
-        localStorage.setItem('ftuHeaderShown','1');
-        showHeaderTooltips(el)}
-      // Change Start button text on TTT overlay (it's already closed, so add a board-level start)
-      var startBtn=document.createElement('button');startBtn.className='btn-p';startBtn.id='ftuStartBtn';
-      startBtn.textContent='Start Playing';startBtn.style.cssText='position:absolute;bottom:-60px;left:50%;transform:translateX(-50%);z-index:50;white-space:nowrap';
-      startBtn.onclick=function(){completeFTU()};
-      var bw=document.querySelector('.board-wrapper');if(bw)bw.appendChild(startBtn);
-    }}
-  requestAnimationFrame(tickXP)}
-function completeFTU(){
-  G.firstVisit=false;save();
-  // Remove blur
-  var bw=document.querySelector('.board-wrapper');if(bw)bw.classList.remove('ftu-blur');
-  // Remove arrow
-  var arrow=$('ftuArrow');if(arrow)arrow.remove();
-  // Remove start button
-  var btn=$('ftuStartBtn');if(btn)btn.remove();
-  // Render proper header with real values
-  renderHeader('hRightPlay');
+function isLocked(m){return m.is_past||Date.now()>=lockUTC(m).getTime()}
+function mstat(m){
+  if(m.is_past)return m.winner?'dn':'lk'
+  if(m.winner)return m.winner==='ABANDONED'?'ab':'dn'
+  if(isLocked(m))return'lk'
+  return'op'
+}
+function todayStr(){const i=nowIST();return`${i.getFullYear()}-${String(i.getMonth()+1).padStart(2,'0')}-${String(i.getDate()).padStart(2,'0')}`}
+function fmtT(m){const[h,mi]=m.match_time.split(':').map(Number);return`${h>12?h-12:h}:${String(mi).padStart(2,'0')} ${h>=12?'PM':'AM'} IST`}
+function fmtD(m){
+  const[y,mo,d]=m.match_date.split('-').map(Number)
+  const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],mns=['Jan','Feb','Mar','Apr','May','Jun']
+  return`${days[new Date(Date.UTC(y,mo-1,d)).getUTCDay()]} ${d} ${mns[mo-1]}`
+}
+function dateHdr(ds){
+  const td=todayStr(),[y,mo,d]=ds.split('-').map(Number)
+  const mns=['Jan','Feb','Mar','Apr','May','Jun']
+  if(ds===td)return`📅 TODAY · ${d} ${mns[mo-1]}`
+  const yest=new Date(Date.now()-86400000)
+  const yd=`${yest.getUTCFullYear()}-${String(yest.getUTCMonth()+1).padStart(2,'0')}-${String(yest.getUTCDate()).padStart(2,'0')}`
+  if(ds===yd)return`YESTERDAY · ${d} ${mns[mo-1]}`
+  return`${d} ${mns[mo-1]}`
 }
 
-// NEW: FTU header reveal — short tooltips for streak and XP
-function showHeaderTooltips(headerEl){
-  var pills=headerEl.querySelectorAll('.h-pill');
-  if(pills.length<2)return;
-  var tt1=document.createElement('div');tt1.className='header-tooltip';tt1.textContent='Your streak 🔥';
-  pills[0].style.position='relative';pills[0].appendChild(tt1);
-  var tt2=document.createElement('div');tt2.className='header-tooltip';tt2.textContent='Use for lifelines 🪙';
-  pills[1].style.position='relative';pills[1].appendChild(tt2);
-  // Fade tooltips + arrow together after 2.5s
-  setTimeout(function(){
-    tt1.classList.add('fade-out');tt2.classList.add('fade-out');
-    var arrow=$('ftuArrow');if(arrow){arrow.style.transition='opacity .5s ease';arrow.style.opacity='0'}
-  },2500);
-  setTimeout(function(){
-    tt1.remove();tt2.remove();
-    var arrow=$('ftuArrow');if(arrow)arrow.remove()
-  },3100)}
+/* ══════════════════════════════════════════════════════════
+   SCREEN / TAB SWITCHING
+══════════════════════════════════════════════════════════ */
+function showScreen(id){
+  document.querySelectorAll('.scr').forEach(s=>s.classList.replace('on','off'))
+  document.getElementById('s'+id[0].toUpperCase()+id.slice(1))?.classList.replace('off','on')
+  // also handle sL, sM, sLoad directly
+  const map={login:'sL',main:'sM',loading:'sLoad'}
+  if(map[id]) document.getElementById(map[id]).classList.replace('off','on')
+}
+function goTab(panel,tabEl,navId){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'))
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'))
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'))
+  if(tabEl)tabEl.classList.add('on')
+  else document.querySelectorAll('.tab').forEach(t=>{if((t.getAttribute('onclick')||'').includes("'"+panel+"'"))t.classList.add('on')})
+  document.getElementById('p-'+panel).classList.add('on')
+  const nb=document.getElementById(navId);if(nb)nb.classList.add('on')
+}
 
-// NEW: daily reward animation — streak +1 and XP +5 floating text
-function playDailyRewardAnimation(){
-  var hdr=$('hRightPlay');if(!hdr)return;
-  var pills=hdr.querySelectorAll('.h-pill');if(pills.length<2)return;
-  // Streak float
-  var sf=document.createElement('div');sf.className='h-float streak-float';sf.textContent='+1 Day';
-  pills[0].style.position='relative';pills[0].appendChild(sf);
-  // Streak glow
-  var flame=pills[0].querySelector('.v');if(flame){flame.style.transition='transform .2s ease';flame.style.transform='scale(1.3)';setTimeout(function(){flame.style.transform='scale(1)'},300)}
-  // XP float
-  var xf=document.createElement('div');xf.className='h-float xp-float';xf.textContent='+5 XP';
-  pills[1].style.position='relative';pills[1].appendChild(xf);
-  // XP bounce
-  var coin=pills[1].querySelector('.xv');if(coin){coin.style.transition='transform .2s ease';coin.style.transform='scale(1.2)';setTimeout(function(){coin.style.transform='scale(1)'},250)}
-  // Clean up floats
-  setTimeout(function(){sf.remove();xf.remove()},900)}
+/* ══════════════════════════════════════════════════════════
+   LOGIN
+══════════════════════════════════════════════════════════ */
+function onCI(){
+  const v=document.getElementById('ci').value.trim()
+  document.getElementById('gbtn').disabled=v.length<4
+  document.getElementById('err').style.display='none'
+}
+async function doLogin(){
+  const raw=document.getElementById('ci').value.trim()
+  const user=USERS.find(u=>u.code.toLowerCase()===raw.toLowerCase())
+  if(!user){document.getElementById('err').style.display='block';return}
+  CU=user
+  // Set up header
+  document.getElementById('uav').textContent=CU.name.charAt(0)
+  document.getElementById('uav').style.background=CU.grad
+  document.getElementById('uname').textContent=CU.name
+  const at=document.getElementById('atab'),n4=document.getElementById('n4')
+  if(CU.admin){at.style.display='';n4.style.display=''}
+  else{at.style.display='none';n4.style.display='none'}
+  document.getElementById('sL').classList.replace('on','off')
+  document.getElementById('sM').classList.replace('off','on')
+  goTab('matches',null,'n0')
+  renderAll()
+  startClock()
+  // Auto-refresh every 30s so everyone sees live data
+  clearInterval(RFSH)
+  RFSH=setInterval(async()=>{await refreshDB();renderAll()},30000)
+}
+function signOut(){
+  CU=null;clearInterval(CLK);clearInterval(RFSH)
+  document.getElementById('ci').value=''
+  document.getElementById('gbtn').disabled=true
+  document.getElementById('sM').classList.replace('on','off')
+  document.getElementById('sL').classList.replace('off','on')
+}
 
-// PLAY SCREEN
-function showPlayScreen(){
-  // NEW: FTU — don't render header (it appears after animation)
-  if(!G.firstVisit){renderHeader('hRightPlay')}
-  var today=localDate(),done=G.playedDate===today&&G.result!=='',h='';
-  if(done){
-    if(G.reviewMode){
-      // Review mode: show board with clickable empty tiles
-      h+='<div class="review-label">Review Mode — tap empty tiles to see questions</div>';
-      h+='<div class="board-wrapper" style="position:relative"><div class="board" id="boardGrid">'+renderBoard()+'</div></div>';
-      h+='<div style="margin-top:16px"><button class="btn-o" onclick="exitReviewMode()">← Back to Results</button></div>';
-    } else {
-    var isW=G.result==='win',sc=getScore();
-    h+='<div class="done-msg'+(isW?'':' loss')+'"><div class="dm-title">'+(isW?'✅ Victory!':'The board held today.')+'</div><div class="dm-sub">'+(isW?'Your streak continues!':'Come back tomorrow and try again.')+'</div></div>';
-    h+='<div class="board-wrapper"><div class="board" id="boardGrid">'+renderBoard()+'</div></div>';
-    h+='<div style="font-size:13px;color:var(--t3);margin-bottom:16px">Next puzzle: <span class="time" id="playCd" style="color:var(--red);font-weight:600">'+midCd()+'</span></div>';
-    h+='<div style="display:flex;gap:8px;width:100%;max-width:300px"><button class="btn-o" style="flex:1" onclick="shareToClipboard()">📋 Share</button><button class="btn-o" style="flex:1" onclick="showResult()">View Result</button></div>';
-    }
+/* ══════════════════════════════════════════════════════════
+   CLOCK
+══════════════════════════════════════════════════════════ */
+function startClock(){
+  clearInterval(CLK);tickClock()
+  CLK=setInterval(tickClock,30000)
+}
+function tickClock(){
+  const i=nowIST()
+  document.getElementById('ckr').textContent=`${String(i.getHours()).padStart(2,'0')}:${String(i.getMinutes()).padStart(2,'0')} IST`
+  const open=DB.matches.filter(m=>!isLocked(m))
+  const dot=document.getElementById('ckd'),txt=document.getElementById('ckt')
+  if(!open.length){dot.className='dot r';txt.textContent='All 70 matches complete';return}
+  const next=open[0],mins=Math.floor((lockUTC(next).getTime()-Date.now())/60000)
+  if(mins<=0){dot.className='dot o';txt.textContent='Match locked — vote for upcoming ones'}
+  else if(mins<60){dot.className='dot o';txt.textContent=`M${next.id} locks in ${mins}m — vote now!`}
+  else{dot.className='dot g';txt.textContent=`All open · M${next.id} locks ${fmtT(next)}`}
+}
+
+/* ══════════════════════════════════════════════════════════
+   RENDER ALL
+══════════════════════════════════════════════════════════ */
+function renderAll(){
+  if(!CU)return
+  const me=DB.users.find(u=>u.code===CU.code)
+  document.getElementById('upts').textContent=(me?.total_points||0)+' PTS'
+  renderMatches();renderPicks();renderMyPicks();renderStandings()
+  if(CU.admin)renderAdmin()
+}
+
+/* helpers */
+function matchVotes(mid){return DB.votes.filter(v=>v.match_id===mid)}
+function myVote(mid){return DB.votes.find(v=>v.match_id===mid&&v.user_code===CU.code)}
+function isDog(mid,team){
+  const v=matchVotes(mid),t=v.length,c=v.filter(x=>x.team===team).length
+  return t>0&&(c/t*100)<30
+}
+
+/* ══════════════════════════════════════════════════════════
+   MATCHES TAB
+══════════════════════════════════════════════════════════ */
+function renderMatches(){
+  const el=document.getElementById('p-matches')
+  const groups={}
+  DB.matches.forEach(m=>{if(!groups[m.match_date])groups[m.match_date]=[];groups[m.match_date].push(m)})
+  let h=''
+  Object.entries(groups).forEach(([d,ms])=>{
+    const isToday=d===todayStr()
+    h+=`<div class="sh" ${isToday?'id="todayHdr"':''}>${dateHdr(d)}</div>`
+    ms.forEach(m=>{h+=buildCard(m)})
+  })
+  el.innerHTML=h
+  const hdr=el.querySelector('#todayHdr')
+  if(hdr)setTimeout(()=>hdr.scrollIntoView({behavior:'smooth',block:'start'}),120)
+}
+
+function buildCard(m){
+  const st=mstat(m),ht=tm(m.home_team),at2=tm(m.away_team)
+  const mv=myVote(m.id),locked=isLocked(m)
+  const isAbandoned=m.winner==='ABANDONED'
+  const hW=!isAbandoned&&m.winner===m.home_team
+  const aW=!isAbandoned&&m.winner===m.away_team
+  const isFuture=!m.is_past&&!locked&&m.match_date>todayStr()
+  const chipCls=st==='op'&&isFuture?'ft':st
+  const chipLbl={op:isFuture?`Open · Locks ${fmtD(m)}`:'Open · Vote Now',lk:'🔒 Locked',dn:isAbandoned?'🌧 Abandoned':m.winner?`${tm(m.winner).code} Won`:'Result In',ab:'🌧 Abandoned'}
+
+  let h=`<div class="mc">
+    <div class="mh">
+      <span class="mm">M${m.id} · ${m.venue} · ${fmtD(m)} · ${fmtT(m)}</span>
+      <span class="chip ${chipCls}">${chipLbl[st]||'Open'}</span>
+    </div>
+    <div class="mt">
+      <div class="mteam" style="opacity:${aW?.4:1}">
+        <div class="tbadge" style="background:linear-gradient(135deg,${ht.dark},${ht.acc})">${ht.code}</div>
+        <div class="tn" style="${hW?'color:var(--grn)':''}">${m.home_team}${hW?' ✓':''}</div>
+      </div>
+      <div class="vs">VS</div>
+      <div class="mteam" style="opacity:${hW?.4:1}">
+        <div class="tbadge" style="background:linear-gradient(135deg,${at2.dark},${at2.acc})">${at2.code}</div>
+        <div class="tn" style="${aW?'color:var(--grn)':''}">${m.away_team}${aW?' ✓':''}</div>
+      </div>
+    </div>`
+
+  if(st==='op'){
+    // Always show full vote form — pre-selected if already voted. Changeable until 7:30 PM.
+    const curTeam = mv ? mv.team : (PP[m.id]?.team || null)
+    const curConf  = mv ? mv.confidence : (PP[m.id]?.conf || 1)
+    const isUpdate = !!mv
+    if(mv && !PP[m.id]) PP[m.id] = {team:mv.team, conf:mv.confidence}
+    const selHome = curTeam === m.home_team
+    const selAway = curTeam === m.away_team
+    const btnLabel = curTeam
+      ? (isUpdate ? `Update Pick: ${tm(curTeam).code} · ${curConf}×` : `Lock In: ${tm(curTeam).code} · ${curConf}×`)
+      : 'Select a team first'
+    h+=`<div class="pz">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding-top:9px;margin-bottom:7px">
+        <span class="pzl" style="padding-top:0;margin-bottom:0">Your Prediction</span>
+        <span id="sv-${m.id}" style="font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;
+          background:${isUpdate?'rgba(29,185,84,.08)':'transparent'};
+          color:${isUpdate?'var(--grn)':'var(--dim)'}">
+          ${isUpdate?'✓ Saved':'Tap to pick'}
+        </span>
+      </div>
+      <div class="pg">
+        <button class="pb ${selHome?'sel':''}" id="pb-${m.id}-h" onclick="pickTeam(${m.id},'${esc(m.home_team)}',this)">${ht.code}<br><small style="font-size:9px;font-weight:600;opacity:.75">${m.home_team}</small></button>
+        <button class="pb ${selAway?'sel':''}" id="pb-${m.id}-a" onclick="pickTeam(${m.id},'${esc(m.away_team)}',this)">${at2.code}<br><small style="font-size:9px;font-weight:600;opacity:.75">${m.away_team}</small></button>
+      </div>
+      <div class="cr">
+        <span class="cl">Confidence:</span>
+        <div class="cg">
+          <button class="cb ${curConf===1?'sel':''}" onclick="pickConf(${m.id},1,this)">1×</button>
+          <button class="cb ${curConf===2?'sel':''}" onclick="pickConf(${m.id},2,this)">2×</button>
+          <button class="cb ${curConf===3?'sel':''}" onclick="pickConf(${m.id},3,this)">3×</button>
+        </div>
+      </div>
+    </div>`
   } else {
-    h+='<div class="board-wrapper" style="position:relative"><div class="play-title">Today\'s Puzzle</div><div class="play-sub">Tap a square</div><div class="board" id="boardGrid">'+renderBoard()+'</div></div>';
+    const allV=matchVotes(m.id),total=allV.length
+    const hc=allV.filter(v=>v.team===m.home_team).length
+    const ac=allV.filter(v=>v.team===m.away_team).length
+    const hp=total?Math.round(hc/total*100):0,ap=total?Math.round(ac/total*100):0
+    h+=`<div class="rz">
+      <div class="rzh">
+        <span class="rzl">Distribution${total?` · ${total} votes`:' · No votes'}</span>
+        <span class="rzb" style="color:${st==='dn'?'var(--grn)':'var(--red)'}">${st==='dn'?'✅ Result In':'🔒 LOCKED'}</span>
+      </div>
+      <div class="dr">
+        <span class="dn2" style="color:${ht.light}">${ht.code}</span>
+        <div class="dtr"><div class="df" style="width:${hp}%;background:linear-gradient(90deg,${ht.dark},${ht.acc})"></div></div>
+        <span class="dp" style="color:${ht.light}">${hp}%</span>
+        ${m.winner&&isDog(m.id,m.home_team)&&m.winner===m.home_team?'<span class="dtag">🐶</span>':''}
+      </div>
+      <div class="dr">
+        <span class="dn2" style="color:${at2.light}">${at2.code}</span>
+        <div class="dtr"><div class="df" style="width:${ap}%;background:linear-gradient(90deg,${at2.dark},${at2.acc})"></div></div>
+        <span class="dp" style="color:${at2.light}">${ap}%</span>
+        ${m.winner&&isDog(m.id,m.away_team)&&m.winner===m.away_team?'<span class="dtag">🐶</span>':''}
+      </div>
+      <div class="chs">${buildChips(m,allV)}</div>
+    </div>`
   }
-  $('playBody').innerHTML=h;go('sPlay');_boardRenderedTime=Date.now();
-  if(!done&&!G.reviewMode)logOnce('board_rendered',{move_number:G.moveCount});
-  if(G.result==='win'){var wl=checkWin('x');if(wl)setTimeout(function(){var tiles=document.querySelectorAll('.tile');wl.forEach(function(i){if(tiles[i])tiles[i].classList.add('win-highlight')})},100)}
-  if(done){clearInterval(G._cdI);G._cdI=setInterval(function(){var e=$('playCd');if(e)e.textContent=midCd()},1000)}
-}
-// Gameplay feedback (#3/#7)
-function showBoardFeedback(correct){var bw=document.querySelector('.board-wrapper');if(!bw)return;bw.style.position='relative';var el=document.createElement('div');el.className='board-feedback '+(correct?'correct':'wrong');el.textContent=correct?'Correct! You claimed this square.':'Wrong \u2014 the square is lost.';bw.appendChild(el);setTimeout(function(){el.remove()},1200)}
-
-// === ANALYTICS HELPERS ===
-var _questionStartTime=0;
-function getBoardStateString(){return G.board.map(function(v){return v||'_'}).join('')}
-function countBoardSpaces(){var c=0;for(var i=0;i<9;i++)if(G.board[i]==='')c++;return c}
-function hasAboutToLose(){for(var i=0;i<WIN_LINES.length;i++){var l=WIN_LINES[i],oC=0,eC=0;for(var j=0;j<3;j++){if(G.board[l[j]]==='o')oC++;else if(G.board[l[j]]==='')eC++}if(oC===2&&eC===1)return true}return false}
-function detectNearWin(){
-  var LINE_TYPES=['row','row','row','column','column','column','diagonal','diagonal'];
-  for(var i=0;i<WIN_LINES.length;i++){var l=WIN_LINES[i],xC=0,eIdx=-1;
-    for(var j=0;j<3;j++){if(G.board[l[j]]==='x')xC++;else if(G.board[l[j]]==='')eIdx=l[j]}
-    if(xC===2&&eIdx>=0){log('near_win_state',{line_type:LINE_TYPES[i],move_number:G.moveCount,open_winning_tile_index:eIdx});log('two_in_row_created',{line_type:LINE_TYPES[i],move_number:G.moveCount})}}}
-
-// === COMPREHENSIVE ANALYTICS ===
-var _boardRenderedTime=0;
-var _resultScreenOpenTime=0;
-function tilePosition(idx){var corners=[0,2,6,8],edges=[1,3,5,7];if(idx===4)return 'center';if(corners.indexOf(idx)>=0)return 'corner';return 'edge'}
-function checkNearWinOnLoss(){
-  // Did player have 2-in-a-row X but still lost?
-  var LINE_TYPES=['row','row','row','column','column','column','diagonal','diagonal'];
-  for(var i=0;i<WIN_LINES.length;i++){var l=WIN_LINES[i],xC=0;
-    for(var j=0;j<3;j++){if(G.board[l[j]]==='x')xC++}
-    if(xC===2)return true}
-  return false}
-
-// TILE CLICK — #4: skipped tiles are replayable
-var _tileGuard=0;
-function tileClick(idx){
-  var now=Date.now();if(now-_tileGuard<300)return;_tileGuard=now;
-  // Review mode: show question for empty tiles
-  if(G.reviewMode){reviewTileClick(idx);return}
-  if(!G.gameStarted||G.result)return;
-  // Allow click on empty tiles OR skipped tiles (replayable)
-  var isSkip=G.skippedTiles.indexOf(idx)>=0;
-  if(G.board[idx]!==''&&!isSkip)return;
-  if(G.board[idx]===''&&!isSkip&&G.activeTile>=0&&G.activeTile!==idx)return;
-  if(G.activeTile===idx){showQuestion();return}
-  G.activeTile=idx;G.answered=false;G.fiftyHidden=[];G.moveCount++;if(!G.solveStartTs)G.solveStartTs=Date.now();save();
-  var hesitation=_boardRenderedTime>0?Math.round((Date.now()-_boardRenderedTime)/1000):0;
-  var tPos=tilePosition(idx);
-  log('tile_selected',{tile_index:idx,move_number:G.moveCount,tile_position:tPos});
-  log('tile_opened',{tile_index:idx,move_number:G.moveCount,board_state:getBoardStateString(),is_skipped_tile:isSkip,streak:G.streak,xp:G.xp,tile_position:tPos,tile_hesitation:hesitation});
-  if(G.moveCount===1){window.firstMoveTs=Date.now();log('first_tile_clicked',{tile_index:idx,tile_position:tPos,time_to_first_move:hesitation})}
-  showQuestion();
+  return h+'</div>'
 }
 
-// TIMER
-var _timerInt=null,_timerStart=0;
-function startTimer(){clearInterval(_timerInt);var fill=$('qTimerFill');fill.style.transition='none';fill.style.width='100%';fill.classList.remove('urgent');fill.offsetHeight;fill.style.transition='width 0.1s linear';_timerStart=Date.now();_timerInt=setInterval(function(){if(G.answered){clearInterval(_timerInt);return}var el=(Date.now()-_timerStart)/1000,pct=Math.max(0,(1-el/Q_TIME)*100);fill.style.width=pct+'%';if(pct<30)fill.classList.add('urgent');if(el>=Q_TIME){clearInterval(_timerInt);timeUp()}},100)}
-function stopTimer(){clearInterval(_timerInt)}
-function timeUp(){if(G.answered)return;G.answered=true;var ti=G.activeTile,db=getDailyBoard(),q=db[ti];var opts=document.querySelectorAll('.q-opt');opts.forEach(function(b,j){b.classList.add('off');if(j===q.a)b.classList.add('reveal')});$('lifelines').style.display='none';G.board[ti]='o';
-// Remove from skipped if it was a retry
-var si=G.skippedTiles.indexOf(ti);if(si>=0)G.skippedTiles.splice(si,1);
-log('question_timeout',{tile_index:ti,move_number:G.moveCount,category:q.cat,remaining_board_spaces:countBoardSpaces()});save();setTimeout(function(){closeQuestion();showBoardFeedback(false);afterAnswer(ti)},1400)}
+function buildChips(m,allV){
+  if(!allV.length)return'<span style="font-size:10px;color:var(--dim)">No picks placed</span>'
+  return USERS.map(u=>{
+    const v=allV.find(x=>x.user_code===u.code);if(!v)return''
+    const vt=tm(v.team),win=m.winner&&v.team===m.winner,loss=m.winner&&v.team!==m.winner
+    const dog=win&&isDog(m.id,v.team)
+    const pts=win?`<span style="color:var(--grn);font-weight:900">+${v.confidence*10+(dog?5:0)}${dog?'🐶':''}</span>`
+             :loss?`<span style="color:var(--red);font-weight:900">-${v.confidence*5}</span>`:''
+    return`<div class="pch ${win?'win':loss?'los':''}">
+      <div class="mav" style="background:${u.grad}">${u.name.charAt(0)}</div>
+      <span style="color:${vt.light};font-weight:800">${vt.code}</span>
+      <span style="color:var(--blue)">·${v.confidence}×</span>${pts}
+    </div>`
+  }).join('')
+}
 
-function showQuestion(){var ti=G.activeTile;if(ti<0)return;var db=getDailyBoard(),q=db[ti];$('qCat').innerHTML=(CAT_E[q.cat]||'')+' '+q.cat;$('qMove').textContent='Move '+G.moveCount+' of 9';$('qText').textContent=q.q;var keys=['A','B','C','D'],el=$('qOpts');el.innerHTML='';q.o.forEach(function(opt,i){var b=document.createElement('button');b.className='q-opt';if(G.fiftyHidden.indexOf(i)>=0)b.classList.add('fifty-hidden');b.innerHTML='<span class="q-key">'+keys[i]+'</span><span>'+opt+'</span>';b.onclick=function(){answerQuestion(i)};if(G.answered)b.classList.add('off');el.appendChild(b)});updateLL();$('lifelines').style.display=G.answered?'none':'flex';$('qOverlay').classList.add('active');
-if(!G.answered){_questionStartTime=Date.now();window.questionStartTs=Date.now();startTimer();
-log('question_shown',{category:q.cat,move_number:G.moveCount,difficulty:q.difficulty||'medium'});
-log('question_started',{tile_index:ti,category:q.cat,difficulty:q.difficulty||'medium',move_number:G.moveCount,time_allowed:Q_TIME})}else{$('qTimerFill').style.width='0%'}}
-function updateLL(){$('llFifty').disabled=G.usedFifty||G.xp<FIFTY_COST||G.answered;$('llSkip').disabled=G.usedSkip||G.xp<SKIP_COST||G.answered}
+/* ══════════════════════════════════════════════════════════
+   VOTE LOGIC (writes to Supabase)
+══════════════════════════════════════════════════════════ */
+function pickTeam(mid,team,btn){
+  if(!PP[mid])PP[mid]={team:null,conf:1}
+  PP[mid].team=team
+  btn.closest('.pg').querySelectorAll('.pb').forEach(b=>b.classList.remove('sel'))
+  btn.classList.add('sel')
+  // Auto-save whenever team is selected (confidence already has a default of 1)
+  autoSave(mid)
+}
+function pickConf(mid,conf,btn){
+  if(!PP[mid])PP[mid]={team:null,conf:1}
+  PP[mid].conf=conf
+  btn.closest('.cg').querySelectorAll('.cb').forEach(b=>b.classList.remove('sel'))
+  btn.classList.add('sel')
+  // Auto-save on confidence change only if team already selected
+  if(PP[mid].team) autoSave(mid)
+}
+function setSaveStatus(mid,msg,color){
+  const el=document.getElementById('sv-'+mid)
+  if(!el)return
+  el.textContent=msg
+  el.style.color=color
+  el.style.background=color==='var(--grn)'?'rgba(29,185,84,.08)':color==='var(--acc)'?'rgba(242,184,48,.1)':'transparent'
+}
+// Debounce map so rapid taps don't fire multiple requests
+const SAVE_T={}
+function autoSave(mid){
+  clearTimeout(SAVE_T[mid])
+  setSaveStatus(mid,'Saving…','var(--acc)')
+  SAVE_T[mid]=setTimeout(()=>submitVote(mid),400)
+}
+async function submitVote(mid){
+  const p=PP[mid];if(!p||!p.team)return
+  const m=DB.matches.find(x=>x.id===mid)
+  if(!m||isLocked(m)){showToast('⏰ Voting closed at 7:30 PM!');setSaveStatus(mid,'Locked','var(--red)');return}
+  const existing=myVote(mid)
+  const isUpdate=!!existing
 
-var _lastPick=0;
-function answerQuestion(i){if(G.answered)return;var now=Date.now();if(now-_lastPick<200)return;_lastPick=now;stopTimer();G.answered=true;var ti=G.activeTile,db=getDailyBoard(),q=db[ti],correct=i===q.a;var opts=document.querySelectorAll('.q-opt');opts.forEach(function(b,j){b.classList.add('off');if(j===q.a)b.classList.add('correct');if(j===i&&!correct){b.classList.add('wrong');opts[q.a].classList.add('reveal')}});$('lifelines').style.display='none';G.board[ti]=correct?'x':'o';
-// Remove from skipped if retried
-var si=G.skippedTiles.indexOf(ti);if(si>=0)G.skippedTiles.splice(si,1);
-var responseMs=Date.now()-_questionStartTime;
-log('question_answered',{tile_index:ti,selected_option_index:i,correct_option_index:q.a,is_correct:correct,correct:correct,response_time_ms:responseMs,response_time_seconds:Math.round(responseMs/1000),remaining_time_seconds:Math.max(0,Q_TIME-Math.round((Date.now()-_timerStart)/1000)),move_number:G.moveCount,streak:G.streak,category:q.cat,used_5050:G.fiftyHidden.length>0});save();if(!correct){$('qOpts').classList.add('shake');setTimeout(function(){$('qOpts').classList.remove('shake')},250)}setTimeout(function(){closeQuestion();showBoardFeedback(correct);afterAnswer(ti)},correct?1000:1400)}
-
-function afterAnswer(ti){setTimeout(function(){var tiles=document.querySelectorAll('.tile');if(tiles[ti])tiles[ti].classList.add('claim-anim')},50);
-// Near-win detection: if X was just placed, check for 2-in-a-row
-if(G.board[ti]==='x')detectNearWin();
-var xW=checkWin('x'),oW=checkWin('o');
-if(xW){G.result='win';G.solveEndTs=Date.now();var sc=getScore();
-var reward=G.dailyOwner?calcXpReward(true,G.moveCount,sc):0;
-if(G.dailyOwner){G.streak++;if(!G.firstPlayDone){reward+=40;G.firstPlayDone=true}G.xp+=reward}
-G.xpEarned=reward;G.playedDate=localDate();
-var st=getSolveTime();if(!G.bestSolveTime||st<G.bestSolveTime)G.bestSolveTime=st;
-save();if(G.logged)sbSyncToCloud();recordResult();
-log('game_finished',{result:'win',moves_taken:G.moveCount,x_tiles:sc,o_tiles:G.moveCount-sc,xp_earned:reward,solve_time_seconds:st,used_fifty:G.usedFifty,used_skip:G.usedSkip,streak_after:G.streak});
-log('board_won',{moves_taken:G.moveCount,solve_time_seconds:st});
-log('game_completed',{result:'win',moves_taken:G.moveCount,solve_time_seconds:st});
-log('xp_awarded',{source:'win',amount:reward,xp_balance_after:G.xp});
-log('streak_increased',{new_streak_length:G.streak});
-if(G.xp<Math.min(FIFTY_COST,SKIP_COST))log('player_out_of_xp',{xp:G.xp});
-setTimeout(function(){showConfetti();showResult()},500)}
-else if(oW||isBoardFull()){G.result='loss';G.solveEndTs=Date.now();var sc=getScore();
-var reward=G.dailyOwner?calcXpReward(false,G.moveCount,sc):0;
-if(G.dailyOwner){if(!G.firstPlayDone){reward+=40;G.firstPlayDone=true}G.xp+=reward}
-G.xpEarned=reward;G.playedDate=localDate();
-var st=getSolveTime();if(!G.bestSolveTime||st<G.bestSolveTime)G.bestSolveTime=st;
-var oTiles=0;for(var i=0;i<9;i++)if(G.board[i]==='o')oTiles++;
-save();if(G.logged)sbSyncToCloud();recordResult();
-log('game_finished',{result:'loss',moves_taken:G.moveCount,x_tiles:sc,o_tiles:oTiles,xp_earned:reward,solve_time_seconds:st,used_fifty:G.usedFifty,used_skip:G.usedSkip,streak_after:G.streak});
-log('board_lost',{moves_taken:G.moveCount,solve_time_seconds:st});
-if(!oW&&isBoardFull())log('board_draw',{moves_taken:G.moveCount});
-log('game_completed',{result:oW?'loss':'draw',moves_taken:G.moveCount,solve_time_seconds:st});
-if(reward>0)log('xp_awarded',{source:'loss',amount:reward,xp_balance_after:G.xp});
-if(checkNearWinOnLoss())log('near_win',{moves_taken:G.moveCount,had_two_in_row:true});
-if((!G.usedFifty&&G.xp>=FIFTY_COST)||(!G.usedSkip&&G.xp>=SKIP_COST))log('lifeline_available_not_used',{had_fifty:!G.usedFifty&&G.xp>=FIFTY_COST,had_skip:!G.usedSkip&&G.xp>=SKIP_COST,xp:G.xp});
-if(G.xp<Math.min(FIFTY_COST,SKIP_COST))log('player_out_of_xp',{xp:G.xp});
-setTimeout(function(){showResult()},600)}
-else{showPlayScreen()}}
-
-// Record result to server (once)
-function recordResult(){if(!G.serverRecorded){G.serverRecorded=true;G.deviceSig=G.deviceSig||genDeviceSig();save();recordAttemptWithSig(getScore())}}
-
-function closeQuestion(){G.activeTile=-1;G.answered=false;G.fiftyHidden=[];stopTimer();save();$('qOverlay').classList.remove('active')}
-
-// 50:50
-function useFiftyFifty(){if(G.usedFifty||G.xp<FIFTY_COST||G.answered)return;var ti=G.activeTile;if(ti<0)return;var db=getDailyBoard(),q=db[ti],xpB=G.xp;G.usedFifty=true;G.xp-=FIFTY_COST;var wrong=[];for(var i=0;i<4;i++)if(i!==q.a&&G.fiftyHidden.indexOf(i)<0)wrong.push(i);for(var i=wrong.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=wrong[i];wrong[i]=wrong[j];wrong[j]=t}G.fiftyHidden=wrong.slice(0,2);save();var opts=document.querySelectorAll('.q-opt');G.fiftyHidden.forEach(function(idx){if(opts[idx])opts[idx].classList.add('fifty-hidden')});log('lifeline_used',{type:'fifty_fifty',tile_index:ti,xp_before:xpB,xp_after:G.xp,move_number:G.moveCount,board_state:getBoardStateString(),about_to_lose:hasAboutToLose()});
-log('lifeline_5050_used',{tile_index:ti,move_number:G.moveCount,xp_balance_before:xpB});
-log('xp_spent',{amount:FIFTY_COST,type:'fifty_fifty',xp_after:G.xp});
-updateLL();renderHeader('hRightPlay');toast('Two options removed!')}
-
-// SKIP TILE (#3 new): discard current question, assign NEW unused question, tile stays empty
-function useSkipTile(){if(G.usedSkip||G.xp<SKIP_COST||G.answered||G.activeTile<0)return;stopTimer();var xpB=G.xp,ti=G.activeTile;G.usedSkip=true;G.xp-=SKIP_COST;
-// Discard current question permanently
-var db=getDailyBoard();var oldQ=db[ti];
-G.discardedQs.push(oldQ.origIdx);
-// Assign a new spare question to this tile
-var rng2=seededRNG(localDate()+'skip'+ti+G.moveCount);
-var spare=getSpareQuestion(ti,rng2);
-if(spare){db[ti]=spare}// If no spares left, tile keeps old question (shouldn't happen with 18 questions)
-// Tile stays empty — replayable with new question
-G.board[ti]='';
-if(G.skippedTiles.indexOf(ti)<0)G.skippedTiles.push(ti);
-log('lifeline_used',{type:'skip_tile',tile_index:ti,xp_before:xpB,xp_after:G.xp,move_number:G.moveCount,board_state:getBoardStateString(),about_to_lose:hasAboutToLose()});
-log('lifeline_skip_used',{tile_index:ti,move_number:G.moveCount,xp_balance_before:xpB});
-log('xp_spent',{amount:SKIP_COST,type:'skip_tile',xp_after:G.xp});
-G.activeTile=-1;G.answered=false;G.fiftyHidden=[];G.moveCount--;save();
-$('qOverlay').classList.remove('active');toast('New question assigned — tap the tile again!');showPlayScreen()}
-
-// RESULT SCREEN — with XP reward display (#5)
-function showResult(){
-  renderHeader('hRightRes');var isW=G.result==='win',sc=getScore(),st=getSolveTime(),h='';
-  // 1) Victory/loss as TTT outcome
-  if(isW){h+='<div class="r-emoji">🏆</div><div class="r-headline">You won today\'s tic-tac-toe!</div><div class="r-subtitle">You formed a winning line.</div>'}
-  else{h+='<div class="r-emoji">🧩</div><div class="r-headline">You lost today\'s tic-tac-toe.</div><div class="r-subtitle">Try a different line tomorrow.</div>'}
-  // 2) Large countdown
-  h+='<div class="r-cd-big">New puzzle in<span class="time" id="rCd">'+midCd()+'</span></div>';
-  // 3) Streak box with "come back" message
-  h+='<div class="r-streak-box"><div class="r-streak-num">🔥 '+G.streak+'</div><div class="r-streak-label">Day Streak</div>';
-  h+='<div class="streak-dots">';for(var i=0;i<7;i++){h+='<div class="streak-dot'+(i<Math.min(G.streak,7)?' filled':'')+'"></div>'}h+='</div>';
-  var nm=nextMilestone(G.streak);if(nm){h+='<div class="streak-milestone">'+(nm-G.streak)+' more day'+(nm-G.streak===1?'':'s')+' to reach a '+nm+'-day streak</div>'}
-  h+='<div style="font-size:12px;color:var(--t3);margin-top:8px">Come back tomorrow to protect your streak</div>';
-  h+='</div>';
-  // 4) XP earned
-  h+='<div class="r-xp-badge">+'+G.xpEarned+' XP today</div>';
-  // 5) Moves as secondary
-  h+='<div class="r-meta-secondary">'+(isW?'Winning line formed in '+G.moveCount+' turns':'Completed in '+G.moveCount+' moves')+' • '+st+'s</div>';
-  // 6) Actions
-  h+='<div class="r-actions">';
-  h+='<button class="btn-o" onclick="shareToClipboard()">📋 Share Result</button>';
-  if(isW){h+='<button class="btn-t" onclick="enterReviewMode()">🔍 Review Board</button>'}
-  else{h+='<button class="btn-t" onclick="showPlayScreen()">View Board</button>'}
-  if(shouldShowSaveStreak())h+='<button class="btn-p" onclick="openLogin()" style="margin-top:8px">🔒 Save your streak</button>';
-  h+='</div>';
-  $('resBody').innerHTML=h;go('sRes');
-  if(isW){var wl=checkWin('x');if(wl){var cells=document.querySelectorAll('.r-cell');wl.forEach(function(i){if(cells[i])cells[i].style.boxShadow='0 0 0 2px var(--green)'})}}
-  clearInterval(G._cdI);G._cdI=setInterval(function(){var e=$('rCd');if(e)e.textContent=midCd()},1000);
-  logOnce('result_screen_viewed',{result:G.result,streak:G.streak,xp_balance:G.xp,xp_earned:G.xpEarned,solve_time:st});
-  _resultScreenOpenTime=Date.now();window.resultOpenTs=Date.now()}
-
-// REVIEW MODE — explore unopened tiles after winning
-function enterReviewMode(){
-  if(_resultScreenOpenTime>0){var dur=Math.round((Date.now()-_resultScreenOpenTime)/1000);log('result_screen_view_duration',{seconds:dur});if(dur<2)log('result_screen_exited_quickly',{seconds:dur});_resultScreenOpenTime=0}
-  G.reviewMode=true;showPlayScreen()}
-function exitReviewMode(){G.reviewMode=false;showResult()}
-function reviewTileClick(idx){
-  if(G.board[idx]!=='')return;// Only empty tiles
-  var db=getDailyBoard(),q=db[idx];if(!q)return;
-  // Show question + reveal answer immediately
-  var h='<div style="padding:20px;text-align:center">';
-  h+='<div style="font-size:12px;color:var(--t3);margin-bottom:8px">'+(CAT_E[q.cat]||'')+' '+q.cat+'</div>';
-  h+='<div style="font-size:15px;font-weight:600;margin-bottom:12px;line-height:1.4">'+q.q+'</div>';
-  q.o.forEach(function(opt,i){
-    var cls=i===q.a?'review-answer correct':'review-answer';
-    h+='<div class="'+cls+'">'+opt+'</div>'});
-  h+='</div>';
-  var tile=document.querySelectorAll('.tile')[idx];
-  if(!tile)return;
-  // Show in a floating panel
-  var panel=document.createElement('div');panel.className='board-feedback';
-  panel.style.cssText='background:#fff;border-radius:12px;padding:0;box-shadow:0 4px 20px rgba(0,0,0,.15);position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:280px;z-index:50';
-  panel.innerHTML=h;
-  var bw=document.querySelector('.board-wrapper');if(bw){bw.style.position='relative';bw.appendChild(panel)}
-  setTimeout(function(){if(panel.parentNode)panel.remove()},3000)}
-
-// SHARE — emoji board grid with CTA
-function buildShareText(){
-  var grid=G.board.map(function(v){return v==='x'?'🟩':v==='o'?'🟥':'⬜'});
-  var r1=grid.slice(0,3).join(''),r2=grid.slice(3,6).join(''),r3=grid.slice(6,9).join('');
-  if(G.result==='win'){return 'I just won tic-tac-toe on Questly board 🎯\n'+r1+'\n'+r2+'\n'+r3+'\nCan you beat this?\nplayquestly.in'}
-  return 'I just played tic-tac-toe on Questly board 🎯\n'+r1+'\n'+r2+'\n'+r3+'\nCan you beat this?\nplayquestly.in'}
-function getShareText(){return buildShareText()}
-function shareToClipboard(){log('share_intent',{result:G.result});log('share_clicked',{type:'clipboard'});var text=buildShareText();
-  // Always copy to clipboard first
-  if(navigator.clipboard&&navigator.clipboard.writeText){
-    navigator.clipboard.writeText(text).then(function(){
-      toast('Copied — paste it in WhatsApp 😄');
-      log('share_completed',{method:'clipboard'});
-      // Also try native share sheet on mobile
-      if(navigator.share){try{navigator.share({text:text}).catch(function(){})}catch(e){}}
-    }).catch(function(){fallbackCopy(text)})
-  }else{fallbackCopy(text)}}
-function fallbackCopy(text){var ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.left='-999px';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');toast('Copied! Paste on WhatsApp or your status.')}catch(e){toast('Could not copy.')}document.body.removeChild(ta)}
-
-function openHTP(){$('htpModal').classList.add('active')}
-function closeHTP(){$('htpModal').classList.remove('active')}
-$('htpModal').addEventListener('click',function(e){if(e.target===this)closeHTP()});
-function showTutorial(){/* Legacy — FTU now handled by openBoard directly */}
-function closeTutorial(){$('tutModal').classList.remove('active')}
-function showConfetti(){var c=document.createElement('div');c.className='confetti-container';document.body.appendChild(c);var colors=['#e85d2a','#2d9b5a','#c49a20','#d44040','#3b82f6','#9b5de5','#00bbf9','#f15bb5'];for(var i=0;i<40;i++){var p=document.createElement('div');p.className='confetti-piece';p.style.left=Math.random()*100+'%';p.style.background=colors[Math.floor(Math.random()*colors.length)];p.style.animationDelay=(Math.random()*0.8)+'s';p.style.animationDuration=(2+Math.random()*1.5)+'s';p.style.width=(6+Math.random()*8)+'px';p.style.height=(6+Math.random()*8)+'px';if(Math.random()>0.5)p.style.borderRadius='50%';c.appendChild(p)}setTimeout(function(){c.remove()},4000)}
-
-// LOGIN — #5.6: dynamic microcopy
-function openLogin(){log('login_opened');$('loginDesc').textContent='You have a '+G.streak+'-day streak. Create an account so it\'s never lost.';$('phoneG').style.display='block';$('otpG').classList.remove('active');$('emailIn').value='';$('loginOL').classList.add('active')}
-function closeLogin(){$('loginOL').classList.remove('active')}
-async function sendMagicLink(){var email=$('emailIn').value.trim();if(!email||!email.includes('@')){toast('Enter a valid email');return}G.email=email;var btn=$('phoneG').querySelector('.btn-p');btn.textContent='Sending...';btn.disabled=true;var err=await sbSendMagicLink(email);btn.textContent='Send login link';btn.disabled=false;if(err){toast('Failed: '+err.message);return}$('otpPh').textContent=email;$('phoneG').style.display='none';$('otpG').classList.add('active');toast('Check your email!')}
-// #5.5: After login, hide save streak buttons, refresh screens
-sb.auth.onAuthStateChange(async function(event,session){if(event==='SIGNED_IN'&&session&&!G.logged){G.logged=true;G.email=session.user.email||G.email;try{if(window.posthog){posthog.identify(session.user.id,{email:session.user.email});posthog.capture('login_success')}}catch(x){}var existing=await sbFetchProfile(session.user.id);if(existing&&existing.streak>G.streak){await sbSyncFromCloud()}else{await sbSyncToCloud()}save();closeLogin();toast('Signed in!');
-// Re-render current screen to hide save streak buttons
-var today=localDate(),done=G.playedDate===today&&G.result!=='';
-if(done){if($('sRes').classList.contains('active'))showResult();else showPlayScreen()}else showHome()}});
-$('loginOL').addEventListener('click',function(e){if(e.target===this)closeLogin()});
-
-// INIT — load questions from Supabase, return reward (#6/#10)
-async function initApp(){
-  var s=load();if(s){for(var k in s){if(s[k]!==undefined)G[k]=s[k]}}
-  var today=localDate();
-  // Show loading screen
-  $('loadingScreen').style.display='flex';
-  // Load questions from Supabase
-  await loadQuestions();buildCatEmoji();
-  $('loadingScreen').style.display='none';
-  log('app_opened',{date:today,streak:G.streak,xp_balance:G.xp,has_played_today:G.playedDate===today&&G.result!=='',q_count:ALL_Q.length});
-  // Detect shared link referral
-  if(window.location.search.indexOf('ref=')>=0||document.referrer)logOnce('share_link_opened',{referrer:document.referrer||'',search:window.location.search});
-  if(G.gameDate&&G.gameDate!==today){resetForNewDay()}
-  // Streak & return reward logic (#6/#10)
-  var returnXpGranted=false;var streakReset=false;
-  if(G.playedDate===yday()&&G.returnXpClaimed!==today){
-    // Played yesterday, returning today: grant reward + increment streak
-    G.xp+=50;G.streak++;G.returnXpClaimed=today;returnXpGranted=true;save();
-    log('return_next_day',{streak:G.streak,days_since_last:1});
-    log('streak_increased',{new_streak_length:G.streak});
-    log('xp_awarded',{source:'daily',amount:50,xp_balance_after:G.xp});
-    log('daily_reward_claimed',{streak:G.streak,xp_granted:50})
-  } else if(G.playedDate&&G.playedDate!==today&&G.playedDate!==yday()&&G.result!==''){
-    // Missed a day
-    var prevStreak=G.streak;G.streak=0;streakReset=true;save();
-    log('streak_broken',{previous_streak:prevStreak})
+  // Delete existing vote first (works around RLS upsert issues), then insert fresh
+  if(existing){
+    const {error:delErr}=await sb.from('votes').delete()
+      .eq('match_id',mid).eq('user_code',CU.code)
+    if(delErr){
+      showToast('❌ Failed to update. Try again.')
+      setSaveStatus(mid,'Failed ✗','var(--red)')
+      console.error(delErr);return
+    }
   }
-  G.gameDate=localDate();getDailyBoard();
-  (async function(){
-    var session=await sbGetSession();
-    if(session&&session.user){G.logged=true;G.email=session.user.email||G.email;try{await sbSyncFromCloud()}catch(e){}}
-    if(!G.logged&&G.streak===0){try{await tryDeviceRecovery()}catch(e){}}
-    var done=G.playedDate===today&&G.result!=='';
-    if(done){showPlayScreen()}
-    else if(G.gameStarted&&G.activeTile>=0){showPlayScreen();setTimeout(function(){showQuestion()},150)}
-    else if(G.gameStarted){showPlayScreen()}
-    else{go('sHome');
-      // NEW: FTU — hide header for first-time users
-      if(G.firstVisit){$('hRight').innerHTML=''}else{renderHeader('hRight')}
-      var h='';
-      // Return reward popup (#6/#10)
-      if(returnXpGranted&&!G.returnXpShown){G.returnXpShown=true;save();
-        h+='<div class="home-reward"><div class="hr-title">Welcome back 🔥</div><div class="hr-body">+50 XP Daily Bonus added</div><div class="hr-streak">You kept your streak: '+G.streak+' days</div></div>'}
-      else if(streakReset){h+='<div class="r-bonus-msg" style="max-width:280px;margin-bottom:16px;text-align:center">Your streak reset. Start a new one today!</div>'}
-      h+='<div class="home-headline">Questly</div><div class="home-sub">Win tic-tac-toe by answering trivia questions.</div><div class="home-cta"><button class="btn-p" onclick="openBoard()">Play Today\'s Puzzle</button></div>';
-      if(shouldShowSaveStreak())h+='<div class="home-save"><button class="btn-o" onclick="openLogin()">🔒 Save your streak</button></div>';
-      h+='<button class="htp-btn" onclick="openHTP()">How to Play</button>';
-      h+='<div class="home-micro">No sign up required • 2 minutes daily</div>';
-      $('homeBody').innerHTML=h;
-      logOnce('home_viewed')}
-    scheduleMN()})()}
-function resetForNewDay(){G.board=['','','','','','','','',''];G.skippedTiles=[];G.discardedQs=[];G.moveCount=0;G.activeTile=-1;G.usedFifty=false;G.usedSkip=false;G.fiftyHidden=[];G.result='';G.gameStarted=false;G.answered=false;G.serverRecorded=false;G.xpEarned=0;G.solveStartTs=0;G.solveEndTs=0;G.returnXpShown=false;_dailyBoard=null;_dailySpares=[];save()}
-function scheduleMN(){var n=new Date(),t=new Date(n);t.setDate(t.getDate()+1);t.setHours(0,0,0,100);setTimeout(function(){resetForNewDay();G.gameDate=localDate();_dailyBoard=null;showHome();scheduleMN()},Math.min(t-n,864e5))}
-window.addEventListener('beforeunload',function(){save();
-  // Rage quit / session abandoned: if question overlay is open
-  if($('qOverlay').classList.contains('active')&&_questionStartTime>0){log('rage_quit',{tile_index:G.activeTile,time_spent_in_question_ms:Date.now()-_questionStartTime,move_number:G.moveCount});log('session_abandoned_mid_question',{tile_index:G.activeTile,move_number:G.moveCount})}
-  // Board exit without any move
-  if(G.gameStarted&&!G.result&&G.moveCount===0)log('board_exit_before_move',{})});
-document.addEventListener('visibilitychange',function(){if(document.hidden){save();
-  if($('qOverlay').classList.contains('active')&&_questionStartTime>0){log('rage_quit',{tile_index:G.activeTile,time_spent_in_question_ms:Date.now()-_questionStartTime,move_number:G.moveCount});log('session_abandoned_mid_question',{tile_index:G.activeTile,move_number:G.moveCount})}
-  if(G.gameStarted&&!G.result&&G.moveCount===0)log('board_exit_before_move',{});
-  // Track result screen duration if leaving while on result screen
-  if(_resultScreenOpenTime>0&&$('sRes').classList.contains('active')){var dur=Math.round((Date.now()-_resultScreenOpenTime)/1000);log('result_screen_view_duration',{seconds:dur});if(dur<2)log('result_screen_exited_quickly',{seconds:dur})}}});
-initApp();
-</script></body></html>
+
+  const {error:insErr}=await sb.from('votes').insert(
+    {match_id:mid, user_code:CU.code, team:p.team, confidence:p.conf||1}
+  )
+  if(insErr){
+    showToast('❌ Failed to save. Try again.')
+    setSaveStatus(mid,'Failed ✗','var(--red)')
+    console.error(insErr);return
+  }
+
+  // Update local cache instantly
+  const cached=DB.votes.find(v=>v.match_id===mid&&v.user_code===CU.code)
+  if(cached){cached.team=p.team;cached.confidence=p.conf||1}
+  else DB.votes.push({match_id:mid,user_code:CU.code,team:p.team,confidence:p.conf||1,id:Date.now()})
+
+  setSaveStatus(mid,'✓ Saved','var(--grn)')
+  showToast(isUpdate?`✏️ Updated to ${tm(p.team).code} · ${p.conf||1}×`:`✓ ${tm(p.team).code} · ${p.conf||1}× saved!`)
+  refreshDB().then(()=>renderAll())
+}
+
+/* ══════════════════════════════════════════════════════════
+   ALL PICKS TAB — everyone's picks post-lock
+══════════════════════════════════════════════════════════ */
+function renderPicks(){
+  const el=document.getElementById('p-picks')
+
+  // Only show from match 7 onwards (today, 3 Apr). Sort newest-locked first, then upcoming.
+  const START_MATCH=7
+  const relevant=DB.matches.filter(m=>m.id>=START_MATCH)
+  const locked=relevant.filter(m=>isLocked(m)).slice().reverse()   // most recent locked first
+  const open=relevant.filter(m=>!isLocked(m))                      // upcoming, vote open
+
+  let h=''
+
+  // ── LOCKED/DONE: Show EVERYONE's pick (team + confidence) ──
+  if(locked.length){
+    h+=`<div class="sh">🔒 PICKS REVEALED — AFTER LOCK</div>`
+    locked.forEach(m=>{
+      const allV=matchVotes(m.id)
+      const ht=tm(m.home_team),at2=tm(m.away_team),st=mstat(m)
+      const voted=allV.length,total=USERS.length
+      const hc=allV.filter(v=>v.team===m.home_team).length
+      const ac=allV.filter(v=>v.team===m.away_team).length
+      const hp=voted?Math.round(hc/voted*100):0
+      const ap=voted?Math.round(ac/voted*100):0
+
+      h+=`<div class="mc" style="margin-bottom:12px">
+        <div class="mh">
+          <div>
+            <div style="font-size:12px;font-weight:800">M${m.id} · ${ht.code} vs ${at2.code}</div>
+            <div style="font-size:9px;color:var(--dim2);margin-top:1px">${fmtD(m)} · ${m.venue}${m.winner==='ABANDONED'?' · <span style="color:var(--dim2);font-weight:800">🌧 Abandoned</span>':m.winner?` · <span style="color:var(--grn);font-weight:800">${tm(m.winner).code} Won ✓</span>`:''}</div>
+          </div>
+          <span class="chip ${st}">${st==='ab'?'🌧 Abandoned':st==='dn'&&m.winner?`${tm(m.winner).code} Won`:st==='lk'?'🔒 Locked':'Done'}</span>
+        </div>`
+
+      // Distribution bars
+      if(voted){
+        h+=`<div style="padding:9px 13px 0">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">
+            <span style="width:36px;font-size:9px;font-weight:800;color:${ht.light};flex-shrink:0">${ht.code}</span>
+            <div style="flex:1;height:14px;background:var(--s3);border-radius:4px;overflow:hidden">
+              <div style="height:100%;width:${hp}%;background:linear-gradient(90deg,${ht.dark},${ht.acc});border-radius:4px"></div>
+            </div>
+            <span style="font-size:10px;font-weight:800;color:${ht.light};width:28px;text-align:right">${hp}%</span>
+            ${m.winner&&isDog(m.id,m.home_team)&&m.winner===m.home_team?'<span style="font-size:8px;padding:1px 4px;border-radius:10px;background:rgba(232,61,90,.12);color:var(--red)">🐶</span>':''}
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+            <span style="width:36px;font-size:9px;font-weight:800;color:${at2.light};flex-shrink:0">${at2.code}</span>
+            <div style="flex:1;height:14px;background:var(--s3);border-radius:4px;overflow:hidden">
+              <div style="height:100%;width:${ap}%;background:linear-gradient(90deg,${at2.dark},${at2.acc});border-radius:4px"></div>
+            </div>
+            <span style="font-size:10px;font-weight:800;color:${at2.light};width:28px;text-align:right">${ap}%</span>
+            ${m.winner&&isDog(m.id,m.away_team)&&m.winner===m.away_team?'<span style="font-size:8px;padding:1px 4px;border-radius:10px;background:rgba(232,61,90,.12);color:var(--red)">🐶</span>':''}
+          </div>
+        </div>`
+      }
+
+      // EVERYONE's pick — full name, team, confidence, points
+      h+=`<div style="padding:0 13px 12px;display:flex;flex-direction:column;gap:5px">`
+      USERS.forEach(u=>{
+        const v=allV.find(x=>x.user_code===u.code)
+        const vt=v?tm(v.team):null
+        const abandoned=m.winner==='ABANDONED'
+        const win=!abandoned&&v&&m.winner&&v.team===m.winner
+        const loss=!abandoned&&v&&m.winner&&v.team!==m.winner
+        const dog=win&&isDog(m.id,v.team)
+        const pts=win?v.confidence*10+(dog?5:0):loss?-(v.confidence*5):null
+        const isMe=u.code===CU.code
+
+        h+=`<div style="display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:10px;
+          background:${abandoned?'var(--s2)':win?'rgba(29,185,84,.07)':loss?'rgba(232,61,90,.05)':'var(--s2)'};
+          border:1px solid ${abandoned?'var(--b1)':win?'rgba(29,185,84,.25)':loss?'rgba(232,61,90,.15)':isMe?'rgba(242,184,48,.3)':'var(--b1)'};
+          opacity:${abandoned?'.5':loss?'.75':'1'}">
+          <div style="width:22px;height:22px;border-radius:50%;background:${u.grad};display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:900;color:#fff;flex-shrink:0">${u.name.charAt(0)}</div>
+          <span style="font-size:12px;font-weight:700;flex:1;color:${isMe?'var(--acc)':'var(--txt)'}">${u.name}${isMe?' (you)':''}</span>
+          ${v
+            ? `<span style="font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px;background:${vt.dark}55;color:${vt.light}">${vt.code}</span>
+               <span style="font-size:10px;font-weight:800;color:var(--blue)">${v.confidence}×</span>
+               ${abandoned
+                 ? `<span style="font-size:10px;color:var(--dim);min-width:36px;text-align:right">0 pts</span>`
+                 : pts!==null
+                   ? `<span style="font-size:12px;font-weight:900;color:${pts>=0?'var(--grn)':'var(--red)'};min-width:36px;text-align:right">${pts>0?'+':''}${pts}${dog?'🐶':''}</span>`
+                   : `<span style="font-size:10px;color:var(--dim);min-width:36px;text-align:right">pending</span>`
+               }`
+            : `<span style="font-size:10px;color:var(--dim);font-style:italic">did not vote</span>`
+          }
+        </div>`
+      })
+      h+=`</div></div>` // end user list + card
+    })
+  }
+
+  // ── OPEN: Show who has voted (team hidden until lock) ──
+  if(open.length){
+    h+=`<div class="sh" style="color:var(--acc);margin-top:8px">🟡 VOTING OPEN — PICKS HIDDEN TILL 7:30 PM</div>`
+    open.forEach(m=>{
+      const allV=matchVotes(m.id)
+      const ht=tm(m.home_team),at2=tm(m.away_team)
+      const votedCount=allV.length
+      const pct=Math.round(votedCount/USERS.length*100)
+
+      h+=`<div class="mc" style="margin-bottom:10px">
+        <div class="mh">
+          <div>
+            <div style="font-size:12px;font-weight:800">M${m.id} · ${ht.code} vs ${at2.code}</div>
+            <div style="font-size:9px;color:var(--dim2);margin-top:1px">${fmtD(m)} · ${fmtT(m)} · ${m.venue}</div>
+          </div>
+          <span style="font-size:11px;font-weight:800;color:${votedCount===USERS.length?'var(--grn)':'var(--acc)'}">${votedCount}/${USERS.length} voted</span>
+        </div>
+        <div style="padding:10px 13px 12px">
+          <div style="height:4px;background:var(--s3);border-radius:2px;margin-bottom:10px;overflow:hidden">
+            <div style="height:100%;width:${pct}%;background:${votedCount===USERS.length?'var(--grn)':'var(--acc)'};border-radius:2px"></div>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:5px">`
+
+      USERS.forEach(u=>{
+        const v=allV.find(x=>x.user_code===u.code)
+        const voted=!!v
+        const isMe=u.code===CU.code
+        h+=`<div style="display:flex;align-items:center;gap:5px;padding:5px 10px 5px 6px;border-radius:20px;
+          background:${voted?'rgba(29,185,84,.09)':'rgba(94,95,122,.09)'};
+          border:1px solid ${voted?(isMe?'rgba(242,184,48,.4)':'rgba(29,185,84,.25)'):'var(--b1)'};
+          font-size:11px;font-weight:700;color:${voted?'var(--grn)':'var(--dim)'}">
+          <div style="width:18px;height:18px;border-radius:50%;background:${u.grad};display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:900;color:#fff;flex-shrink:0">${u.name.charAt(0)}</div>
+          ${u.name} <span style="margin-left:2px">${voted?'✓':'✗'}</span>
+        </div>`
+      })
+      h+=`</div></div></div>`
+    })
+  }
+
+  if(!locked.length&&!open.length){
+    h+=`<div style="text-align:center;padding:50px 20px;color:var(--dim);font-size:13px">No matches yet</div>`
+  }
+
+  el.innerHTML=h
+}
+
+/* ══════════════════════════════════════════════════════════
+   MY PICKS TAB
+══════════════════════════════════════════════════════════ */
+function renderMyPicks(){
+  const el=document.getElementById('p-mypicks')
+  const me=DB.users.find(u=>u.code===CU.code)||{total_points:0,correct:0,wrong:0}
+  const myVotes=DB.votes.filter(v=>v.user_code===CU.code)
+  let h=`
+  <div class="sr">
+    <div class="sc"><div class="sv" style="color:var(--grn)">${me.correct||0}</div><div class="sl">Correct</div></div>
+    <div class="sc"><div class="sv" style="color:var(--red)">${me.wrong||0}</div><div class="sl">Wrong</div></div>
+    <div class="sc"><div class="sv" style="color:var(--acc)">${me.total_points||0}</div><div class="sl">Points</div></div>
+  </div>
+  <div style="background:var(--s1);border:1px solid var(--b1);border-radius:11px;padding:9px 12px;margin-bottom:11px;display:flex;justify-content:space-between;align-items:center">
+    <span style="font-size:12px;color:var(--dim2)">Matches voted</span>
+    <span style="font-size:13px;font-weight:800">${myVotes.length} / ${DB.matches.length}</span>
+  </div>
+  <div class="sh">MY PREDICTIONS</div>`
+
+  if(!myVotes.length){h+=`<div style="text-align:center;padding:40px;color:var(--dim);font-size:13px">No predictions yet.<br>Head to Matches to vote 🏏</div>`;el.innerHTML=h;return}
+
+  DB.matches.forEach(m=>{
+    const v=myVotes.find(x=>x.match_id===m.id);if(!v)return
+    const vt=tm(v.team),win=m.winner&&v.team===m.winner,loss=m.winner&&v.team!==m.winner
+    const dog=win&&isDog(m.id,v.team)
+    const pe=win?v.confidence*10+(dog?5:0):loss?-(v.confidence*5):null
+    h+=`<div class="pr">
+      <div class="pm">
+        <div class="pmn">${tm(m.home_team).code} vs ${tm(m.away_team).code}</div>
+        <div class="pmd">${fmtD(m)} · ${fmtT(m)}${m.winner?` · ${tm(m.winner).code} won`:''}</div>
+      </div>
+      <div class="ppr">
+        <div class="ptb" style="background:${vt.dark}44;color:${vt.light}">${vt.code} · ${v.confidence}×</div>
+        ${pe!==null?`<div class="ppt ${pe>=0?'p':'n'}">${pe>=0?'+':''}${pe}${dog?'🐶':''}</div>`:`<div class="ppd">Pending</div>`}
+      </div>
+    </div>`
+  })
+  el.innerHTML=h
+}
+
+/* ══════════════════════════════════════════════════════════
+   STANDINGS (live from Supabase users table)
+══════════════════════════════════════════════════════════ */
+function renderStandings(){
+  const el=document.getElementById('p-standings')
+  const ranked=[...DB.users].sort((a,b)=>(b.total_points||0)-(a.total_points||0)||a.code.localeCompare(b.code))
+  let h=`<div class="sh">STANDINGS · IPL 2026</div>`
+  ranked.forEach((u,i)=>{
+    const ux=USERS.find(x=>x.code===u.code)||{grad:'linear-gradient(135deg,#555,#888)',name:u.name}
+    const me=u.code===CU.code,first=i===0
+    const voted=DB.votes.filter(v=>v.user_code===u.code).length
+
+    // Last 10 settled picks, most recent first
+    const settled=DB.matches
+      .filter(m=>m.winner&&m.winner!=='ABANDONED')  // skip abandoned in form
+      .map(m=>({m, v:DB.votes.find(x=>x.match_id===m.id&&x.user_code===u.code)}))
+      .filter(x=>x.v)
+      .sort((a,b)=>b.m.id-a.m.id)
+      .slice(0,10)
+    const dots=settled.map(({m,v})=>{
+      const win=v.team===m.winner
+      return `<span title="${win?'✓':'✗'} M${m.id}" style="
+        display:inline-block;width:9px;height:9px;border-radius:50%;flex-shrink:0;
+        background:${win?'var(--grn)':'var(--red)'};
+        opacity:${win?'1':'.7'}"
+      ></span>`
+    }).join('')
+
+    h+=`<div class="lr ${first?'gd':''} ${me&&!first?'me':''}">
+      <div class="lrk">${first?'👑':i+1}</div>
+      <div class="lav" style="background:${ux.grad}">${u.name.charAt(0)}</div>
+      <div class="li">
+        <div class="ln">${u.name}${me?'<span class="mtg">YOU</span>':''}</div>
+        <div class="ls" style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:4px">
+          <span>✅ ${u.correct||0} · ❌ ${u.wrong||0}</span>
+          ${dots?`<span style="display:flex;gap:3px;align-items:center">${dots}</span>`:''}
+        </div>
+      </div>
+      <div class="lpw"><div class="lpt">${u.total_points||0}</div><span class="lpl">pts</span></div>
+    </div>`
+  })
+  h+=`<div class="sk">
+    <div class="skh">SCORING KEY</div>
+    <div class="skr"><span style="color:var(--dim2)">Correct pick</span><span style="color:var(--grn);font-weight:800">+10 pts base</span></div>
+    <div class="skr"><span style="color:var(--dim2)">Wrong pick</span><span style="color:var(--red);font-weight:800">−5 pts base</span></div>
+    <div class="skr"><span style="color:var(--dim2)">Confidence multiplier</span><span style="color:var(--blue);font-weight:800">×1 / ×2 / ×3</span></div>
+    <div class="skr"><span style="color:var(--dim2)">Underdog 🐶 bonus</span><span style="color:var(--acc);font-weight:800">+5 if &lt;30% picked winner</span></div>
+  </div>`
+  el.innerHTML=h
+}
+
+/* ══════════════════════════════════════════════════════════
+   ADMIN — Live voter tracker + result entry
+══════════════════════════════════════════════════════════ */
+function renderAdmin(){
+  const el=document.getElementById('p-admin')
+  // Admin sees ALL matches without a winner — sorted by date
+  const needResult=DB.matches.filter(m=>!m.winner)   // every match, locked or not
+  const done=DB.matches.filter(m=>m.winner)
+  const openMatches=DB.matches.filter(m=>!isLocked(m))
+  const lockedNeedResult=needResult.filter(m=>isLocked(m))    // locked, needs result NOW
+  const upcomingNeedResult=needResult.filter(m=>!isLocked(m)) // future — for reference
+  const pending=lockedNeedResult  // stat badge = only locked ones
+
+  let h=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;margin-top:4px">
+    <div class="sh" style="margin:0">ADMIN PANEL</div>
+    <span style="font-size:9px;background:rgba(232,61,90,.12);color:var(--red);padding:2px 8px;border-radius:20px;font-weight:800;text-transform:uppercase">PRAT ONLY</span>
+  </div>`
+
+  /* ── LIVE VOTER TRACKER ── */
+  if(openMatches.length){
+    h+=`<div class="sh" style="color:var(--acc)">🔴 LIVE — WHO HAS VOTED</div>
+    <div style="background:var(--s1);border:1px solid var(--b1);border-radius:13px;overflow:hidden;margin-bottom:14px">`
+    openMatches.slice(0,8).forEach((m,idx)=>{
+      const allV=matchVotes(m.id),votedCodes=allV.map(v=>v.user_code)
+      const votedCount=votedCodes.length,total=USERS.length,pct=Math.round(votedCount/total*100)
+      const isFuture=m.match_date>todayStr()
+      h+=`<div style="padding:10px 13px;${idx>0?'border-top:1px solid var(--b1)':''}">`
+      h+=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px">
+        <div>
+          <span style="font-size:12px;font-weight:800">M${m.id} · ${tm(m.home_team).code} vs ${tm(m.away_team).code}</span>
+          <span style="font-size:10px;color:var(--dim);margin-left:6px">${fmtD(m)} · ${fmtT(m)}</span>
+        </div>
+        <span style="font-size:11px;font-weight:800;color:${votedCount===total?'var(--grn)':isFuture?'var(--blue)':'var(--acc)'}">${votedCount}/${total}</span>
+      </div>
+      <div style="height:4px;background:var(--s3);border-radius:2px;margin-bottom:9px;overflow:hidden">
+        <div style="height:100%;width:${pct}%;background:${votedCount===total?'var(--grn)':'var(--acc)'};border-radius:2px"></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">`
+      USERS.forEach(u=>{
+        const voted=votedCodes.includes(u.code)
+        h+=`<div style="display:flex;align-items:center;gap:4px;padding:4px 9px 4px 5px;border-radius:20px;
+          background:${voted?'rgba(29,185,84,.1)':'rgba(94,95,122,.12)'};
+          border:1px solid ${voted?'rgba(29,185,84,.3)':'var(--b1)'};
+          font-size:11px;font-weight:700;color:${voted?'var(--grn)':'var(--dim)'}">
+          <div style="width:16px;height:16px;border-radius:50%;background:${u.grad};display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:900;color:#fff;flex-shrink:0">${u.name.charAt(0)}</div>
+          ${u.name.split(' ')[0]} ${voted?'✓':'✗'}
+        </div>`
+      })
+      h+=`</div>`
+      const notVoted=USERS.filter(u=>!votedCodes.includes(u.code))
+      if(notVoted.length&&!isFuture)h+=`<div style="margin-top:8px;font-size:10px;color:var(--red);font-weight:700">⏰ Not voted: ${notVoted.map(u=>u.name).join(', ')}</div>`
+      h+=`</div>`
+    })
+    if(openMatches.length>8)h+=`<div style="padding:8px 13px;border-top:1px solid var(--b1);font-size:11px;color:var(--dim);text-align:center">+${openMatches.length-8} more upcoming matches</div>`
+    h+=`</div>`
+  }
+
+  /* ── STATS ── */
+  h+=`<div style="background:var(--s1);border:1px solid var(--b1);border-radius:11px;padding:9px 12px;margin-bottom:13px;display:grid;grid-template-columns:repeat(3,1fr);text-align:center">
+    <div><div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--red)">${pending.length}</div><div style="font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px">Need Result</div></div>
+    <div><div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--grn)">${done.length}</div><div style="font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px">Done</div></div>
+    <div><div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--blue)">${openMatches.length}</div><div style="font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px">Upcoming</div></div>
+  </div>`
+
+  // Locked matches needing result — highest priority
+  if(lockedNeedResult.length){
+    h+=`<div class="sh" style="color:var(--red)">⚠️ LOCKED — ENTER RESULT</div>`
+    lockedNeedResult.forEach(m=>h+=adminCard(m))
+  }
+
+  // Upcoming matches — shown for reference, buttons disabled until locked
+  if(upcomingNeedResult.length){
+    h+=`<div class="sh" style="color:var(--blue)">📅 UPCOMING MATCHES</div>`
+    h+=`<div style="background:rgba(66,133,244,.06);border:1px solid rgba(66,133,244,.15);border-radius:10px;padding:8px 12px;margin-bottom:10px;font-size:11px;color:var(--dim2)">
+      Buttons unlock at 7:30 PM IST on match day. All ${upcomingNeedResult.length} upcoming matches shown below.
+    </div>`
+    upcomingNeedResult.forEach(m=>h+=adminCard(m))
+  }
+
+  // Done
+  if(done.length){
+    h+=`<div class="sh">✅ RESULTS ENTERED</div>`
+    ;[...done].reverse().forEach(m=>h+=adminCard(m))
+  }
+  el.innerHTML=h
+}
+
+function adminCard(m){
+  const locked=isLocked(m),ht=tm(m.home_team),at2=tm(m.away_team)
+  const allV=matchVotes(m.id),total=allV.length
+  if(m.winner){
+    const isAbandoned=m.winner==='ABANDONED'
+    return`<div class="ac">
+      <div class="ach">
+        <div class="act">M${m.id} · ${ht.code} vs ${at2.code} · ${fmtD(m)}</div>
+        <span class="chip ${isAbandoned?'ab':'dn'}">${isAbandoned?'🌧 Abandoned':'Done'}</span>
+      </div>
+      <div class="${isAbandoned?'':'db'}" style="${isAbandoned?'background:rgba(94,95,122,.07);border:1px solid rgba(94,95,122,.2);border-radius:9px;padding:9px 12px;font-size:12px;font-weight:700;color:var(--dim2);display:flex;justify-content:space-between;align-items:center':''}">
+        <span>${isAbandoned?'🌧 Match abandoned · No points awarded · '+total+' votes voided':'✅ '+m.winner+' won · '+total+' picks · Points calculated'}</span>
+        <button class="ub" onclick="askUndo(${m.id})">Undo?</button>
+      </div>
+    </div>`
+  }
+  const votedNames=USERS.filter(u=>allV.find(v=>v.user_code===u.code)).map(u=>u.name)
+  const notVotedNames=USERS.filter(u=>!allV.find(v=>v.user_code===u.code)).map(u=>u.name)
+  return`<div class="ac">
+    <div class="ach"><div class="act">M${m.id} · ${m.home_team} vs ${m.away_team}</div>
+    <span class="chip ${locked?'lk':'ft'}">${locked?`🔒 Locked · ${total} votes`:`Upcoming · ${total} votes`}</span></div>
+    <div style="font-size:10px;color:var(--dim2);margin-bottom:7px">${fmtD(m)} · ${fmtT(m)} · ${m.venue}</div>
+    ${total>0?`<div style="margin-bottom:10px;font-size:11px;line-height:1.8">
+      ${votedNames.length?`<span style="color:var(--grn);font-weight:700">✓ ${votedNames.join(', ')}</span><br>`:''}
+      ${notVotedNames.length?`<span style="color:var(--red);font-weight:700">✗ Not yet: ${notVotedNames.join(', ')}</span>`:''}
+    </div>`:`<div style="margin-bottom:10px;font-size:11px;color:var(--dim)">No votes yet.</div>`}
+    <div class="wg">
+      <button class="wb" ${!locked?'disabled':''} onclick="enterResult(${m.id},'${esc(m.home_team)}')"
+        style="background:linear-gradient(135deg,${ht.dark}55,${ht.dark});color:${ht.light};border:1.5px solid ${ht.acc}44">
+        ${ht.code}<span class="wbs">${locked?'👆 Tap = Winner':'Not locked'}</span></button>
+      <button class="wb" ${!locked?'disabled':''} onclick="enterResult(${m.id},'${esc(m.away_team)}')"
+        style="background:linear-gradient(135deg,${at2.dark}55,${at2.dark});color:${at2.light};border:1.5px solid ${at2.acc}44">
+        ${at2.code}<span class="wbs">${locked?'👆 Tap = Winner':'Not locked'}</span></button>
+    </div>
+    <button ${!locked?'disabled':''} onclick="enterResult(${m.id},'ABANDONED')"
+      style="width:100%;margin-top:7px;padding:9px;border-radius:8px;border:1px solid rgba(94,95,122,.3);
+      background:rgba(94,95,122,.08);color:var(--dim2);font-family:'Barlow',sans-serif;font-size:12px;font-weight:800;
+      cursor:${locked?'pointer':'not-allowed'};opacity:${locked?'1':'.3'}">
+      🌧 Mark as Abandoned / No Result (0 pts for everyone)
+    </button>
+    ${total>0?`<button onclick="askResetVotes(${m.id})" style="width:100%;margin-top:7px;padding:9px;border-radius:8px;border:1px solid rgba(232,61,90,.3);background:rgba(232,61,90,.06);color:var(--red);font-family:'Barlow',sans-serif;font-size:12px;font-weight:800;cursor:pointer">
+      🗑 Reset All Votes for This Match
+    </button>`:''}
+  </div>`
+}
+
+/* ══════════════════════════════════════════════════════════
+   ENTER RESULT — calls Supabase SQL function for atomic
+   point calculation. No stale cache issues.
+   Requires: STEP1B-add-scoring-function.sql to be run first.
+══════════════════════════════════════════════════════════ */
+async function enterResult(mid,winner){
+  const m=DB.matches.find(x=>x.id===mid)
+  if(!m||!isLocked(m)){showToast('⏰ Match not locked yet!');return}
+  if(m.winner){showToast('Already entered. Use Undo to change.');return}
+
+  // ABANDONED — just mark the match, no points for anyone
+  if(winner==='ABANDONED'){
+    const{error}=await sb.from('matches').update({winner:'ABANDONED'}).eq('id',mid)
+    if(error){showToast('❌ Failed: '+error.message);return}
+    showToast('🌧 Match marked as abandoned — no points awarded')
+    await refreshDB();renderAll()
+    return
+  }
+
+  showToast('⏳ Calculating points…')
+
+  // Call the SQL function — handles everything atomically in Postgres
+  const {error}=await sb.rpc('calculate_match_points',{
+    p_match_id: mid,
+    p_winner:   winner
+  })
+
+  if(error){
+    // Fallback: if RPC not set up yet, do it client-side
+    console.warn('RPC not available, using fallback:', error.message)
+    await enterResultFallback(mid, winner)
+    return
+  }
+
+  showToast(`✅ ${winner} won! Points updated in Supabase.`)
+  await refreshDB();renderAll()
+}
+
+// Fallback if SQL function hasn't been created yet
+async function enterResultFallback(mid,winner){
+  await refreshDB()  // get fresh data before calculating
+  const freshVotes=DB.votes.filter(v=>v.match_id===mid)
+  const freshUsers=[...DB.users]
+  const total=freshVotes.length
+  const wc=freshVotes.filter(v=>v.team===winner).length
+  const dog=total>0&&(wc/total*100)<30
+
+  await sb.from('matches').update({winner}).eq('id',mid)
+
+  let correct=0,wrong=0
+  for(const v of freshVotes){
+    const u=freshUsers.find(x=>x.code===v.user_code)
+    if(v.team===winner){
+      const pts=v.confidence*10+(dog?5:0)
+      await sb.from('votes').update({points_awarded:pts}).eq('id',v.id)
+      await sb.from('users').update({
+        total_points:(u?.total_points||0)+pts,
+        correct:(u?.correct||0)+1
+      }).eq('code',v.user_code)
+      // Update local cache so next iteration has correct value
+      if(u){u.total_points=(u.total_points||0)+pts;u.correct=(u.correct||0)+1}
+      correct++
+    } else {
+      const pts=v.confidence*5
+      await sb.from('votes').update({points_awarded:-pts}).eq('id',v.id)
+      await sb.from('users').update({
+        total_points:(u?.total_points||0)-pts,
+        wrong:(u?.wrong||0)+1
+      }).eq('code',v.user_code)
+      if(u){u.total_points=(u.total_points||0)-pts;u.wrong=(u.wrong||0)+1}
+      wrong++
+    }
+  }
+  showToast(`✅ ${winner} won! ${correct} correct, ${wrong} wrong${dog?' · 🐶 Underdog!':''}`)
+  await refreshDB();renderAll()
+}
+
+/* ── UNDO ── */
+function askUndo(mid){
+  undoMid=mid;const m=DB.matches.find(x=>x.id===mid)
+  document.getElementById('modal-msg').textContent=`Remove "${m.winner} won" from M${mid} and reverse all points?`
+  document.getElementById('overlay').classList.add('open')
+}
+function closeModal(){document.getElementById('overlay').classList.remove('open');undoMid=null}
+async function confirmUndo(){
+  if(!undoMid)return
+  const mid=undoMid
+  showToast('⏳ Reversing points…')
+
+  const {error}=await sb.rpc('undo_match_points',{p_match_id:mid})
+
+  if(error){
+    // Fallback client-side undo
+    console.warn('RPC undo not available, using fallback:', error.message)
+    const m=DB.matches.find(x=>x.id===mid)
+    const allV=matchVotes(mid),winner=m.winner
+    const total=allV.length,wc=allV.filter(v=>v.team===winner).length
+    const dog=total>0&&(wc/total*100)<30
+    for(const v of allV){
+      const u=DB.users.find(x=>x.code===v.user_code)
+      if(v.team===winner){
+        const pts=v.confidence*10+(dog?5:0)
+        await sb.from('users').update({total_points:(u?.total_points||0)-pts,correct:Math.max(0,(u?.correct||0)-1)}).eq('code',v.user_code)
+      } else {
+        const pts=v.confidence*5
+        await sb.from('users').update({total_points:(u?.total_points||0)+pts,wrong:Math.max(0,(u?.wrong||0)-1)}).eq('code',v.user_code)
+      }
+      await sb.from('votes').update({points_awarded:null}).eq('id',v.id)
+    }
+    await sb.from('matches').update({winner:null}).eq('id',mid)
+  }
+
+  closeModal();showToast(`↩️ Result undone for M${mid} — points reversed`)
+  await refreshDB();renderAll()
+}
+
+/* ── RESET VOTES (admin) ── */
+let resetMid=null
+function askResetVotes(mid){
+  resetMid=mid
+  const m=DB.matches.find(x=>x.id===mid)
+  const total=matchVotes(mid).length
+  document.getElementById('modal2-msg').textContent=
+    `Delete all ${total} vote${total!==1?'s':''} for M${mid} (${m.home_team} vs ${m.away_team})? Everyone can re-vote from scratch. This cannot be undone.`
+  document.getElementById('overlay2').classList.add('open')
+}
+function closeModal2(){document.getElementById('overlay2').classList.remove('open');resetMid=null}
+async function confirmResetVotes(){
+  if(!resetMid)return
+  const mid=resetMid
+  const {error}=await sb.from('votes').delete().eq('match_id',mid)
+  if(error){showToast('❌ Reset failed: '+error.message);closeModal2();return}
+  closeModal2()
+  showToast(`🗑 All votes cleared for M${mid} — everyone can re-vote`)
+  await refreshDB();renderAll()
+}
+
+/* ── TOAST ── */
+let TT
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(TT);TT=setTimeout(()=>t.classList.remove('show'),3200)}
+
+/* screen helper — not needed, inline transitions used directly */
+</script>
+</body>
+</html>
