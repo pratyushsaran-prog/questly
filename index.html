@@ -314,11 +314,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 <div id="toast"></div>
 
 <script>
-/* ══════════════════════════════════════════════════════════
-   ⚙️  CONFIGURATION — Replace with your Supabase values
-   Get from: supabase.com → your project → Settings → API
-══════════════════════════════════════════════════════════ */
-const SUPABASE_URL  = 'https://kpfnoppmfvkxdssaabef.supabase.co'  // ← paste your URL
+const SUPABASE_URL  = 'https://kpfnoppmfvkxdssaabef.supabase.co'
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtwZm5vcHBtZnZreGRzc2FhYmVmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4ODEyODgsImV4cCI6MjA5MDQ1NzI4OH0.Prjaq85U5EDTKdRrn4tqiO0p-7ktlE1d5yjBfXlLVp4'
 
 /* ══════════════════════════════════════════════════════════
@@ -366,21 +362,16 @@ const PP = {}  // pending picks (UI state only)
 window.addEventListener('DOMContentLoaded', async () => {
   const loadtxt = document.querySelector('.loadtxt')
   try {
-    // Supabase UMD exposes window.supabase
     if(!window.supabase) throw new Error('Supabase SDK not loaded')
     sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON)
     loadtxt.textContent = 'LOADING DATA…'
     await refreshDB()
-    // Show login screen
     document.getElementById('sLoad').classList.replace('on','off')
     document.getElementById('sL').classList.replace('off','on')
   } catch(e) {
-    loadtxt.textContent = 'FAILED: ' + e.message
-    loadtxt.style.color = '#e83d5a'
-    loadtxt.style.fontSize = '12px'
-    loadtxt.style.padding = '0 20px'
-    loadtxt.style.textAlign = 'center'
-    console.error('Init error:', e)
+    loadtxt.textContent = 'ERROR: ' + e.message
+    loadtxt.style.cssText='color:#e83d5a;font-size:12px;padding:0 20px;text-align:center;font-family:Barlow,sans-serif'
+    console.error(e)
   }
 })
 
