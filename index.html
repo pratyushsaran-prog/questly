@@ -538,8 +538,8 @@ function buildCard(m){
   const st=mstat(m),ht=tm(m.home_team),at2=tm(m.away_team)
   const mv=myVote(m.id),locked=isLocked(m)
   const isAbandoned=m.winner==='ABANDONED'
-  const hW=!isAbandoned&&m.winner===m.home_team
-  const aW=!isAbandoned&&m.winner===m.away_team
+  const hW=m.winner&&!isAbandoned&&m.winner===m.home_team
+  const aW=m.winner&&!isAbandoned&&m.winner===m.away_team
   const isFuture=!m.is_past&&!locked&&m.match_date>todayStr()
   const chipCls=st==='op'&&isFuture?'ft':st
   const chipLbl={op:isFuture?`Open · Locks ${fmtD(m)}`:'Open · Vote Now',lk:'🔒 Locked',dn:isAbandoned?'🌧 Abandoned':m.winner?`${tm(m.winner).code} Won`:'Result In',ab:'🌧 Abandoned'}
@@ -564,7 +564,7 @@ function buildCard(m){
   if(st==='op'){
     // Always show full vote form — pre-selected if already voted. Changeable until 7:30 PM.
     const curTeam = mv ? mv.team : (PP[m.id]?.team || null)
-    const curConf  = mv ? mv.confidence : (PP[m.id]?.conf || 1)
+    const curConf  = 3  // always 3x
     const isUpdate = !!mv
     if(mv && !PP[m.id]) PP[m.id] = {team:mv.team, conf:mv.confidence}
     const selHome = curTeam === m.home_team
@@ -585,14 +585,7 @@ function buildCard(m){
         <button class="pb ${selHome?'sel':''}" id="pb-${m.id}-h" onclick="pickTeam(${m.id},'${esc(m.home_team)}',this)">${ht.code}<br><small style="font-size:9px;font-weight:600;opacity:.75">${m.home_team}</small></button>
         <button class="pb ${selAway?'sel':''}" id="pb-${m.id}-a" onclick="pickTeam(${m.id},'${esc(m.away_team)}',this)">${at2.code}<br><small style="font-size:9px;font-weight:600;opacity:.75">${m.away_team}</small></button>
       </div>
-      <div class="cr">
-        <span class="cl">Confidence:</span>
-        <div class="cg">
-          <button class="cb ${curConf===1?'sel':''}" onclick="pickConf(${m.id},1,this)">1×</button>
-          <button class="cb ${curConf===2?'sel':''}" onclick="pickConf(${m.id},2,this)">2×</button>
-          <button class="cb ${curConf===3?'sel':''}" onclick="pickConf(${m.id},3,this)">3×</button>
-        </div>
-      </div>
+
     </div>`
   } else if(st==='ab') {
     // Abandoned — show grey banner, no points
@@ -654,21 +647,15 @@ function buildChips(m,allV){
    VOTE LOGIC (writes to Supabase)
 ══════════════════════════════════════════════════════════ */
 function pickTeam(mid,team,btn){
-  if(!PP[mid])PP[mid]={team:null,conf:1}
+  if(!PP[mid])PP[mid]={team:null,conf:3}
   PP[mid].team=team
+  PP[mid].conf=3
   btn.closest('.pg').querySelectorAll('.pb').forEach(b=>b.classList.remove('sel'))
   btn.classList.add('sel')
   // Auto-save whenever team is selected (confidence already has a default of 1)
   autoSave(mid)
 }
-function pickConf(mid,conf,btn){
-  if(!PP[mid])PP[mid]={team:null,conf:1}
-  PP[mid].conf=conf
-  btn.closest('.cg').querySelectorAll('.cb').forEach(b=>b.classList.remove('sel'))
-  btn.classList.add('sel')
-  // Auto-save on confidence change only if team already selected
-  if(PP[mid].team) autoSave(mid)
-}
+
 function setSaveStatus(mid,msg,color){
   const el=document.getElementById('sv-'+mid)
   if(!el)return
@@ -702,7 +689,7 @@ async function submitVote(mid){
   }
 
   const {error:insErr}=await sb.from('votes').insert(
-    {match_id:mid, user_code:CU.code, team:p.team, confidence:p.conf||1}
+    {match_id:mid, user_code:CU.code, team:p.team, confidence:3}
   )
   if(insErr){
     showToast('❌ Failed to save. Try again.')
