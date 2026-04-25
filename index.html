@@ -110,12 +110,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
   cursor:pointer;transition:all .12s;text-align:center;line-height:1.3}
 .pb:hover{border-color:rgba(242,184,48,.4)}
 .pb.sel{border-color:var(--acc);background:rgba(242,184,48,.08);color:var(--acc)}
-.cr{display:flex;align-items:center;gap:6px;margin-bottom:8px}
-.cl{font-size:10px;color:var(--dim2);flex-shrink:0;font-weight:600}
-.cg{display:flex;gap:5px;flex:1}
-.cb{flex:1;padding:6px 3px;border-radius:7px;border:1.5px solid var(--b1);background:var(--s2);
-  color:var(--dim);font-family:'Barlow',sans-serif;font-size:12px;font-weight:800;cursor:pointer;transition:all .12s;text-align:center}
-.cb.sel{border-color:var(--blue);background:rgba(66,133,244,.1);color:var(--blue)}
+
 .lkb{width:100%;padding:11px;border-radius:8px;border:none;
   background:linear-gradient(135deg,var(--acc),var(--red));color:#fff;
   font-family:'Barlow',sans-serif;font-size:13px;font-weight:800;cursor:pointer;transition:opacity .14s}
@@ -564,14 +559,11 @@ function buildCard(m){
   if(st==='op'){
     // Always show full vote form — pre-selected if already voted. Changeable until 7:30 PM.
     const curTeam = mv ? mv.team : (PP[m.id]?.team || null)
-    const curConf  = 3  // always 3x
-    const isUpdate = !!mv
+      const isUpdate = !!mv
     if(mv && !PP[m.id]) PP[m.id] = {team:mv.team, conf:mv.confidence}
     const selHome = curTeam === m.home_team
     const selAway = curTeam === m.away_team
-    const btnLabel = curTeam
-      ? (isUpdate ? `Update Pick: ${tm(curTeam).code} · ${curConf}×` : `Lock In: ${tm(curTeam).code} · ${curConf}×`)
-      : 'Select a team first'
+
     h+=`<div class="pz">
       <div style="display:flex;justify-content:space-between;align-items:center;padding-top:9px;margin-bottom:7px">
         <span class="pzl" style="padding-top:0;margin-bottom:0">Your Prediction</span>
@@ -638,7 +630,7 @@ function buildChips(m,allV){
     return`<div class="pch ${win?'win':loss?'los':''}">
       <div class="mav" style="background:${u.grad}">${u.name.charAt(0)}</div>
       <span style="color:${vt.light};font-weight:800">${vt.code}</span>
-      <span style="color:var(--blue)">·${v.confidence}×</span>${pts}
+      ${pts}
     </div>`
   }).join('')
 }
@@ -784,7 +776,7 @@ function renderPicks(){
           <span style="font-size:12px;font-weight:700;flex:1;color:${isMe?'var(--acc)':'var(--txt)'}">${u.name}${isMe?' (you)':''}</span>
           ${v
             ? `<span style="font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px;background:${vt.dark}55;color:${vt.light}">${vt.code}</span>
-               <span style="font-size:10px;font-weight:800;color:var(--blue)">${v.confidence}×</span>
+
                ${abandoned
                  ? `<span style="font-size:10px;color:var(--dim);min-width:36px;text-align:right">0 pts</span>`
                  : pts!==null
@@ -877,7 +869,7 @@ function renderMyPicks(){
         <div class="pmd">${fmtD(m)} · ${fmtT(m)}${m.winner?` · ${tm(m.winner).code} won`:''}</div>
       </div>
       <div class="ppr">
-        <div class="ptb" style="background:${vt.dark}44;color:${vt.light}">${vt.code} · ${v.confidence}×</div>
+        <div class="ptb" style="background:${vt.dark}44;color:${vt.light}">${vt.code}</div>
         ${pe!==null?`<div class="ppt ${pe>=0?'p':'n'}">${pe>=0?'+':''}${pe}${dog?'🐶':''}</div>`:`<div class="ppd">Pending</div>`}
       </div>
     </div>`
