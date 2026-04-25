@@ -644,7 +644,7 @@ function pickTeam(mid,team,btn){
   PP[mid].conf=3
   btn.closest('.pg').querySelectorAll('.pb').forEach(b=>b.classList.remove('sel'))
   btn.classList.add('sel')
-  // Auto-save whenever team is selected (confidence already has a default of 1)
+  // Auto-save whenever team is selected
   autoSave(mid)
 }
 
@@ -691,11 +691,11 @@ async function submitVote(mid){
 
   // Update local cache instantly
   const cached=DB.votes.find(v=>v.match_id===mid&&v.user_code===CU.code)
-  if(cached){cached.team=p.team;cached.confidence=p.conf||1}
-  else DB.votes.push({match_id:mid,user_code:CU.code,team:p.team,confidence:p.conf||1,id:Date.now()})
+  if(cached){cached.team=p.team;cached.confidence=3}
+  else DB.votes.push({match_id:mid,user_code:CU.code,team:p.team,confidence:3,id:Date.now()})
 
   setSaveStatus(mid,'✓ Saved','var(--grn)')
-  showToast(isUpdate?`✏️ Updated to ${tm(p.team).code} · ${p.conf||1}×`:`✓ ${tm(p.team).code} · ${p.conf||1}× saved!`)
+  showToast(isUpdate?`✏️ Updated to ${tm(p.team).code}`:`✓ ${tm(p.team).code} saved!`)
   refreshDB().then(()=>renderAll())
 }
 
@@ -922,7 +922,6 @@ function renderStandings(){
     <div class="skh">SCORING KEY</div>
     <div class="skr"><span style="color:var(--dim2)">Correct pick</span><span style="color:var(--grn);font-weight:800">+10 pts base</span></div>
     <div class="skr"><span style="color:var(--dim2)">Wrong pick</span><span style="color:var(--red);font-weight:800">−5 pts base</span></div>
-    <div class="skr"><span style="color:var(--dim2)">Confidence multiplier</span><span style="color:var(--blue);font-weight:800">×1 / ×2 / ×3</span></div>
     <div class="skr"><span style="color:var(--dim2)">Underdog 🐶 bonus</span><span style="color:var(--acc);font-weight:800">+5 if &lt;30% picked winner</span></div>
   </div>`
   el.innerHTML=h
